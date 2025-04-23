@@ -3,62 +3,41 @@
     isMobile ? 'grid-cols-1 relative z-10' : 'md:grid-cols-2 lg:grid-cols-3'
   ]">
     <!-- Favorite Jobs Card -->
-    <div class="card-container" :class="{ 
-      'p-4': !isMobile, 
-      'p-3': isMobile,
-      'relative': isMobile
-    }">
-      <div class="relative flex-1 group rounded-2xl backdrop-blur-sm transition-all duration-300" 
-           :style="{
-            height: activeCard === 'complete' ? (isMobile ? '220px' : '280px') : (isMobile ? '50px' : '60px'),
-            marginTop: activeCard === 'complete' ? (isMobile ? '0' : '-220px') : '0',
-            zIndex: activeCard === 'complete' ? 10 : 1,
-            backgroundColor: `rgb(var(--${safeTheme.primary}-rgb), 0.05)`,
-            border: `1px solid rgb(var(--${safeTheme.primary}-rgb), 0.1)`
-           }"
+    <div class="unlock-card group" 
+         :style="{ '--delay': '200ms' }">
+      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
            @click="toggleCard('complete')" 
            @mouseenter="!isMobile && (activeCard = 'complete')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
-        <div class="p-2">
-          <div class="flex items-center justify-between mb-1.5">
-            <div class="flex items-center gap-2">
-              <span :class="[`text-${safeTheme.primary}-600`, 'text-sm font-medium']">
-                Favorite Jobs
-              </span>
-              <span :class="[
-                `bg-${safeTheme.primary}-100/30`,
-                `text-${safeTheme.primary}-600`,
-                'text-xs px-2 py-0.5 rounded-full',
-                { 'opacity-0': activeCard === 'complete' }
-              ]">{{ favoriteJobs.length }}</span>
-            </div>
-            <div :class="[
-              `bg-${safeTheme.button}`,
-              'h-5 w-5 rounded-full flex items-center justify-center transition-transform duration-300',
-              { 'rotate-90': activeCard === 'complete' }
-            ]">
-              <ArrowRight class="h-3.5 w-3.5 text-white" />
-            </div>
+        <!-- Background Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+
+        <div class="relative flex items-start space-x-4">
+          <!-- Icon -->
+          <div :class="[
+            'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
+            `bg-${safeTheme.primary}-100 dark:bg-${safeTheme.primary}-900/50`
+          ]">
+            <ArrowRight :class="[`text-${safeTheme.primary}-600 dark:text-${safeTheme.primary}-400`, 'w-6 h-6']" />
           </div>
 
-          <div class="space-y-1.5 overflow-hidden transition-all duration-300"
-            :class="{ 'opacity-100': activeCard === 'complete', 'opacity-0': activeCard !== 'complete' }">
-            <!-- Jobs Counter -->
-            <div class="relative overflow-hidden">
-              <div class="flex items-baseline gap-1">
-                <div class="text-xl font-bold text-gray-800 tracking-tight"
-                  :class="{ 'animate-number': activeCard === 'complete' }">
-                  {{ favoriteJobs.length }}
-                </div>
-                <span class="text-xs text-gray-500">Saved Jobs</span>
-              </div>
-            </div>
+          <!-- Content -->
+          <div class="flex-1 space-y-1">
+            <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+              Favorite Jobs
+              <span :class="[
+                `bg-${safeTheme.primary}-100/30 ml-2`,
+                `text-${safeTheme.primary}-600`,
+                'text-xs px-2 py-0.5 rounded-full'
+              ]">{{ favoriteJobs.length }}</span>
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Your saved career opportunities</p>
 
-            <!-- Favorite Jobs List -->
-            <div class="transition-all duration-300 transform"
-              :class="{ 'translate-y-0': activeCard === 'complete', 'translate-y-4': activeCard !== 'complete' }">
-              <div class="max-h-[140px] md:max-h-[180px] overflow-y-auto custom-scrollbar pr-2">
+            <!-- Expandable content -->
+            <div class="pt-2 overflow-hidden transition-all duration-300"
+              :class="{ 'max-h-[200px]': activeCard === 'complete', 'max-h-0': activeCard !== 'complete' }">
+              <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
                 <RouterLink v-for="(job, index) in favoriteJobs" 
                       :key="job.id" 
                       :to="`/career/${job.slug}`"
@@ -85,62 +64,41 @@
     </div>
 
     <!-- Favorite Degrees Card -->
-    <div class="card-container" :class="{ 
-      'p-4': !isMobile, 
-      'p-3': isMobile,
-      'relative': isMobile
-    }">
-      <div class="relative flex-1 group rounded-2xl backdrop-blur-sm transition-all duration-300" 
-           :style="{
-            height: activeCard === 'degrees' ? (isMobile ? '220px' : '280px') : (isMobile ? '50px' : '60px'),
-            marginTop: activeCard === 'degrees' ? (isMobile ? '0' : '-220px') : '0',
-            zIndex: activeCard === 'degrees' ? 10 : 1,
-            backgroundColor: `rgb(var(--${safeTheme.primary}-rgb), 0.05)`,
-            border: `1px solid rgb(var(--${safeTheme.primary}-rgb), 0.1)`
-           }"
+    <div class="unlock-card group" 
+         :style="{ '--delay': '400ms' }">
+      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
            @click="toggleCard('degrees')" 
            @mouseenter="!isMobile && (activeCard = 'degrees')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
-        <div class="p-2">
-          <div class="flex items-center justify-between mb-1.5">
-            <div class="flex items-center gap-2">
-              <span :class="[`text-${safeTheme.primary}-600`, 'text-sm font-medium']">
-                Favorite Degrees
-              </span>
-              <span :class="[
-                `bg-${safeTheme.primary}-100/30`,
-                `text-${safeTheme.primary}-600`,
-                'text-xs px-2 py-0.5 rounded-full',
-                { 'opacity-0': activeCard === 'degrees' }
-              ]">{{ favoriteDegrees.length }}</span>
-            </div>
-            <div :class="[
-              `bg-${safeTheme.button}`,
-              'h-5 w-5 rounded-full flex items-center justify-center transition-transform duration-300',
-              { 'rotate-90': activeCard === 'degrees' }
-            ]">
-              <ArrowRight class="h-3.5 w-3.5 text-white" />
-            </div>
+        <!-- Background Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+
+        <div class="relative flex items-start space-x-4">
+          <!-- Icon -->
+          <div :class="[
+            'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
+            `bg-purple-100 dark:bg-purple-900/50`
+          ]">
+            <ArrowRight :class="['text-purple-600 dark:text-purple-400', 'w-6 h-6']" />
           </div>
 
-          <div class="space-y-1.5 overflow-hidden transition-all duration-300"
-            :class="{ 'opacity-100': activeCard === 'degrees', 'opacity-0': activeCard !== 'degrees' }">
-            <!-- Degrees Counter -->
-            <div class="relative overflow-hidden">
-              <div class="flex items-baseline gap-1">
-                <div class="text-xl font-bold text-gray-800 tracking-tight"
-                  :class="{ 'animate-number': activeCard === 'degrees' }">
-                  {{ favoriteDegrees.length }}
-                </div>
-                <span class="text-xs text-gray-500">Saved Degrees</span>
-              </div>
-            </div>
+          <!-- Content -->
+          <div class="flex-1 space-y-1">
+            <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+              Favorite Degrees
+              <span :class="[
+                `bg-${safeTheme.primary}-100/30 ml-2`,
+                `text-${safeTheme.primary}-600`,
+                'text-xs px-2 py-0.5 rounded-full'
+              ]">{{ favoriteDegrees.length }}</span>
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Your saved educational paths</p>
 
-            <!-- Favorite Degrees List -->
-            <div class="transition-all duration-300 transform"
-              :class="{ 'translate-y-0': activeCard === 'degrees', 'translate-y-4': activeCard !== 'degrees' }">
-              <div class="max-h-[140px] md:max-h-[180px] overflow-y-auto custom-scrollbar pr-2">
+            <!-- Expandable content -->
+            <div class="pt-2 overflow-hidden transition-all duration-300"
+              :class="{ 'max-h-[200px]': activeCard === 'degrees', 'max-h-0': activeCard !== 'degrees' }">
+              <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
                 <RouterLink v-for="(degree, index) in favoriteDegrees" 
                       :key="degree.id" 
                       :to="`/degree/${degree.slug}`"
@@ -167,60 +125,41 @@
     </div>
 
     <!-- Watch Card -->
-    <div class="card-container" :class="{ 
-      'p-4': !isMobile, 
-      'p-3': isMobile,
-      'relative': isMobile
-    }">
-      <div class="relative flex-1 group rounded-2xl backdrop-blur-sm transition-all duration-300" 
-           :style="{
-            height: activeCard === 'watch' ? (isMobile ? '220px' : '280px') : (isMobile ? '50px' : '60px'),
-            marginTop: activeCard === 'watch' ? (isMobile ? '0' : '-220px') : '0',
-            zIndex: activeCard === 'watch' ? 10 : 1,
-            backgroundColor: `rgb(var(--${safeTheme.primary}-rgb), 0.05)`,
-            border: `1px solid rgb(var(--${safeTheme.primary}-rgb), 0.1)`
-           }"
+    <div class="unlock-card group" 
+         :style="{ '--delay': '600ms' }">
+      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
            @click="toggleCard('watch')" 
            @mouseenter="!isMobile && (activeCard = 'watch')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
-        <div class="p-2">
-          <div class="flex items-center justify-between mb-1.5">
-            <div class="flex items-center gap-2">
-              <span :class="[`text-${safeTheme.primary}-600`, 'text-sm font-medium']">Watch</span>
-              <span :class="[
-                `bg-${safeTheme.primary}-100/30`,
-                `text-${safeTheme.primary}-600`,
-                'text-xs px-2 py-0.5 rounded-full',
-                { 'opacity-0': activeCard === 'watch' }
-              ]">{{ streamingPlatforms.length }}</span>
-            </div>
-            <div :class="[
-              `bg-${safeTheme.button}`,
-              'h-5 w-5 rounded-full flex items-center justify-center transition-transform duration-300',
-              { 'rotate-90': activeCard === 'watch' }
-            ]">
-              <ArrowRight class="h-3.5 w-3.5 text-white" />
-            </div>
+        <!-- Background Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+
+        <div class="relative flex items-start space-x-4">
+          <!-- Icon -->
+          <div :class="[
+            'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
+            `bg-blue-100 dark:bg-blue-900/50`
+          ]">
+            <Tv :class="['text-blue-600 dark:text-blue-400', 'w-6 h-6']" />
           </div>
 
-          <div class="space-y-1.5 overflow-hidden transition-all duration-300"
-            :class="{ 'opacity-100': activeCard === 'watch', 'opacity-0': activeCard !== 'watch' }">
-            <!-- Watch Counter -->
-            <div class="relative overflow-hidden">
-              <div class="flex items-baseline gap-1">
-                <div class="text-xl font-bold text-gray-800 tracking-tight"
-                  :class="{ 'animate-number': activeCard === 'watch' }">
-                  {{ streamingPlatforms.length }}
-                </div>
-                <span class="text-xs text-gray-500">Platforms</span>
-              </div>
-            </div>
+          <!-- Content -->
+          <div class="flex-1 space-y-1">
+            <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+              Watch
+              <span :class="[
+                `bg-${safeTheme.primary}-100/30 ml-2`,
+                `text-${safeTheme.primary}-600`,
+                'text-xs px-2 py-0.5 rounded-full'
+              ]">{{ streamingPlatforms.length }}</span>
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Streaming platforms for your entertainment</p>
 
-            <!-- Streaming Services -->
-            <div class="transition-all duration-300 transform"
-              :class="{ 'translate-y-0': activeCard === 'watch', 'translate-y-4': activeCard !== 'watch' }">
-              <div class="max-h-[140px] md:max-h-[180px] overflow-y-auto custom-scrollbar pr-2">
+            <!-- Expandable content -->
+            <div class="pt-2 overflow-hidden transition-all duration-300"
+              :class="{ 'max-h-[200px]': activeCard === 'watch', 'max-h-0': activeCard !== 'watch' }">
+              <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
                 <RouterLink v-for="(platform, index) in streamingPlatforms" 
                       :key="platform.name"
                       :to="`/watch/${platform.name.toLowerCase()}`"
@@ -305,26 +244,47 @@ const toggleCard = (cardName) => {
 </script>
 
 <style scoped>
-.group {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+.unlock-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: var(--delay);
 }
 
-.group:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+.unlock-card:hover {
   transform: translateY(-2px);
+}
+
+/* Enhanced card hover effects */
+.unlock-card .group-hover\:scale-110 {
+  transition-delay: 100ms;
+}
+
+.unlock-card .group-hover\:translate-x-\[200\%\] {
+  transition-delay: 200ms;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glass effect enhancement */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
 }
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  .card-container {
-    position: relative;
+  .unlock-card {
     margin-bottom: 0.75rem;
-  }
-
-  .group {
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-    transform: none !important;
-    transition: all 0.3s ease-in-out;
   }
 
   .group:active {
