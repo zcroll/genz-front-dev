@@ -1,0 +1,120 @@
+### Coverage Requirements
+1. **MUST** have tests for all actions
+2. **MUST** have tests for all DTOs
+3. **MUST** have tests for all API endpoints
+4. **MUST** test happy path and at least two error cases
+5. **MUST** test authorization rules
+
+## Test-Driven Development (TDD)
+
+### Core Principles
+1. **MUST** write tests before writing implementation code
+2. **MUST** follow the Red-Green-Refactor cycle
+3. **MUST** write the minimum code necessary to pass tests
+4. **MUST** refactor code after tests pass without changing behavior
+5. **MUST** use small, incremental steps when developing features
+
+### TDD Workflow
+1. **MUST** write a failing test that defines expected behavior
+2. **MUST** run the test to confirm it fails for the expected reason
+3. **MUST** write minimal implementation code to make the test pass
+4. **MUST** run tests to confirm they pass
+5. **MUST** refactor code to improve quality while maintaining passing tests
+6. **MUST** repeat the cycle for each feature or requirement
+
+### Test First Guidelines
+1. **MUST** create test files before implementation files
+2. **MUST** organize test structure to mirror the application structure
+3. **MUST** test public interfaces and behavior, not implementation details
+4. **MUST** focus on testing outcomes rather than methods
+5. **MUST** use descriptive test names that explain the behavior being tested
+
+### PEST Implementation
+```php
+<?php
+
+use App\Models\Career;
+use App\Enums\SalaryRange;
+use function Pest\Laravel\getJson;
+
+test('filters_careers_by_salary_range', function () {
+    // Arrange
+    Career::factory()->create([
+        'title' => 'Software Developer',
+        'salary_range' => SalaryRange::HIGH->value,
+    ]);
+    
+    Career::factory()->create([
+        'title' => 'Customer Support',
+        'salary_range' => SalaryRange::LOW->value,
+    ]);
+
+    // Act
+    $response = getJson('/api/v1/careers?filter[salary_range]=high');
+
+    // Assert
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.title', 'Software Developer')
+        ->assertJsonPath('success', true);
+});
+
+test('returns_empty_data_array_when_no_careers_match_filter', function () {
+    // Arrange
+    Career::factory()->create([
+        'salary_range' => SalaryRange::HIGH->value,
+    ]);
+
+    // Act
+    $response = getJson('/api/v1/careers?filter[salary_range]=medium');
+
+    // Assert
+    $response->assertStatus(200)
+        ->assertJsonCount(0, 'data')
+        ->assertJsonPath('success', true);
+});
+```
+
+### Test Coverage Requirements
+1. **MUST** achieve at least 85% code coverage for all business logic
+2. **MUST** have 100% test coverage for:
+   - DTOs
+   - Actions
+   - Enums
+   - Custom Exceptions
+3. **MUST** use coverage reports to identify untested code paths
+4. **MUST NOT** write tests just to increase coverage percentage
+5. **MUST** focus on testing behavior, not implementation
+
+### Testing Strategy
+1. **MUST** use unit tests for:
+   - DTOs
+   - Actions
+   - Value Objects
+   - Service Classes
+   - Utility Classes
+2. **MUST** use feature tests for:
+   - API Endpoints
+   - Controller Logic
+   - Middleware Behavior
+   - Route Configuration
+3. **MUST** use integration tests for:
+   - Database Interactions
+   - Third-party Service Integrations
+   - Complex System Workflows
+
+### Mocking and Test Doubles
+1. **MUST** use mocks for external services and dependencies
+2. **MUST** use fakes for Laravel facades when appropriate
+3. **MUST** use factories for database models
+4. **MUST** prefer integration tests over excessive mocking
+5. **MUST** isolate unit tests from database and external services
+
+### Test Data Management
+1. **MUST** use model factories for all test data creation
+2. **MUST** use database transactions to reset state between tests
+3. **MUST** seed test database with consistent reference data
+4. **MUST** avoid hard-coded test data values
+5. **MUST** use realistic data that represents actual usage
+
+## Enum Implementation 

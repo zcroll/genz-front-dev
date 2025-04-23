@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "laravel-pest": {
+      "command": "npx",
+      "args": ["-y", "@cursor/pest-helper"],
+      "env": {
+        "TEST_DIR": "tests",
+        "COVERAGE_ENABLED": "true"
+      }
+    },
+    "api-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-api-docs"],
+      "env": {
+        "API_SPEC_PATH": "docs/api-spec.yaml"
+      }
+    },
+    "action-pattern": {
+      "command": "php",
+      "args": ["-f", "${HOME}/Desktop/genz/genz_api/vendor/bin/mcp-action-helper.php"],
+      "env": {
+        "PROJECT_ROOT": "${workspaceFolder}"
+      }
+    },
+    "enum-helper": {
+      "command": "php",
+      "args": ["-f", "${HOME}/Desktop/genz/genz_api/vendor/bin/mcp-enum-helper.php"],
+      "env": {
+        "PROJECT_ROOT": "${workspaceFolder}"
+      }
+    }
+  }
+} 

@@ -1,0 +1,287 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Gen.Z Career Orientation Platform - Development Rules
+
+## Coding Standards
+
+### Naming Conventions
+1. **File Names**: kebab-case (e.g., `my-class-file.php`)
+2. **Class and Enum Names**: PascalCase (e.g., `MyClass`)
+3. **Method Names**: camelCase (e.g., `myMethod`)
+4. **Variable and Property Names**: snake_case (e.g., `my_variable`)
+5. **Constants and Enum Cases**: SCREAMING_SNAKE_CASE (e.g., `MY_CONSTANT`)
+
+### PHP 8.3 Features
+1. **MUST** use typed properties
+2. **MUST** use return type declarations
+3. **MUST** use parameter type declarations
+4. **MUST** use readonly properties for DTOs
+5. **MUST** use constructor property promotion
+6. **MUST** use match expressions instead of switch statements
+7. **MUST** use named arguments for clarity
+8. **MUST** use union types when appropriate
+9. **MUST** use intersection types when appropriate
+10. **MUST** use the null coalescing operator (`??`) instead of ternary with `isset`
+
+## REST API Structure
+
+### Endpoint Design
+1. **MUST** use resource-based URLs with nouns (e.g., `/api/careers`, `/api/assessments`)
+2. **MUST** use HTTP methods appropriately:
+   - `GET`: Retrieve resources
+   - `POST`: Create new resources
+   - `PUT`: Update entire resources
+   - `PATCH`: Partial updates
+   - `DELETE`: Remove resources
+3. **MUST** follow URL structure:
+   - Collection: `/api/v1/resources`
+   - Individual: `/api/v1/resources/{id}`
+   - Sub-resources: `/api/v1/resources/{id}/sub-resources`
+4. **MUST** include version in URL path: `/api/v1/...`
+
+### Response Format
+1. **MUST** use standard JSON structure:
+   - `success`: boolean
+   - `data`: response data or null
+   - `meta`: pagination or additional metadata
+   - `errors`: error details or null
+2. **MUST** use appropriate HTTP status codes
+3. **MUST** include pagination in meta section with standard fields
+4. **MUST** use consistent error response format with code, message, and details
+
+### Authentication & Security
+1. **MUST** use Laravel Sanctum for API authentication
+2. **MUST** include token in Authorization header: `Bearer {token}`
+3. **MUST** configure appropriate CORS headers
+4. **MUST** implement rate limiting on all endpoints
+
+## DTO Implementation
+
+### Structure
+1. **MUST** place DTOs in `App\DTOs` namespace
+2. **MUST** use readonly properties
+3. **MUST** implement `Arrayable` interface
+4. **MUST** use constructor property promotion
+5. **MUST** include static factory methods
+6. **MUST** make DTOs immutable
+7. **MUST** use strict type declarations
+8. **MUST** implement `JsonSerializable` interface
+
+### DTO Implementation
+```php
+namespace App\DTOs;
+
+use Illuminate\Contracts\Support\Arrayable;
+
+class AssessmentData implements Arrayable, \JsonSerializable
+{
+    public function __construct(
+        public readonly string $user_id,
+        public readonly string $assessment_type,
+        public readonly array $answers,
+        public readonly ?string $session_id = null
+    ) {}
+
+    public static function fromArray(array $data): self
+    {
+        if (!isset($data['user_id']) || !isset($data['assessment_type']) || !isset($data['answers'])) {
+            throw new \InvalidArgumentException('Missing required DTO fields');
+        }
+
+        return new self(
+            user_id: $data['user_id'],
+            assessment_type: $data['assessment_type'],
+            answers: $data['answers'],
+            session_id: $data['session_id'] ?? null
+        );
+    }
+
+    public static function fromRequest(\Illuminate\Http\Request $request): self
+    {
+        return self::fromArray($request->validated());
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'user_id' => $this->user_id,
+            'assessment_type' => $this->assessment_type,
+            'answers' => $this->answers,
+            'session_id' => $this->session_id,
+        ];
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
+    public function toResponse(): array
+    {
+        return [
+            'data' => $this->toArray(),
+        ];
+    }
+}
+```
+
+### Validation
+1. **MUST** validate data in static factory methods
+2. **MUST** throw typed exceptions for invalid data
+3. **MUST** use value objects for complex properties
+
+### Transformation
+1. **MUST** include `toArray()` method
+2. **MUST** include `toResponse()` method for API responses
+3. **MUST** support serialization/deserialization
+
+## Action Pattern Implementation
+
+### Structure
+1. **MUST** place actions in `App\Actions` namespace
+2. **MUST** name actions with verb + noun (e.g., `CreateUser`, `UpdateProfile`)
+3. **MUST** implement a single public `execute()` method
+4. **MUST** use constructor dependency injection for services
+5. **MUST** accept DTOs as input parameters
+6. **MUST** return DTOs as output
+7. **MUST** be invokable via `__invoke()` method
+
+### Organization
+1. **MUST** organize actions by domain (e.g., `App\Actions\Assessment`, `App\Actions\Career`)
+2. **MUST** keep actions focused on a single responsibility
+3. **MUST** make actions queueable when appropriate using `ShouldQueue` interface
+4. **MUST** use action composition for complex operations
+
+### Action Implementation
+```php
+namespace App\Actions\Assessment;
+
+use App\DTOs\AssessmentData;
+use App\DTOs\AssessmentResultData;
+
+class CompleteAssessment
+{
+    public function __construct(
+        private CalculateScores $calculateScores,
+        private MatchCareers $matchCareers
+    ) {}
+
+    public function execute(AssessmentData $data): AssessmentResultData
+    {
+        // Single responsibility: orchestrate the assessment completion process
+        $scores = $this->calculateScores->execute($data);
+        $matches = $this->matchCareers->execute($scores);
+
+        return new AssessmentResultData(
+            user_id: $data->user_id,
+            assessment_type: $data->assessment_type,
+            scores: $scores->toArray(),
+            matched_careers: $matches->toArray(),
+            completed_at: now()
+        );
+    }
+
+    public function __invoke(AssessmentData $data): AssessmentResultData
+    {
+        return $this->execute($data);
+    }
+}
+```
+
+### Controller Integration
+1. **MUST** inject actions into controllers
+2. **MUST** convert request data to DTOs before passing to actions
+3. **MUST** transform action results to API responses
+
+## Testing with PEST
+
+### Organization
+1. **MUST** organize tests by feature and unit tests
+2. **MUST** use descriptive test names with underscores
+3. **MUST** test actions in isolation
+4. **MUST** test DTOs for validation and transformation
+5. **MUST** test API endpoints for functionality and error handling
+
+### Coverage Requirements
+1. **MUST** have tests for all actions
+2. **MUST** have tests for all DTOs
+3. **MUST** have tests for all API endpoints
+4. **MUST** test happy path and at least two error cases
+5. **MUST** test authorization rules
+
+## Enum Implementation
+
+### Structure
+1. **MUST** place enums in `App\Enums` namespace
+2. **MUST** use backed enums with string or int values
+3. **MUST** include helper methods for labels and metadata
+4. **MUST** use enums for all status codes, types, and fixed values
+
+### Usage
+1. **MUST** use enums for request validation
+2. **MUST** use enums for database values
+3. **MUST** use enums for API response codes
+4. **MUST** use enums for application state
+
+## Exception Handling
+
+### Structure
+1. **MUST** create custom exceptions for domain-specific errors
+2. **MUST** place exceptions in `App\Exceptions` namespace
+3. **MUST** extend appropriate base exception classes
+4. **MUST** include context data in exceptions
+
+### API Error Handling
+1. **MUST** map exceptions to API error codes
+2. **MUST** use a global exception handler for API responses
+3. **MUST** log exceptions appropriately
+4. **MUST** sanitize exception details in production
+
+## Spatie Packages Integration
+
+### Required Packages
+1. **MUST** use `spatie/laravel-permission` for role and permission management
+2. **MUST** use `spatie/laravel-query-builder` for API filtering, sorting, and including relationships
+3. **MUST** use `spatie/laravel-medialibrary` for file uploads and media management
+4. **MUST** use `spatie/laravel-activitylog` for logging user activities
+5. **MUST** use `spatie/laravel-backup` for application and database backups
+
+### Implementation Guidelines
+1. **MUST** follow each package's official documentation
+2. **MUST** extend package functionality through proper inheritance rather than modification
+3. **MUST** use package configuration files for customization
+4. **MUST** write tests for custom implementations of package functionality
+
+## Debugging with LaraDumps
+
+### Installation and Configuration
+1. **MUST** install LaraDumps as a dev dependency: `composer require laradumps/laradumps --dev`
+2. **MUST** download and install the LaraDumps desktop application
+3. **MUST** configure LaraDumps in the `.env` file with appropriate settings
+4. **MUST NOT** commit LaraDumps debug calls to production code
+
+### Usage Guidelines
+1. **MUST** use the following debug functions appropriately:
+   - `ds($var)` - Display variables with automatic formatting
+   - `dsq($var)` - Quiet dump (doesn't focus the app)
+   - `dsd($var)` - Dump and die
+   - `ds()->time('Label')` / `ds()->stopTime('Label')` - Measure execution time
+   - `ds()->queriesOn('Label')` / `ds()->queriesOff()` - Capture SQL queries
+   - `ds()->model($model)` - Inspect model attributes and relationships
+   - `ds()->table($collection, 'Name')` - Display data in table format
+   - `ds($var)->label('Custom Label')` - Add custom labels
+   - `ds($var)->toScreen('Screen Name')` - Use multiple screens
+   - `ds($var)->contains('Text')` - Search within content
+   - `ds($var)->isJson()` - Validate and display JSON
+
+2. **MUST** use color tags for visual organization:
+   - `ds($var)->info()` - Blue tag for information
+   - `ds($var)->success()` - Green tag for success
+   - `ds($var)->warning()` - Orange tag for warnings
+   - `ds($var)->danger()` - Red tag for errors
+   - `ds($var)->dark()` - Black tag for system info
+
+3. **MUST** run `vendor/bin/laradumps check` before deployment to find debug calls
