@@ -1,17 +1,17 @@
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue'
+import { cn } from '@/lib/utils'
+
+const props = defineProps<{
+  class?: HTMLAttributes['class']
+}>()
+</script>
+
 <template>
-  <div :class="cn('p-6 pt-0', className)" v-bind="$attrs">
+  <div
+    data-slot="card-content"
+    :class="cn('px-6', props.class)"
+  >
     <slot />
   </div>
 </template>
-
-<script lang="ts" setup>
-import { cn } from '@/lib/utils'
-
-defineOptions({
-  inheritAttrs: false
-})
-
-defineProps<{
-  className?: string
-}>()
-</script>

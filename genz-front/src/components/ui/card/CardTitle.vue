@@ -1,26 +1,17 @@
-<template>
-  <component
-    :is="as"
-    :class="cn('text-2xl font-semibold leading-none tracking-tight', className)"
-    v-bind="$attrs"
-  >
-    <slot />
-  </component>
-</template>
-
-<script lang="ts" setup>
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
-defineOptions({
-  inheritAttrs: false
-})
-
-defineProps<{
-  as?: string
-  className?: string
+const props = defineProps<{
+  class?: HTMLAttributes['class']
 }>()
-
-defineDefaults({
-  as: 'h3'
-})
 </script>
+
+<template>
+  <h3
+    data-slot="card-title"
+    :class="cn('leading-none font-semibold', props.class)"
+  >
+    <slot />
+  </h3>
+</template>
