@@ -1,0 +1,11 @@
+<svg width="250" height="350" viewBox="0 0 250 350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="250" height="350" rx="15" fill="#fff" />
+  <rect x="10" y="10" width="230" height="330" rx="10" fill="#fff" stroke="#000" stroke-width="1" />
+  <text x="30" y="50" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c">K</text>
+  <text x="220" y="50" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c" text-anchor="end">K</text>
+  <path d="M125 100 C145 80, 165 100, 145 120 C165 140, 145 160, 125 140 C105 160, 85 140, 105 120 C85 100, 105 80, 125 100 Z" fill="#b91c1c" />
+  <path d="M125 180 C145 160, 165 180, 145 200 C165 220, 145 240, 125 220 C105 240, 85 220, 105 200 C85 180, 105 160, 125 180 Z" fill="#b91c1c" />
+  <text x="30" y="320" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c">♥</text>
+  <text x="220" y="320" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c" text-anchor="end">♥</text>
+  <text x="125" y="175" font-family="Arial" font-size="18" fill="#000" text-anchor="middle">KING OF HEARTS</text>
+</svg>

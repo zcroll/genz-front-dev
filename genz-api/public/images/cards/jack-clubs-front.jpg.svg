@@ -1,0 +1,13 @@
+<svg width="250" height="350" viewBox="0 0 250 350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="250" height="350" rx="15" fill="#fff" />
+  <rect x="10" y="10" width="230" height="330" rx="10" fill="#fff" stroke="#000" stroke-width="1" />
+  <text x="30" y="50" font-family="Arial" font-size="24" font-weight="bold">J</text>
+  <text x="220" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="end">J</text>
+  <circle cx="125" cy="110" r="20" fill="#000" />
+  <circle cx="125" cy="190" r="20" fill="#000" />
+  <path d="M125 130 L125 170" stroke="#000" stroke-width="5" />
+  <path d="M105 150 L145 150" stroke="#000" stroke-width="5" />
+  <text x="30" y="320" font-family="Arial" font-size="24" font-weight="bold">♣</text>
+  <text x="220" y="320" font-family="Arial" font-size="24" font-weight="bold" text-anchor="end">♣</text>
+  <text x="125" y="240" font-family="Arial" font-size="18" fill="#000" text-anchor="middle">JACK OF CLUBS</text>
+</svg>

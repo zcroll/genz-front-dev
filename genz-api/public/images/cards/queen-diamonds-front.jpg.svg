@@ -1,0 +1,11 @@
+<svg width="250" height="350" viewBox="0 0 250 350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="250" height="350" rx="15" fill="#fff" />
+  <rect x="10" y="10" width="230" height="330" rx="10" fill="#fff" stroke="#000" stroke-width="1" />
+  <text x="30" y="50" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c">Q</text>
+  <text x="220" y="50" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c" text-anchor="end">Q</text>
+  <path d="M125 100 L145 120 L125 140 L105 120 Z" fill="#b91c1c" />
+  <path d="M125 180 L145 200 L125 220 L105 200 Z" fill="#b91c1c" />
+  <text x="30" y="320" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c">♦</text>
+  <text x="220" y="320" font-family="Arial" font-size="24" font-weight="bold" fill="#b91c1c" text-anchor="end">♦</text>
+  <text x="125" y="175" font-family="Arial" font-size="18" fill="#000" text-anchor="middle">QUEEN OF DIAMONDS</text>
+</svg>
