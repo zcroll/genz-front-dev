@@ -32,40 +32,115 @@
 
       <!-- Scrollable Content -->
       <div class="p-6 space-y-6 overflow-y-auto" style="max-height: calc(100vh - 12rem);">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2" :class="`border-${themeStore.color}-500`"></div>
+        </div>
+
         <!-- Filter Groups -->
-        <div class="space-y-4">
+        <div v-else class="space-y-6">
+          <!-- Academic Areas Filter -->
           <div :class="[
-            'filter-section transition-all duration-200',
+            'filter-section transition-all duration-200 rounded-lg p-4',
             themeStore.isDarkMode
               ? 'bg-gray-900/50 border-gray-800/30'
               : 'bg-white/50 border-white/20'
           ]">
-            <label class="filter-label">
-              <AcademicCapIcon :class="[
+            <label class="filter-label flex items-center gap-2 mb-3 font-medium">
+              <BookOpenIcon :class="[
                 'h-4 w-4',
                 themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
               ]" />
               <span :class="[
                 themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
               ]">
-                Degree Levels
+                Area of Study
               </span>
             </label>
 
-            <!-- Simple checkboxes instead of CustomMultiSelect -->
-            <div class="space-y-2 mt-3">
-              <div v-for="option in degreeTypeOptions" :key="option.value" class="flex items-center">
+            <!-- Selected Areas Tags -->
+            <div v-if="selectedAreas.length > 0" class="flex flex-wrap gap-2 mb-3">
+              <div
+                v-for="area in selectedAreas"
+                :key="area"
+                :class="[
+                  'inline-flex items-center px-2 py-1 rounded-full text-xs',
+                  themeStore.isDarkMode
+                    ? 'bg-gray-700 text-gray-200'
+                    : 'bg-gray-200 text-gray-800'
+                ]"
+              >
+                {{ area }}
+                <button
+                  @click="removeArea(area)"
+                  class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <span class="sr-only">Remove</span>
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Search for areas with dropdown -->
+            <div class="relative">
+              <div class="relative">
+                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
+                  :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
                 <input
-                  type="checkbox"
-                  :id="option.value"
-                  :value="option.value"
-                  v-model="selectedTypes"
-                  @change="handleFilterChange"
-                  class="rounded text-amber-500 focus:ring-amber-500"
+                  v-model="areaSearchQuery"
+                  type="search"
+                  placeholder="Search and select areas of study"
+                  @focus="showAreaDropdown = true"
+                  :class="[
+                    'w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm',
+                    themeStore.isDarkMode
+                      ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
+                      : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
+                    `focus:border-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`,
+                    `focus:ring-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`
+                  ]"
                 />
-                <label :for="option.value" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  {{ option.label }}
-                </label>
+              </div>
+
+              <!-- Dropdown for areas -->
+              <div
+                v-if="showAreaDropdown && filteredAreas.length > 0"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg"
+                :class="[
+                  themeStore.isDarkMode
+                    ? 'bg-gray-800 border border-gray-700'
+                    : 'bg-white border border-gray-200'
+                ]"
+              >
+                <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+                  <div
+                    v-for="area in filteredAreas"
+                    :key="area.name"
+                    @click="addArea(area.name)"
+                    class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    :class="[
+                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700',
+                      selectedAreas.includes(area.name) ? 'bg-gray-100 dark:bg-gray-700' : ''
+                    ]"
+                  >
+                    {{ area.name }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- No results message -->
+              <div
+                v-if="showAreaDropdown && areaSearchQuery && filteredAreas.length === 0"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center"
+                :class="[
+                  themeStore.isDarkMode
+                    ? 'bg-gray-800 border border-gray-700 text-gray-400'
+                    : 'bg-white border border-gray-200 text-gray-500'
+                ]"
+              >
+                No matching areas found
               </div>
             </div>
           </div>
@@ -108,38 +183,115 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue';
+<script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
-import { AcademicCapIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, BookOpenIcon } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme';
+import { fetchDegreeFilterOptions } from '@/services/degreeService';
+import type { DegreeFilterParams } from '@/types/degree';
 
 const emit = defineEmits(['update:filters', 'reset']);
 const themeStore = useThemeStore();
 
+// Loading state
+const isLoading = ref(true);
+
 // Filter state
 const searchQuery = ref('');
-const selectedTypes = ref([]);
+const selectedAreas = ref([]);
+const areaSearchQuery = ref('');
+const showAreaDropdown = ref(false);
 
-const degreeTypeOptions = [
-  { value: "Associate", label: "Associate" },
-  { value: "Bachelor's", label: "Bachelor's" },
-  { value: "Master's", label: "Master's" },
-  { value: "Doctorate", label: "Doctorate" }
-];
+// Filter options from API
+const degreeLevels = ref([]);
+const academicAreas = ref([]);
+
+// Filtered areas based on search
+const filteredAreas = computed(() => {
+  if (!areaSearchQuery.value) return academicAreas.value;
+
+  const query = areaSearchQuery.value.toLowerCase();
+  return academicAreas.value.filter(area =>
+    area.name.toLowerCase().includes(query)
+  );
+});
+
+// Fetch filter options from API
+const fetchFilterOptions = async () => {
+  try {
+    isLoading.value = true;
+    const response = await fetchDegreeFilterOptions();
+
+    if (response.success && response.data) {
+      degreeLevels.value = response.data.degree_levels || [];
+      academicAreas.value = response.data.areas || [];
+    }
+  } catch (error) {
+    console.error('Error fetching filter options:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 // Methods
 const debouncedSearch = debounce(() => {
   emitFilters();
 }, 300);
 
-const emitFilters = () => {
-  const filters = {};
-  if (searchQuery.value) filters.q = searchQuery.value;
-  if (selectedTypes.value.length) {
-    filters.type = selectedTypes.value;
+// Watch for changes in search query
+watch(searchQuery, () => {
+  debouncedSearch();
+});
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event) => {
+  if (showAreaDropdown.value && !event.target.closest('.relative')) {
+    showAreaDropdown.value = false;
   }
+};
+
+// Add event listener for click outside
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+  fetchFilterOptions();
+});
+
+// Remove event listener when component is unmounted
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+
+// Add an area to the selected areas
+const addArea = (areaName) => {
+  if (!selectedAreas.value.includes(areaName)) {
+    selectedAreas.value.push(areaName);
+    emitFilters();
+  }
+  areaSearchQuery.value = ''; // Clear search after selection
+};
+
+// Remove an area from the selected areas
+const removeArea = (areaName) => {
+  selectedAreas.value = selectedAreas.value.filter(area => area !== areaName);
+  emitFilters();
+};
+
+const emitFilters = () => {
+  // Create an empty filter object
+  const filters: DegreeFilterParams = {};
+
+  // Add name search filter
+  if (searchQuery.value) {
+    filters.name = searchQuery.value;
+  }
+
+  // Add area names filter
+  if (selectedAreas.value.length > 0) {
+    filters.area_names = selectedAreas.value;
+  }
+
   emit('update:filters', filters);
 };
 
@@ -149,9 +301,13 @@ const handleFilterChange = () => {
 
 const resetAllFilters = () => {
   searchQuery.value = '';
-  selectedTypes.value = [];
+  selectedAreas.value = [];
+  areaSearchQuery.value = '';
+  showAreaDropdown.value = false;
   emit('reset');
 };
+
+// Note: We already have an onMounted hook above that includes fetchFilterOptions
 </script>
 
 <style scoped>
