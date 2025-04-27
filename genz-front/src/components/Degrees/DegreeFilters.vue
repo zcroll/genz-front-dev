@@ -72,7 +72,7 @@
               >
                 {{ area }}
                 <button
-                  @click="removeArea(area)"
+                  @click.stop="removeArea(area)"
                   class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                   <span class="sr-only">Remove</span>
@@ -84,7 +84,7 @@
             </div>
 
             <!-- Search for areas with dropdown -->
-            <div class="relative">
+            <div class="relative area-dropdown-container">
               <div class="relative">
                 <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
                   :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
@@ -93,6 +93,7 @@
                   type="search"
                   placeholder="Search and select areas of study"
                   @focus="showAreaDropdown = true"
+                  @click.stop="showAreaDropdown = true"
                   :class="[
                     'w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm',
                     themeStore.isDarkMode
@@ -118,7 +119,7 @@
                   <div
                     v-for="area in filteredAreas"
                     :key="area.name"
-                    @click="addArea(area.name)"
+                    @click.stop="addArea(area.name)"
                     class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                     :class="[
                       themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700',
@@ -245,10 +246,24 @@ watch(searchQuery, () => {
   debouncedSearch();
 });
 
+// Watch for changes in area search query
+watch(areaSearchQuery, () => {
+  if (areaSearchQuery.value.length > 0) {
+    showAreaDropdown.value = true;
+  }
+});
+
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-  if (showAreaDropdown.value && !event.target.closest('.relative')) {
-    showAreaDropdown.value = false;
+  // Only process if dropdown is open
+  if (showAreaDropdown.value) {
+    // Check if click is outside the dropdown container
+    const isClickOutside = !event.target.closest('.area-dropdown-container');
+
+    if (isClickOutside) {
+      showAreaDropdown.value = false;
+      console.log('Closing dropdown due to outside click');
+    }
   }
 };
 
@@ -270,6 +285,7 @@ const addArea = (areaName) => {
     emitFilters();
   }
   areaSearchQuery.value = ''; // Clear search after selection
+  showAreaDropdown.value = false; // Close dropdown after selection
 };
 
 // Remove an area from the selected areas

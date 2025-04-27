@@ -35,6 +35,10 @@ export const useNavigationStore = defineStore('navigation', () => {
       path: '/degrees',
       component: 'Degrees'
     },
+    'careers.index': {
+      path: '/careers',
+      component: 'Careers'
+    },
     'formations.index': {
       path: '/formations',
       component: 'Formations'
@@ -62,4 +66,4 @@ export const useNavigationStore = defineStore('navigation', () => {
     navigationMappings,
     isRouteActive
   }
-}) 
+})

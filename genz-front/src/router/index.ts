@@ -66,6 +66,24 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/careers',
+    name: 'careers.index',
+    component: () => import('../views/Careers.vue'),
+    meta: {
+      title: 'Careers',
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/careers/:slug',
+    name: 'career-details',
+    component: () => import('../views/CareerDetails.vue'),
+    meta: {
+      title: 'Career Details',
+      requiresAuth: true
+    }
+  },
+  {
     path: '/formations',
     name: 'formations.index',
     component: () => import('../views/Formations.vue'),

@@ -93,6 +93,7 @@ const navigationItems = [
   { name: 'Dashboard', route: 'dashboard', icon: HomeIcon },
   { name: 'Results', route: 'results', icon: ClipboardDocumentListIcon },
   { name: 'Jobs', route: 'jobs.index', icon: BriefcaseIcon },
+  { name: 'Careers', route: 'careers.index', icon: BriefcaseIcon },
   { name: 'Degrees', route: 'degrees.index', icon: AcademicCapIcon },
   { name: 'Formations', route: 'formations.index', icon: BookOpenIcon }
 ];
