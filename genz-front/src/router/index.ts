@@ -8,7 +8,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: () => import('../views/Home.vue'),
     meta: {
-      title: 'Home'
+      title: 'Home',
+      allowAll: true // This route is accessible to both authenticated and non-authenticated users
     }
   },
   {
@@ -128,6 +129,7 @@ router.beforeEach(async (to, from, next) => {
   // Check if the route requires authentication
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const isGuestOnly = to.matched.some(record => record.meta.guest)
+  const allowAll = to.matched.some(record => record.meta.allowAll)
 
   // Get the user store
   const userStore = useUserStore()
@@ -146,6 +148,10 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'login' })
   } else if (isGuestOnly && isLoggedIn) {
     // If route is for guests only and user is logged in, redirect to dashboard
+    next({ name: 'dashboard' })
+  } else if (to.name === 'home' && isLoggedIn && !allowAll) {
+    // If user is logged in and trying to access home, redirect to dashboard
+    // unless the route is explicitly marked as allowAll
     next({ name: 'dashboard' })
   } else {
     // Otherwise proceed as normal

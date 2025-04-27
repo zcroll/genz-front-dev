@@ -115,25 +115,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted, provide } from 'vue'
+import { ref, onMounted, provide, computed } from 'vue'
 import { Search, Bell } from 'lucide-vue-next'
 import { UserIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import { useThemeStore } from '@/stores/theme'
 import { useNavigationStore } from '@/stores/navigation/navigationStore'
+import { useUserStore } from '@/stores/user'
 import NotificationDropdown from '@/components/ui/notification/NotificationDropdown.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const themeStore = useThemeStore()
 const navigationStore = useNavigationStore()
+const userStore = useUserStore()
 const isLayoutInitialized = ref(false)
 
-// Mock user data (replace with actual auth logic later)
-const user = {
-  name: 'User',
-  profile_photo_url: 'https://ui-avatars.com/api/?name=User&color=7F9CF5&background=EBF4FF'
-}
+// Check if user is logged in
+const isLoggedIn = computed(() => userStore.isLoggedIn)
+
+// Get user data from user store
+const user = computed(() => {
+  if (isLoggedIn.value) {
+    return {
+      name: userStore.userName || 'User',
+      profile_photo_url: userStore.user?.profile_photo_url || 'https://ui-avatars.com/api/?name=User&color=7F9CF5&background=EBF4FF'
+    }
+  }
+  return {
+    name: 'User',
+    profile_photo_url: 'https://ui-avatars.com/api/?name=User&color=7F9CF5&background=EBF4FF'
+  }
+})
 
 // Provide layout initialization state to child components
 provide('isLayoutInitialized', isLayoutInitialized)
@@ -141,9 +154,14 @@ provide('isLayoutInitialized', isLayoutInitialized)
 provide('user', user)
 
 onMounted(() => {
+  // Redirect to login if not authenticated
+  if (!isLoggedIn.value) {
+    router.push('/login')
+    return
+  }
+
   // Mark layout as initialized
   isLayoutInitialized.value = true
-
   console.log('MainLayout initialized')
 })
 
@@ -154,10 +172,9 @@ defineProps({
   }
 })
 
-const logout = () => {
-  // Replace with actual logout logic
-  console.log('Logout clicked')
-  // router.push('/login')
+const logout = async () => {
+  await userStore.logout()
+  router.push('/login')
 };
 </script>
 

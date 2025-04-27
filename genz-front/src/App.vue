@@ -1,26 +1,41 @@
 <script setup lang="ts">
 import { useThemeStore } from './stores/theme'
+import { useUserStore } from './stores/user'
 import MainLayout from "@/layout/Main-layout.vue";
-import HomeLayout from "@/layout/Home-layout.vue";
+import HomeMainLayout from "@/layout/Home-main-layout.vue";
 import { RouterView, useRoute } from 'vue-router'
 import { computed } from 'vue'
 
-// Initialize theme store
+// Initialize stores
 const themeStore = useThemeStore()
+const userStore = useUserStore()
 const route = useRoute()
 
-// Determine which layout to use based on the current route
+// Check if user is logged in
+const isLoggedIn = computed(() => userStore.isLoggedIn)
+
+// Determine which layout to use based on the current route and auth status
 const isHomePage = computed(() => route.name === 'home')
+const isGuestOnlyPage = computed(() => {
+  return route.matched.some(record => record.meta.guest)
+})
+
+// Determine if we should use the main layout
+// Only use MainLayout for authenticated users and non-guest pages
+const useMainLayout = computed(() => {
+  return !isHomePage.value && isLoggedIn.value && !isGuestOnlyPage.value
+})
 </script>
 
 <template>
-  <!-- Use HomeLayout for home page, MainLayout for other pages -->
-  <HomeLayout v-if="isHomePage" title="GenZ App">
+  <!-- Use HomeMainLayout for home page, MainLayout for authenticated non-guest pages, and no layout for guest pages -->
+  <HomeMainLayout v-if="isHomePage" title="GenZ App">
     <RouterView />
-  </HomeLayout>
-  <MainLayout v-else title="GenZ App">
+  </HomeMainLayout>
+  <MainLayout v-else-if="useMainLayout" title="GenZ App">
     <RouterView />
   </MainLayout>
+  <RouterView v-else />
 </template>
 
 <style scoped>

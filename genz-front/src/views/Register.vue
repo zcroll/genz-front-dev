@@ -40,7 +40,7 @@ const error = ref('');
 const onSubmit = async (values) => {
   isSubmitting.value = true;
   error.value = '';
-  
+
   try {
     await userStore.register(
       values.name,
@@ -61,52 +61,79 @@ const onSubmit = async (values) => {
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-md mx-auto">
       <h1 class="text-2xl font-bold mb-6">Register</h1>
-      
+
       <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         {{ error }}
       </div>
-      
+
       <Form :schema="schema" @submit="onSubmit">
         <FormField name="name">
           <FormItem>
             <FormLabel required>Name</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter your name" />
+            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+              <Input 
+                :model-value="modelValue" 
+                :error="error" 
+                placeholder="Enter your name" 
+                @update:model-value="onUpdateModelValue" 
+                @blur="onBlur" 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        
+
         <FormField name="email">
           <FormItem>
             <FormLabel required>Email</FormLabel>
-            <FormControl>
-              <Input type="email" placeholder="Enter your email" />
+            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+              <Input 
+                type="email" 
+                :model-value="modelValue" 
+                :error="error" 
+                placeholder="Enter your email" 
+                @update:model-value="onUpdateModelValue" 
+                @blur="onBlur" 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        
+
         <FormField name="password">
           <FormItem>
             <FormLabel required>Password</FormLabel>
-            <FormControl>
-              <Input type="password" placeholder="Create a password" />
+            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+              <Input 
+                type="password" 
+                :model-value="modelValue" 
+                :error="error" 
+                placeholder="Create a password" 
+                @update:model-value="onUpdateModelValue" 
+                @blur="onBlur" 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        
+
         <FormField name="password_confirmation">
           <FormItem>
             <FormLabel required>Confirm Password</FormLabel>
-            <FormControl>
-              <Input type="password" placeholder="Confirm your password" />
+            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+              <Input 
+                type="password" 
+                :model-value="modelValue" 
+                :error="error" 
+                placeholder="Confirm your password" 
+                @update:model-value="onUpdateModelValue" 
+                @blur="onBlur" 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        
+
         <div class="mt-6">
           <button 
             type="submit" 
@@ -116,7 +143,7 @@ const onSubmit = async (values) => {
             {{ isSubmitting ? 'Registering...' : 'Register' }}
           </button>
         </div>
-        
+
         <div class="mt-4 text-center">
           <p>
             Already have an account?

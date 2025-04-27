@@ -1,18 +1,18 @@
 import axios from 'axios';
+import { get, post } from './api';
 
 // Register
 export async function register(name: string, email: string, password: string, password_confirmation: string) {
     try {
         await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/api/register', {
+        return await post('/register', {
             name,
             email,
             password,
             password_confirmation
         });
-        return response.data;
     } catch (error: any) {
-        throw error.response?.data || error;
+        throw error.response?.data;
     }
 }
 
@@ -20,32 +20,29 @@ export async function register(name: string, email: string, password: string, pa
 export async function login(email: string, password: string) {
     try {
         await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/api/login', {
+        return await post('/login', {
             email,
             password
         });
-        return response.data;
     } catch (error: any) {
-        throw error.response?.data || error;
+        throw error.response?.data;
     }
 }
 
 // Logout
 export async function logout() {
     try {
-        const response = await axios.post('/api/logout');
-        return response.data;
+        return await post('/logout');
     } catch (error: any) {
-        throw error.response?.data || error;
+        throw error.response?.data;
     }
 }
 
 // Get authenticated user
 export async function getUser() {
     try {
-        const response = await axios.get('/api/user');
-        return response.data;
+        return await get('/user');
     } catch (error: any) {
-        throw error.response?.data || error;
+        throw error.response?.data;
     }
 }

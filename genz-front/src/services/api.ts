@@ -1,7 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create a base API instance with common configuration
-const apiClient: AxiosInstance = axios.create({
+const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1',
   headers: {
     'Content-Type': 'application/json',
@@ -33,23 +34,23 @@ apiClient.interceptors.response.use(
     if (error.response) {
       // Server responded with an error status
       const status = error.response.status;
-      
+
       if (status === 401) {
         // Unauthorized - clear auth state and redirect to login
         localStorage.removeItem('auth_token');
         // You could also use a store action here to log the user out
       }
-      
+
       if (status === 403) {
         // Forbidden - user doesn't have permission
         console.error('You do not have permission to access this resource');
       }
-      
+
       if (status === 404) {
         // Not found
         console.error('Resource not found');
       }
-      
+
       if (status === 500) {
         // Server error
         console.error('Server error occurred');
@@ -61,7 +62,7 @@ apiClient.interceptors.response.use(
       // Something else happened while setting up the request
       console.error('Error setting up request:', error.message);
     }
-    
+
     return Promise.reject(error);
   }
 );

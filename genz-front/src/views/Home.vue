@@ -1,22 +1,39 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
+import { useUserStore } from '@/stores/user'
+import { computed } from 'vue'
 
 const themeStore = useThemeStore()
+const userStore = useUserStore()
+
+// Check if user is logged in
+const isLoggedIn = computed(() => userStore.isLoggedIn)
+const userName = computed(() => userStore.userName)
 </script>
 
 <template>
   <div class="home-container">
     <div class="hero-section">
-      <h1 class="text-4xl font-bold mb-4">Welcome to GenZ</h1>
-      <p class="text-xl mb-8">Discover your ideal career path and educational opportunities</p>
+      <h1 class="text-5xl font-bold mb-6" v-if="isLoggedIn">Welcome back, {{ userName }}!</h1>
+      <h1 class="text-5xl font-bold mb-6" v-else>Welcome to GenZ</h1>
+      <p class="text-2xl mb-12 text-gray-600 dark:text-gray-300">Discover your ideal career path and educational opportunities</p>
 
-      <div class="cta-buttons">
+      <!-- Show different buttons based on authentication status -->
+      <div class="cta-buttons" v-if="!isLoggedIn">
         <RouterLink to="/test" class="cta-button primary-button" :class="`bg-${themeStore.color}-500 hover:bg-${themeStore.color}-600`">
           Take a Test
         </RouterLink>
         <RouterLink to="/login" class="cta-button secondary-button" :class="`border-${themeStore.color}-500 text-${themeStore.color}-500 hover:bg-${themeStore.color}-50`">
           Login
+        </RouterLink>
+      </div>
+      <div class="cta-buttons" v-else>
+        <RouterLink to="/dashboard" class="cta-button primary-button" :class="`bg-${themeStore.color}-500 hover:bg-${themeStore.color}-600`">
+          Go to Dashboard
+        </RouterLink>
+        <RouterLink to="/test" class="cta-button secondary-button" :class="`border-${themeStore.color}-500 text-${themeStore.color}-500 hover:bg-${themeStore.color}-50`">
+          Take a Test
         </RouterLink>
       </div>
     </div>
@@ -44,7 +61,6 @@ const themeStore = useThemeStore()
 .home-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .hero-section {
@@ -97,5 +113,18 @@ const themeStore = useThemeStore()
 
 .dark .feature-card {
   background-color: rgba(31, 41, 55, 0.8);
+}
+
+/* Dark mode text colors */
+.dark h1 {
+  color: white;
+}
+
+.dark h2 {
+  color: white;
+}
+
+.dark p {
+  color: #d1d5db;
 }
 </style>
