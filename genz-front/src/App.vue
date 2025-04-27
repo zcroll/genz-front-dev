@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import { useThemeStore } from './stores/theme'
 import MainLayout from "@/layout/Main-layout.vue";
-import { RouterView } from 'vue-router'
+import HomeLayout from "@/layout/Home-layout.vue";
+import { RouterView, useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 // Initialize theme store
 const themeStore = useThemeStore()
+const route = useRoute()
+
+// Determine which layout to use based on the current route
+const isHomePage = computed(() => route.name === 'home')
 </script>
 
 <template>
-  <MainLayout title="GenZ App">
+  <!-- Use HomeLayout for home page, MainLayout for other pages -->
+  <HomeLayout v-if="isHomePage" title="GenZ App">
+    <RouterView />
+  </HomeLayout>
+  <MainLayout v-else title="GenZ App">
     <RouterView />
   </MainLayout>
 </template>

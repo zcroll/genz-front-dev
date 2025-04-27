@@ -12,11 +12,38 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/test',
+    name: 'test',
+    component: () => import('../views/Test.vue'),
+    meta: {
+      title: 'Take a Test'
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/Login.vue'),
+    meta: {
+      title: 'Login',
+      guest: true
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/Register.vue'),
+    meta: {
+      title: 'Register',
+      guest: true
+    }
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../views/Dashboard.vue'),
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
+      requiresAuth: true
     }
   },
   {
@@ -24,7 +51,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'jobs.index',
     component: () => import('../views/Jobs.vue'),
     meta: {
-      title: 'Jobs'
+      title: 'Jobs',
+      requiresAuth: true
     }
   },
   {
@@ -32,7 +60,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'degrees.index',
     component: () => import('../views/Degrees.vue'),
     meta: {
-      title: 'Degrees'
+      title: 'Degrees',
+      requiresAuth: true
     }
   },
   {
@@ -40,7 +69,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'formations.index',
     component: () => import('../views/Formations.vue'),
     meta: {
-      title: 'Formations'
+      title: 'Formations',
+      requiresAuth: true
     }
   },
   {
@@ -48,7 +78,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'results',
     component: () => import('../views/Results.vue'),
     meta: {
-      title: 'Results'
+      title: 'Results',
+      requiresAuth: true
     }
   },
   {
@@ -86,11 +117,40 @@ const router = createRouter({
   }
 })
 
-// Global navigation guard for page titles
-router.beforeEach((to, from, next) => {
+// Import the user store
+import { useUserStore } from '@/stores/user'
+
+// Global navigation guard for authentication and page titles
+router.beforeEach(async (to, from, next) => {
   // Set page title based on route meta
   document.title = `GenZ - ${to.meta.title || 'App'}`
-  next()
+
+  // Check if the route requires authentication
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const isGuestOnly = to.matched.some(record => record.meta.guest)
+
+  // Get the user store
+  const userStore = useUserStore()
+
+  // Initialize the user store if not already initialized
+  if (!userStore.initialized) {
+    await userStore.init()
+    userStore.initialized = true
+  }
+
+  // Check if user is logged in
+  const isLoggedIn = userStore.isLoggedIn
+
+  if (requiresAuth && !isLoggedIn) {
+    // If route requires auth and user is not logged in, redirect to login
+    next({ name: 'login' })
+  } else if (isGuestOnly && isLoggedIn) {
+    // If route is for guests only and user is logged in, redirect to dashboard
+    next({ name: 'dashboard' })
+  } else {
+    // Otherwise proceed as normal
+    next()
+  }
 })
 
 export default router

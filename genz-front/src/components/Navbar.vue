@@ -4,6 +4,7 @@
       ? 'flex-row justify-around py-4 px-2 w-full'
       : 'flex-col items-center gap-5 pt-20'
   ]" class="flex">
+    <!-- Main Navigation Items -->
     <RouterLink v-for="(item, index) in navigationItems" :key="item.route" :to="navigationStore.navigationMappings[item.route].path"
       class="nav-link group relative transition-all duration-300" :class="[
         isMobile
@@ -18,53 +19,140 @@
             ? 'text-gray-400'
             : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
       ]">
-    <div class="relative z-10">
-      <component :is="item.icon" class="nav-icon transition-all duration-300 ease-in-out" :class="[
-        isMobile ? 'h-6 w-6' : 'h-7 w-7',
-        navigationStore.isRouteActive(item.route)
-          ? isMobile
+      <div class="relative z-10">
+        <component :is="item.icon" class="nav-icon transition-all duration-300 ease-in-out" :class="[
+          isMobile ? 'h-6 w-6' : 'h-7 w-7',
+          navigationStore.isRouteActive(item.route)
+            ? isMobile
+              ? `text-${themeStore.color}-500`
+              : 'text-white transform scale-110'
+            : isMobile
+              ? 'text-gray-400 group-hover:text-gray-300'
+              : [`text-${themeStore.color}-500`, `group-hover:text-${themeStore.color}-600`]
+        ]" />
+
+        <!-- Navigation Label -->
+        <span class="text-xs font-medium" v-if="isMobile" :class="[
+          navigationStore.isRouteActive(item.route)
             ? `text-${themeStore.color}-500`
-            : 'text-white transform scale-110'
+            : 'text-gray-400 group-hover:text-gray-300'
+        ]">
+          {{ item.name }}
+        </span>
+        <span v-if="!isMobile" class="nav-tooltip" :class="[`text-${themeStore.color}-500`]">
+          {{ item.name }}
+        </span>
+      </div>
+
+      <!-- Glass effect overlay -->
+      <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
+        `bg-${themeStore.color}-50/10`,
+        isMobile ? 'rounded-xl' : 'rounded-full'
+      ]" style="backdrop-filter: blur(8px);">
+      </div>
+    </RouterLink>
+
+    <!-- Login Button for Guests -->
+    <RouterLink v-if="!isLoggedIn" to="/login"
+      class="nav-link group relative transition-all duration-300" :class="[
+        isMobile
+          ? 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl hover:bg-white/10'
+          : 'h-14 w-14 rounded-full flex items-center justify-center mt-auto mb-10',
+        navigationStore.isRouteActive('login')
+          ? isMobile
+            ? `text-${themeStore.color}-500 bg-white/10 dark:bg-gray-800/40`
+            : [`bg-${themeStore.color}-500`, 'shadow-lg']
           : isMobile
+            ? 'text-gray-400'
+            : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
+      ]">
+      <div class="relative z-10">
+        <UserIcon class="nav-icon transition-all duration-300 ease-in-out" :class="[
+          isMobile ? 'h-6 w-6' : 'h-7 w-7',
+          navigationStore.isRouteActive('login')
+            ? isMobile
+              ? `text-${themeStore.color}-500`
+              : 'text-white transform scale-110'
+            : isMobile
+              ? 'text-gray-400 group-hover:text-gray-300'
+              : [`text-${themeStore.color}-500`, `group-hover:text-${themeStore.color}-600`]
+        ]" />
+
+        <!-- Navigation Label -->
+        <span class="text-xs font-medium" v-if="isMobile" :class="[
+          navigationStore.isRouteActive('login')
+            ? `text-${themeStore.color}-500`
+            : 'text-gray-400 group-hover:text-gray-300'
+        ]">
+          Login
+        </span>
+        <span v-if="!isMobile" class="nav-tooltip" :class="[`text-${themeStore.color}-500`]">
+          Login
+        </span>
+      </div>
+
+      <!-- Glass effect overlay -->
+      <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
+        `bg-${themeStore.color}-50/10`,
+        isMobile ? 'rounded-xl' : 'rounded-full'
+      ]" style="backdrop-filter: blur(8px);">
+      </div>
+    </RouterLink>
+
+    <!-- Logout Button for Authenticated Users -->
+    <button v-if="isLoggedIn" @click="handleLogout"
+      class="nav-link group relative transition-all duration-300" :class="[
+        isMobile
+          ? 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl hover:bg-white/10'
+          : 'h-14 w-14 rounded-full flex items-center justify-center mt-auto mb-10',
+        isMobile
+          ? 'text-gray-400'
+          : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
+      ]">
+      <div class="relative z-10">
+        <ArrowRightOnRectangleIcon class="nav-icon transition-all duration-300 ease-in-out" :class="[
+          isMobile ? 'h-6 w-6' : 'h-7 w-7',
+          isMobile
             ? 'text-gray-400 group-hover:text-gray-300'
             : [`text-${themeStore.color}-500`, `group-hover:text-${themeStore.color}-600`]
-      ]" />
+        ]" />
 
-      <!-- Navigation Label -->
-      <span class="text-xs font-medium" v-if="isMobile" :class="[
-        navigationStore.isRouteActive(item.route)
-          ? `text-${themeStore.color}-500`
-          : 'text-gray-400 group-hover:text-gray-300'
-      ]">
-        {{ item.name }}
-      </span>
-      <span v-if="!isMobile" class="nav-tooltip" :class="[`text-${themeStore.color}-500`]">
-        {{ item.name }}
-      </span>
-    </div>
+        <!-- Navigation Label -->
+        <span class="text-xs font-medium" v-if="isMobile" :class="[
+          'text-gray-400 group-hover:text-gray-300'
+        ]">
+          Logout
+        </span>
+        <span v-if="!isMobile" class="nav-tooltip" :class="[`text-${themeStore.color}-500`]">
+          Logout
+        </span>
+      </div>
 
-    <!-- Glass effect overlay -->
-    <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
-      `bg-${themeStore.color}-50/10`,
-      isMobile ? 'rounded-xl' : 'rounded-full'
-    ]" style="backdrop-filter: blur(8px);">
-    </div>
-    </RouterLink>
+      <!-- Glass effect overlay -->
+      <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
+        `bg-${themeStore.color}-50/10`,
+        isMobile ? 'rounded-xl' : 'rounded-full'
+      ]" style="backdrop-filter: blur(8px);">
+      </div>
+    </button>
   </nav>
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import {
   HomeIcon,
   ClipboardDocumentListIcon,
   BriefcaseIcon,
   AcademicCapIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme';
 import { useNavigationStore } from '@/stores/navigation/navigationStore';
+import { useUserStore } from '@/stores/user';
 
 defineProps({
   isMobile: {
@@ -73,7 +161,8 @@ defineProps({
   }
 });
 
-const navigationItems = [
+// Navigation items that require authentication
+const authNavigationItems = [
   { name: 'Dashboard', route: 'dashboard', icon: HomeIcon },
   { name: 'Results', route: 'results', icon: ClipboardDocumentListIcon },
   { name: 'Jobs', route: 'jobs.index', icon: BriefcaseIcon },
@@ -81,8 +170,29 @@ const navigationItems = [
   { name: 'Formations', route: 'formations.index', icon: BookOpenIcon }
 ];
 
+// Navigation items for guests
+const guestNavigationItems = [
+  { name: 'Home', route: 'home', icon: HomeIcon }
+];
+
+// Computed navigation items based on authentication status
+const navigationItems = computed(() => {
+  return isLoggedIn.value ? authNavigationItems : guestNavigationItems;
+});
+
 const themeStore = useThemeStore();
 const navigationStore = useNavigationStore();
+const userStore = useUserStore();
+const router = useRouter();
+
+// Check if user is logged in
+const isLoggedIn = computed(() => userStore.isLoggedIn);
+
+// Handle logout
+const handleLogout = async () => {
+  await userStore.logout();
+  router.push('/login');
+};
 </script>
 
 <style scoped>

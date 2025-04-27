@@ -11,6 +11,18 @@ export const useNavigationStore = defineStore('navigation', () => {
 
   // Navigation items with their paths and components
   const navigationMappings = {
+    'home': {
+      path: '/',
+      component: 'Home'
+    },
+    'login': {
+      path: '/login',
+      component: 'Login'
+    },
+    'register': {
+      path: '/register',
+      component: 'Register'
+    },
     'dashboard': {
       path: '/dashboard',
       component: 'Dashboard'
