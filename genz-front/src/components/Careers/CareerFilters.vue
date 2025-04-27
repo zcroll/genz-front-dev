@@ -39,6 +39,113 @@
 
         <!-- Filter Groups -->
         <div v-else class="space-y-6">
+          <!-- Related Degrees Filter -->
+          <div :class="[
+            'filter-section transition-all duration-200 rounded-lg p-4',
+            themeStore.isDarkMode
+              ? 'bg-gray-900/50 border-gray-800/30'
+              : 'bg-white/50 border-white/20'
+          ]">
+            <label class="filter-label flex items-center gap-2 mb-3 font-medium">
+              <AcademicCapIcon :class="[
+                'h-4 w-4',
+                themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+              ]" />
+              <span :class="[
+                themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+              ]">
+                Related Degrees
+              </span>
+            </label>
+
+            <!-- Selected Degrees Tags -->
+            <div v-if="selectedDegrees.length > 0" class="flex flex-wrap gap-2 mb-3">
+              <div
+                v-for="degree in selectedDegreesWithNames"
+                :key="degree.id"
+                :class="[
+                  'inline-flex items-center px-2 py-1 rounded-full text-xs',
+                  themeStore.isDarkMode
+                    ? 'bg-gray-700 text-gray-200'
+                    : 'bg-gray-200 text-gray-800'
+                ]"
+              >
+                {{ degree.name }}
+                <button
+                  @click.stop="removeDegree(degree.id)"
+                  class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <span class="sr-only">Remove</span>
+                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Search for degrees with dropdown -->
+            <div class="relative degree-dropdown-container">
+              <div class="relative">
+                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
+                  :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+                <input
+                  v-model="degreeSearchQuery"
+                  type="search"
+                  placeholder="Search and select degrees"
+                  @focus="showDegreeDropdown = true"
+                  @click.stop="showDegreeDropdown = true"
+                  :class="[
+                    'w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm',
+                    themeStore.isDarkMode
+                      ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
+                      : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
+                    `focus:border-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`,
+                    `focus:ring-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`
+                  ]"
+                />
+              </div>
+
+              <!-- Dropdown for degrees -->
+              <div
+                v-if="showDegreeDropdown && filteredDegrees.length > 0"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg"
+                :class="[
+                  themeStore.isDarkMode
+                    ? 'bg-gray-800 border border-gray-700'
+                    : 'bg-white border border-gray-200'
+                ]"
+              >
+                <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+                  <div
+                    v-for="degree in filteredDegrees"
+                    :key="degree.id"
+                    @click.stop="addDegree(degree.id)"
+                    class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    :class="[
+                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700',
+                      selectedDegrees.includes(degree.id) ? 'bg-gray-100 dark:bg-gray-700' : ''
+                    ]"
+                  >
+                    {{ degree.name }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- No results message -->
+              <div
+                v-if="showDegreeDropdown && degreeSearchQuery && filteredDegrees.length === 0"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center"
+                :class="[
+                  themeStore.isDarkMode
+                    ? 'bg-gray-800 border border-gray-700 text-gray-400'
+                    : 'bg-white border border-gray-200 text-gray-500'
+                ]"
+              >
+                No matching degrees found
+              </div>
+            </div>
+          </div>
+
           <!-- Industries Filter -->
           <div :class="[
             'filter-section transition-all duration-200 rounded-lg p-4',
@@ -60,8 +167,8 @@
 
             <!-- Selected Industries Tags -->
             <div v-if="selectedIndustries.length > 0" class="flex flex-wrap gap-2 mb-3">
-              <div 
-                v-for="industry in selectedIndustriesWithNames" 
+              <div
+                v-for="industry in selectedIndustriesWithNames"
                 :key="industry.id"
                 :class="[
                   'inline-flex items-center px-2 py-1 rounded-full text-xs',
@@ -71,7 +178,7 @@
                 ]"
               >
                 {{ industry.name }}
-                <button 
+                <button
                   @click.stop="removeIndustry(industry.id)"
                   class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
@@ -104,10 +211,10 @@
                   ]"
                 />
               </div>
-              
+
               <!-- Dropdown for industries -->
-              <div 
-                v-if="showIndustryDropdown && filteredIndustries.length > 0" 
+              <div
+                v-if="showIndustryDropdown && filteredIndustries.length > 0"
                 class="absolute z-10 mt-1 w-full rounded-md shadow-lg"
                 :class="[
                   themeStore.isDarkMode
@@ -116,8 +223,8 @@
                 ]"
               >
                 <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
-                  <div 
-                    v-for="industry in filteredIndustries" 
+                  <div
+                    v-for="industry in filteredIndustries"
                     :key="industry.id"
                     @click.stop="addIndustry(industry.id)"
                     class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -130,10 +237,10 @@
                   </div>
                 </div>
               </div>
-              
+
               <!-- No results message -->
-              <div 
-                v-if="showIndustryDropdown && industrySearchQuery && filteredIndustries.length === 0" 
+              <div
+                v-if="showIndustryDropdown && industrySearchQuery && filteredIndustries.length === 0"
                 class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center"
                 :class="[
                   themeStore.isDarkMode
@@ -146,119 +253,228 @@
             </div>
           </div>
 
-          <!-- Sort Options -->
+          <!-- Employment Filters Section -->
           <div :class="[
-            'filter-section transition-all duration-200 rounded-lg p-4',
+            'filter-section transition-all duration-200 rounded-lg p-5',
             themeStore.isDarkMode
               ? 'bg-gray-900/50 border-gray-800/30'
               : 'bg-white/50 border-white/20'
           ]">
-            <label class="filter-label flex items-center gap-2 mb-3 font-medium">
-              <ArrowsUpDownIcon :class="[
-                'h-4 w-4',
-                themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-              ]" />
-              <span :class="[
-                themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+            <!-- Section Title -->
+            <div class="flex items-center justify-between mb-5">
+              <h3 :class="[
+                'text-lg font-medium',
+                themeStore.isDarkMode ? 'text-white' : 'text-gray-800'
               ]">
-                Sort By
-              </span>
-            </label>
+                Employment
+              </h3>
+              <button
+                @click="showEmploymentInfo = !showEmploymentInfo"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                aria-label="Show employment filter information"
+              >
+                <InformationCircleIcon class="h-5 w-5" />
+              </button>
+            </div>
 
-            <div class="space-y-2">
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-default"
-                  :value="null"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-default" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Default
+            <!-- Info Panel -->
+            <div
+              v-if="showEmploymentInfo"
+              class="mb-5 p-3 rounded-lg text-sm"
+              :class="[
+                themeStore.isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+              ]"
+            >
+              <p class="mb-2">Select options below to filter careers based on employment characteristics:</p>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><strong>Ease of Employment:</strong> How easy it is to get a job in that field</li>
+                <li><strong>Self-employment:</strong> How suitable the career is for being self-employed</li>
+                <li><strong>Type of Employment:</strong> What kind of work schedule the job usually offers</li>
+              </ul>
+            </div>
+
+            <!-- Ease of Employment -->
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-3">
+                <label class="filter-label flex items-center gap-2 font-medium">
+                  <UserPlusIcon :class="[
+                    'h-4 w-4',
+                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                  ]" />
+                  <span :class="[
+                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                  ]">
+                    Ease of Employment
+                  </span>
                 </label>
+                <button
+                  v-if="selectedEaseOfEmployment"
+                  @click="selectedEaseOfEmployment = null; handleFilterChange();"
+                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  Clear
+                </button>
               </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-name"
-                  value="name"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-name" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Name (A-Z)
-                </label>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="(label, value) in easeOfEmploymentOptions"
+                  :key="value"
+                  @click="selectedEaseOfEmployment = value; handleFilterChange();"
+                  :class="[
+                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
+                    selectedEaseOfEmployment === value
+                      ? `bg-${themeStore.color}-500 text-white`
+                      : themeStore.isDarkMode
+                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ]"
+                >
+                  {{ label }}
+                </button>
               </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-name-desc"
-                  value="-name"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-name-desc" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Name (Z-A)
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-salary"
-                  value="salary"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-salary" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Salary (Low to High)
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-salary-desc"
-                  value="-salary"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-salary-desc" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Salary (High to Low)
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-satisfaction"
-                  value="satisfaction_raw"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-satisfaction" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Satisfaction (Low to High)
-                </label>
-              </div>
-              <div class="flex items-center">
-                <input
-                  type="radio"
-                  id="sort-satisfaction-desc"
-                  value="-satisfaction_raw"
-                  v-model="selectedSort"
-                  @change="handleFilterChange"
-                  class="rounded-full text-amber-500 focus:ring-amber-500"
-                />
-                <label for="sort-satisfaction-desc" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Satisfaction (High to Low)
-                </label>
+
+              <!-- Description -->
+              <div v-if="selectedEaseOfEmployment" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                <p v-if="selectedEaseOfEmployment === 'Easy'">
+                  Jobs are generally available and hiring is frequent.
+                </p>
+                <p v-else-if="selectedEaseOfEmployment === 'Medium'">
+                  Jobs are available but moderately competitive.
+                </p>
+                <p v-else-if="selectedEaseOfEmployment === 'Hard'">
+                  Jobs are harder to find; highly competitive or limited openings.
+                </p>
               </div>
             </div>
+
+            <!-- Self Employment -->
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-3">
+                <label class="filter-label flex items-center gap-2 font-medium">
+                  <UserIcon :class="[
+                    'h-4 w-4',
+                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                  ]" />
+                  <span :class="[
+                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                  ]">
+                    Self-employment
+                  </span>
+                </label>
+                <button
+                  v-if="selectedSelfEmployment"
+                  @click="selectedSelfEmployment = null; handleFilterChange();"
+                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  Clear
+                </button>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="(label, value) in selfEmploymentOptions"
+                  :key="value"
+                  @click="selectedSelfEmployment = value; handleFilterChange();"
+                  :class="[
+                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
+                    selectedSelfEmployment === value
+                      ? `bg-${themeStore.color}-500 text-white`
+                      : themeStore.isDarkMode
+                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ]"
+                >
+                  {{ label }}
+                </button>
+              </div>
+
+              <!-- Description -->
+              <div v-if="selectedSelfEmployment" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                <p v-if="selectedSelfEmployment === 'Easy'">
+                  Easy to start your own business in that field.
+                </p>
+                <p v-else-if="selectedSelfEmployment === 'Medium'">
+                  Possible but requires some effort or risk.
+                </p>
+                <p v-else-if="selectedSelfEmployment === 'Hard'">
+                  Very difficult to be self-employed; jobs are mostly employer-based.
+                </p>
+              </div>
+            </div>
+
+            <!-- Employment Type -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-3">
+                <label class="filter-label flex items-center gap-2 font-medium">
+                  <ClockIcon :class="[
+                    'h-4 w-4',
+                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                  ]" />
+                  <span :class="[
+                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                  ]">
+                    Type of Employment
+                  </span>
+                </label>
+                <button
+                  v-if="selectedEmploymentType"
+                  @click="selectedEmploymentType = null; handleFilterChange();"
+                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  Clear
+                </button>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="(label, value) in employmentTypeOptions"
+                  :key="value"
+                  @click="selectedEmploymentType = value; handleFilterChange();"
+                  :class="[
+                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
+                    selectedEmploymentType === value
+                      ? `bg-${themeStore.color}-500 text-white`
+                      : themeStore.isDarkMode
+                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ]"
+                >
+                  {{ label }}
+                </button>
+              </div>
+
+              <!-- Description -->
+              <div v-if="selectedEmploymentType" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                <p v-if="selectedEmploymentType === 'Part-time'">
+                  Mostly part-time roles.
+                </p>
+                <p v-else-if="selectedEmploymentType === 'Mixed'">
+                  Both part-time and full-time options exist.
+                </p>
+                <p v-else-if="selectedEmploymentType === 'Full-time'">
+                  Mostly full-time positions.
+                </p>
+              </div>
+            </div>
+
+            <!-- Apply Filters Button -->
+            <div class="flex justify-end mt-5">
+              <button
+                @click="applyEmploymentFilters"
+                :class="[
+                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                  `bg-${themeStore.color}-500 hover:bg-${themeStore.color}-600 text-white`
+                ]"
+              >
+                Apply Filters
+              </button>
+            </div>
           </div>
+
+
+
+
         </div>
 
         <!-- Reset Button -->
@@ -302,7 +518,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
-import { BuildingOfficeIcon, ArrowsUpDownIcon } from '@heroicons/vue/24/outline';
+import { BuildingOfficeIcon, UserPlusIcon, UserIcon, ClockIcon, AcademicCapIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme';
 import { fetchCareerFilterOptions } from '@/services/careerService';
 import type { CareerFilterParams, FilterOption } from '@/types/career';
@@ -315,13 +531,23 @@ const isLoading = ref(true);
 
 // Filter state
 const searchQuery = ref('');
+const selectedDegrees = ref<number[]>([]);
+const degreeSearchQuery = ref('');
+const showDegreeDropdown = ref(false);
 const selectedIndustries = ref<number[]>([]);
 const industrySearchQuery = ref('');
 const showIndustryDropdown = ref(false);
-const selectedSort = ref<string | null>(null);
+const selectedEaseOfEmployment = ref<string | null>(null);
+const selectedSelfEmployment = ref<string | null>(null);
+const selectedEmploymentType = ref<string | null>(null);
+const showEmploymentInfo = ref(false);
 
 // Filter options from API
 const industries = ref<FilterOption[]>([]);
+const degrees = ref<FilterOption[]>([]);
+const easeOfEmploymentOptions = ref<Record<string, string>>({});
+const selfEmploymentOptions = ref<Record<string, string>>({});
+const employmentTypeOptions = ref<Record<string, string>>({});
 
 // Computed properties
 const filteredIndustries = computed(() => {
@@ -330,6 +556,15 @@ const filteredIndustries = computed(() => {
   const query = industrySearchQuery.value.toLowerCase();
   return industries.value.filter(industry =>
     industry.name.toLowerCase().includes(query)
+  );
+});
+
+const filteredDegrees = computed(() => {
+  if (!degreeSearchQuery.value) return degrees.value;
+
+  const query = degreeSearchQuery.value.toLowerCase();
+  return degrees.value.filter(degree =>
+    degree.name.toLowerCase().includes(query)
   );
 });
 
@@ -343,6 +578,16 @@ const selectedIndustriesWithNames = computed(() => {
   });
 });
 
+const selectedDegreesWithNames = computed(() => {
+  return selectedDegrees.value.map(id => {
+    const degree = degrees.value.find(d => d.id === id);
+    return {
+      id,
+      name: degree ? degree.name : `Degree ${id}`
+    };
+  });
+});
+
 // Fetch filter options from API
 const fetchFilterOptions = async () => {
   try {
@@ -351,6 +596,10 @@ const fetchFilterOptions = async () => {
 
     if (response.success && response.data) {
       industries.value = response.data.industries || [];
+      degrees.value = response.data.degrees || [];
+      easeOfEmploymentOptions.value = response.data.ease_of_employment || {};
+      selfEmploymentOptions.value = response.data.self_employment || {};
+      employmentTypeOptions.value = response.data.employment_type || {};
     }
   } catch (error) {
     console.error('Error fetching filter options:', error);
@@ -376,16 +625,32 @@ watch(industrySearchQuery, () => {
   }
 });
 
+// Watch for changes in degree search query
+watch(degreeSearchQuery, () => {
+  if (degreeSearchQuery.value.length > 0) {
+    showDegreeDropdown.value = true;
+  }
+});
+
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-  // Only process if dropdown is open
+  // Handle industry dropdown
   if (showIndustryDropdown.value) {
     // Check if click is outside the dropdown container
     const isClickOutside = !event.target.closest('.industry-dropdown-container');
-    
+
     if (isClickOutside) {
       showIndustryDropdown.value = false;
-      console.log('Closing dropdown due to outside click');
+    }
+  }
+
+  // Handle degree dropdown
+  if (showDegreeDropdown.value) {
+    // Check if click is outside the dropdown container
+    const isClickOutside = !event.target.closest('.degree-dropdown-container');
+
+    if (isClickOutside) {
+      showDegreeDropdown.value = false;
     }
   }
 };
@@ -417,6 +682,22 @@ const removeIndustry = (industryId: number) => {
   emitFilters();
 };
 
+// Add a degree to the selected degrees
+const addDegree = (degreeId: number) => {
+  if (!selectedDegrees.value.includes(degreeId)) {
+    selectedDegrees.value.push(degreeId);
+    emitFilters();
+  }
+  degreeSearchQuery.value = ''; // Clear search after selection
+  showDegreeDropdown.value = false; // Close dropdown after selection
+};
+
+// Remove a degree from the selected degrees
+const removeDegree = (degreeId: number) => {
+  selectedDegrees.value = selectedDegrees.value.filter(id => id !== degreeId);
+  emitFilters();
+};
+
 const emitFilters = () => {
   // Create an empty filter object
   const filters: CareerFilterParams = {};
@@ -426,14 +707,29 @@ const emitFilters = () => {
     filters.name = searchQuery.value;
   }
 
+  // Add degree ids filter
+  if (selectedDegrees.value.length > 0) {
+    filters.degree_ids = selectedDegrees.value;
+  }
+
   // Add industry ids filter
   if (selectedIndustries.value.length > 0) {
     filters.industry_ids = selectedIndustries.value;
   }
 
-  // Add sort option
-  if (selectedSort.value) {
-    filters.sort = selectedSort.value;
+  // Add ease of employment filter
+  if (selectedEaseOfEmployment.value) {
+    filters.ease_of_employment = selectedEaseOfEmployment.value;
+  }
+
+  // Add self employment filter
+  if (selectedSelfEmployment.value) {
+    filters.self_employment = selectedSelfEmployment.value;
+  }
+
+  // Add employment type filter
+  if (selectedEmploymentType.value) {
+    filters.employment_type = selectedEmploymentType.value;
   }
 
   emit('update:filters', filters);
@@ -443,12 +739,23 @@ const handleFilterChange = () => {
   emitFilters();
 };
 
+const applyEmploymentFilters = () => {
+  // This will trigger the filter update with current employment filter values
+  handleFilterChange();
+};
+
 const resetAllFilters = () => {
   searchQuery.value = '';
+  selectedDegrees.value = [];
+  degreeSearchQuery.value = '';
   selectedIndustries.value = [];
   industrySearchQuery.value = '';
-  selectedSort.value = null;
+  selectedEaseOfEmployment.value = null;
+  selectedSelfEmployment.value = null;
+  selectedEmploymentType.value = null;
+  showDegreeDropdown.value = false;
   showIndustryDropdown.value = false;
+  showEmploymentInfo.value = false;
   emit('reset');
 };
 </script>
