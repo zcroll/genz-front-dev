@@ -1,10 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
         border: "var(--border)",
@@ -57,12 +65,75 @@ export default {
           4: "var(--chart-4)",
           5: "var(--chart-5)",
         },
+        // Theme colors for 16personalities.com-style themes
+        blue: {
+          50: "var(--blue-50)",
+          100: "var(--blue-100)",
+          200: "var(--blue-200)",
+          300: "var(--blue-300)",
+          400: "var(--blue-400)",
+          500: "var(--blue-500)",
+          600: "var(--blue-600)",
+          700: "var(--blue-700)",
+          800: "var(--blue-800)",
+          900: "var(--blue-900)",
+        },
+        green: {
+          50: "var(--green-50)",
+          100: "var(--green-100)",
+          200: "var(--green-200)",
+          300: "var(--green-300)",
+          400: "var(--green-400)",
+          500: "var(--green-500)",
+          600: "var(--green-600)",
+          700: "var(--green-700)",
+          800: "var(--green-800)",
+          900: "var(--green-900)",
+        },
+        purple: {
+          50: "var(--purple-50)",
+          100: "var(--purple-100)",
+          200: "var(--purple-200)",
+          300: "var(--purple-300)",
+          400: "var(--purple-400)",
+          500: "var(--purple-500)",
+          600: "var(--purple-600)",
+          700: "var(--purple-700)",
+          800: "var(--purple-800)",
+          900: "var(--purple-900)",
+        },
+        amber: {
+          50: "var(--amber-50)",
+          100: "var(--amber-100)",
+          200: "var(--amber-200)",
+          300: "var(--amber-300)",
+          400: "var(--amber-400)",
+          500: "var(--amber-500)",
+          600: "var(--amber-600)",
+          700: "var(--amber-700)",
+          800: "var(--amber-800)",
+          900: "var(--amber-900)",
+        },
       },
       borderRadius: {
         lg: "var(--radius-lg)",
         md: "var(--radius-md)",
         sm: "var(--radius-sm)",
         xl: "var(--radius-xl)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

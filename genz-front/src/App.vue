@@ -4,12 +4,19 @@ import { useUserStore } from './stores/user'
 import MainLayout from "@/layout/Main-layout.vue";
 import HomeMainLayout from "@/layout/Home-main-layout.vue";
 import { RouterView, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { applyTheme, currentTheme } from './lib/theme-utils'
 
 // Initialize stores
 const themeStore = useThemeStore()
 const userStore = useUserStore()
 const route = useRoute()
+
+// Initialize theme
+onMounted(() => {
+  // Apply the current theme
+  applyTheme(currentTheme.value)
+})
 
 // Check if user is logged in
 const isLoggedIn = computed(() => userStore.isLoggedIn)

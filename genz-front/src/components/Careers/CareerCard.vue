@@ -69,13 +69,10 @@
       <!-- View Details Button -->
       <router-link
         :to="{ name: 'career-details', params: { slug: career.slug } }"
-        :class="[
-          'inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-          `bg-${themeStore.color}-500 hover:bg-${themeStore.color}-600 text-white`
-        ]"
+
       >
-        View Details
-        <ArrowRightIcon class="ml-2 h-4 w-4" />
+        <Button>        View Details
+        </Button>
       </router-link>
     </div>
   </div>
@@ -93,6 +90,7 @@ import {
   ArrowRightIcon
 } from '@heroicons/vue/24/outline';
 import type { Career } from '@/types/career';
+import {Button} from "@/components/ui/button";
 
 const props = defineProps<{
   career: Career;

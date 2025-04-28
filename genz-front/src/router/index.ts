@@ -110,6 +110,15 @@ const routes: Array<RouteRecordRaw> = [
       title: 'About'
     }
   },
+  {
+    path: '/theme-test',
+    name: 'theme-test',
+    component: () => import('../views/ThemeTest.vue'),
+    meta: {
+      title: 'Theme Test',
+      allowAll: true
+    }
+  },
 
   // Catch-all route for 404
   {

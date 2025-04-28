@@ -5,28 +5,28 @@
   ]">
     <h3 :class="[
       'text-base md:text-lg font-semibold mb-4',
-      theme.isDarkMode ? 'text-white' : 'text-gray-800'
+      `text-${theme.primary}-700 dark:text-${theme.primary}-300`
     ]">
       Personality Traits
     </h3>
-    
+
     <div class="space-y-4">
-      <div v-for="(trait, index) in personalityTraits" 
+      <div v-for="(trait, index) in personalityTraits"
            :key="index"
            class="trait-scale">
         <div class="flex justify-between text-xs md:text-sm mb-1.5">
-          <span :class="theme.isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+          <span :class="`text-${theme.primary}-600/70 dark:text-${theme.primary}-400/70`">
             {{ trait.left }}
           </span>
           <span class="font-medium" :class="trait.color">
             {{ trait.value }}% {{ trait.dominant }}
           </span>
-          <span :class="theme.isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+          <span :class="`text-${theme.primary}-600/70 dark:text-${theme.primary}-400/70`">
             {{ trait.right }}
           </span>
         </div>
         <div class="h-2 rounded-full" :class="trait.bgClass">
-          <div class="h-full rounded-full transition-all duration-500" 
+          <div class="h-full rounded-full transition-all duration-500"
                :class="trait.barClass"
                :style="{ width: `${trait.value}%` }">
           </div>
@@ -51,7 +51,8 @@ const props = defineProps({
 
 // Helper function to get border class
 const getBorderClass = () => {
-  return `border border-${props.theme.primary}-200 dark:border-${props.theme.primary}-800`
+  const themeColor = props.theme.primary || 'blue'
+  return `border border-${themeColor}-200 dark:border-${themeColor}-800`
 }
 
 // Theme colors for each trait
@@ -100,8 +101,8 @@ const personalityTraits = computed(() => [
     value: 53,
     dominant: 'Introverted',
     color: `text-${traitColors.mind.color}-600 dark:text-${traitColors.mind.color}-400`,
-    bgClass: props.theme.isDarkMode ? traitColors.mind.bgDark : traitColors.mind.bgLight,
-    barClass: props.theme.isDarkMode ? traitColors.mind.darkClass : traitColors.mind.lightClass
+    bgClass: `bg-${traitColors.mind.color}-100/50 dark:bg-${traitColors.mind.color}-900/30`,
+    barClass: `bg-${traitColors.mind.color}-500 dark:bg-${traitColors.mind.color}-400`
   },
   {
     left: 'Intuitive',
@@ -109,8 +110,8 @@ const personalityTraits = computed(() => [
     value: 53,
     dominant: 'Intuitive',
     color: `text-${traitColors.energy.color}-600 dark:text-${traitColors.energy.color}-400`,
-    bgClass: props.theme.isDarkMode ? traitColors.energy.bgDark : traitColors.energy.bgLight,
-    barClass: props.theme.isDarkMode ? traitColors.energy.darkClass : traitColors.energy.lightClass
+    bgClass: `bg-${traitColors.energy.color}-100/50 dark:bg-${traitColors.energy.color}-900/30`,
+    barClass: `bg-${traitColors.energy.color}-500 dark:bg-${traitColors.energy.color}-400`
   },
   {
     left: 'Thinking',
@@ -118,8 +119,8 @@ const personalityTraits = computed(() => [
     value: 54,
     dominant: 'Feeling',
     color: `text-${traitColors.nature.color}-600 dark:text-${traitColors.nature.color}-400`,
-    bgClass: props.theme.isDarkMode ? traitColors.nature.bgDark : traitColors.nature.bgLight,
-    barClass: props.theme.isDarkMode ? traitColors.nature.darkClass : traitColors.nature.lightClass
+    bgClass: `bg-${traitColors.nature.color}-100/50 dark:bg-${traitColors.nature.color}-900/30`,
+    barClass: `bg-${traitColors.nature.color}-500 dark:bg-${traitColors.nature.color}-400`
   },
   {
     left: 'Judging',
@@ -127,8 +128,8 @@ const personalityTraits = computed(() => [
     value: 58,
     dominant: 'Prospecting',
     color: `text-${traitColors.tactics.color}-600 dark:text-${traitColors.tactics.color}-400`,
-    bgClass: props.theme.isDarkMode ? traitColors.tactics.bgDark : traitColors.tactics.bgLight,
-    barClass: props.theme.isDarkMode ? traitColors.tactics.darkClass : traitColors.tactics.lightClass
+    bgClass: `bg-${traitColors.tactics.color}-100/50 dark:bg-${traitColors.tactics.color}-900/30`,
+    barClass: `bg-${traitColors.tactics.color}-500 dark:bg-${traitColors.tactics.color}-400`
   },
   {
     left: 'Assertive',
@@ -136,8 +137,8 @@ const personalityTraits = computed(() => [
     value: 54,
     dominant: 'Assertive',
     color: `text-${traitColors.identity.color}-600 dark:text-${traitColors.identity.color}-400`,
-    bgClass: props.theme.isDarkMode ? traitColors.identity.bgDark : traitColors.identity.bgLight,
-    barClass: props.theme.isDarkMode ? traitColors.identity.darkClass : traitColors.identity.lightClass
+    bgClass: `bg-${traitColors.identity.color}-100/50 dark:bg-${traitColors.identity.color}-900/30`,
+    barClass: `bg-${traitColors.identity.color}-500 dark:bg-${traitColors.identity.color}-400`
   }
 ])
 </script>
@@ -163,4 +164,4 @@ const personalityTraits = computed(() => [
     transform: translateX(0);
   }
 }
-</style> 
+</style>

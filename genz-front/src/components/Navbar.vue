@@ -10,10 +10,11 @@
           ? 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl hover:bg-white/10'
           : 'h-14 w-14 rounded-full flex items-center justify-center',
         { 'delay-100': index > 0 },
+        { 'nav-active': navigationStore.isRouteActive(item.route) },
         navigationStore.isRouteActive(item.route)
           ? isMobile
-            ? `text-${themeStore.color}-500 bg-white/10 dark:bg-gray-800/40`
-            : [`bg-${themeStore.color}-500`, 'shadow-lg']
+            ? `text-${currentThemeColor}-500 bg-${currentThemeColor}-50/20 dark:bg-${currentThemeColor}-900/30`
+            : [`bg-${currentThemeColor}-500`, 'shadow-lg']
           : isMobile
             ? 'text-gray-400'
             : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
@@ -23,29 +24,33 @@
         isMobile ? 'h-6 w-6' : 'h-7 w-7',
         navigationStore.isRouteActive(item.route)
           ? isMobile
-            ? `text-${themeStore.color}-500`
+            ? `text-${currentThemeColor}-600 dark:text-${currentThemeColor}-400`
             : 'text-white transform scale-110'
           : isMobile
             ? 'text-gray-400 group-hover:text-gray-300'
-            : [`text-${themeStore.color}-500`, `group-hover:text-${themeStore.color}-600`]
+            : [`text-${currentThemeColor}-500`, `group-hover:text-${currentThemeColor}-600`]
       ]" />
 
       <!-- Navigation Label -->
       <span class="text-xs font-medium" v-if="isMobile" :class="[
         navigationStore.isRouteActive(item.route)
-          ? `text-${themeStore.color}-500`
+          ? `text-${currentThemeColor}-600 dark:text-${currentThemeColor}-400 font-semibold`
           : 'text-gray-400 group-hover:text-gray-300'
       ]">
         {{ item.name }}
       </span>
-      <span v-if="!isMobile" class="nav-tooltip" :class="[`text-${themeStore.color}-500`]">
+      <span v-if="!isMobile" class="nav-tooltip" :class="[
+        navigationStore.isRouteActive(item.route)
+          ? `text-${currentThemeColor}-600 dark:text-${currentThemeColor}-400 font-semibold`
+          : `text-${currentThemeColor}-500`
+      ]">
         {{ item.name }}
       </span>
     </div>
 
     <!-- Glass effect overlay -->
     <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
-      `bg-${themeStore.color}-50/10`,
+      `bg-${currentThemeColor}-50/10`,
       isMobile ? 'rounded-xl' : 'rounded-full'
     ]" style="backdrop-filter: blur(8px);">
     </div>
@@ -66,6 +71,7 @@ import {
 import { useThemeStore } from '@/stores/theme';
 import { useNavigationStore } from '@/stores/navigation/navigationStore';
 import { useUserStore } from '@/stores/user';
+import { currentTheme, availableThemes } from '@/lib/theme-utils';
 
 defineProps({
   isMobile: {
@@ -100,6 +106,22 @@ const navigationItems = [
 
 const themeStore = useThemeStore();
 const navigationStore = useNavigationStore();
+
+// Get the current theme color (blue, green, purple, amber)
+const currentThemeColor = computed(() => {
+  // Get theme from theme store or from theme-utils
+  const themeId = themeStore.currentThemeId || currentTheme.value;
+  // Remove '-theme' suffix if present
+  return themeId.replace('-theme', '');
+});
+
+// Get the current theme object with name and category
+const currentThemeObject = computed(() => {
+  const themeId = currentThemeColor.value;
+  // Find the theme object in availableThemes
+  return availableThemes.find(theme => theme.id === themeId) ||
+         themeStore.availableThemes.find(theme => theme.id === `${themeId}-theme`);
+});
 </script>
 
 <style scoped>
@@ -113,16 +135,59 @@ const navigationStore = useNavigationStore();
   position: relative;
 }
 
-.nav-active::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 9999px;
-  z-index: -1;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  background: linear-gradient(45deg,
-      rgba(var(--color-primary), 0.4),
-      rgba(var(--color-primary), 0.2));
+/* Desktop active state with pulsing effect */
+@media (min-width: 768px) {
+  .nav-active::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    z-index: -1;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    background: linear-gradient(45deg,
+        var(--primary-translucent),
+        var(--primary-translucent-light));
+  }
+}
+
+/* Mobile active state with left border */
+@media (max-width: 767px) {
+  .nav-active::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    border-radius: 4px;
+    background: var(--primary-solid);
+  }
+}
+
+/* Theme-specific variables */
+.theme-blue .nav-active::before {
+  --primary-translucent: rgba(37, 99, 235, 0.4);
+  --primary-translucent-light: rgba(37, 99, 235, 0.2);
+  --primary-solid: rgb(37, 99, 235);
+}
+
+.theme-green .nav-active::before {
+  --primary-translucent: rgba(22, 163, 74, 0.4);
+  --primary-translucent-light: rgba(22, 163, 74, 0.2);
+  --primary-solid: rgb(22, 163, 74);
+}
+
+.theme-purple .nav-active::before {
+  --primary-translucent: rgba(126, 34, 206, 0.4);
+  --primary-translucent-light: rgba(126, 34, 206, 0.2);
+  --primary-solid: rgb(126, 34, 206);
+}
+
+.theme-amber .nav-active::before {
+  --primary-translucent: rgba(217, 119, 6, 0.4);
+  --primary-translucent-light: rgba(217, 119, 6, 0.2);
+  --primary-solid: rgb(217, 119, 6);
 }
 
 .nav-tooltip {
@@ -171,7 +236,24 @@ const navigationStore = useNavigationStore();
 }
 
 .nav-active .nav-icon {
-  filter: drop-shadow(0 0 8px rgba(var(--color-primary), 0.3));
+  filter: drop-shadow(0 0 8px var(--primary-shadow));
+}
+
+/* Theme-specific shadow variables */
+.theme-blue .nav-active .nav-icon {
+  --primary-shadow: rgba(37, 99, 235, 0.3);
+}
+
+.theme-green .nav-active .nav-icon {
+  --primary-shadow: rgba(22, 163, 74, 0.3);
+}
+
+.theme-purple .nav-active .nav-icon {
+  --primary-shadow: rgba(126, 34, 206, 0.3);
+}
+
+.theme-amber .nav-active .nav-icon {
+  --primary-shadow: rgba(217, 119, 6, 0.3);
 }
 
 /* Ensure icon stays above glass effect */

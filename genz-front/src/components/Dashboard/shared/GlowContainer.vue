@@ -1,10 +1,10 @@
 <template>
-  <div class="relative md:w-[400px] md:h-[400px] w-[280px] h-[280px]" 
+  <div class="relative md:w-[400px] md:h-[400px] w-[280px] h-[280px]"
        @mouseover="$emit('show-details')"
        @mouseleave="$emit('hide-details')">
-    <!-- Glow Effect -->
+    <!-- Glow Effect with updated theme system -->
     <div :class="[
-      `bg-${theme?.primary || 'indigo'}-400/20`,
+      `bg-${theme?.primary || 'blue'}-400/20`,
       'absolute inset-0 rounded-full blur-3xl scale-90',
       { 'animate-pulse-slow': shouldPulse }
     ]"></div>
@@ -28,4 +28,4 @@ defineProps({
 })
 
 defineEmits(['show-details', 'hide-details'])
-</script> 
+</script>

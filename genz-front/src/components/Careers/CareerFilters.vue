@@ -34,7 +34,7 @@
       <div class="p-6 space-y-6 overflow-y-auto" style="max-height: calc(100vh - 12rem);">
         <!-- Loading State -->
         <div v-if="isLoading" class="flex justify-center py-4">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2" :class="`border-${themeStore.color}-500`"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2" :class="`border-${themeColorName}-500`"></div>
         </div>
 
         <!-- Filter Groups -->
@@ -87,7 +87,7 @@
             <div class="relative degree-dropdown-container">
               <div class="relative">
                 <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
-                  :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+                  :class="[`text-${themeColorName}-${themeStore.isDarkMode ? '400' : '500'}`]" />
                 <input
                   v-model="degreeSearchQuery"
                   type="search"
@@ -99,8 +99,8 @@
                     themeStore.isDarkMode
                       ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
                       : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
-                    `focus:border-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`,
-                    `focus:ring-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`
+                    `focus:border-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`,
+                    `focus:ring-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`
                   ]"
                 />
               </div>
@@ -194,7 +194,7 @@
             <div class="relative industry-dropdown-container">
               <div class="relative">
                 <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
-                  :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+                  :class="[`text-${themeColorName}-${themeStore.isDarkMode ? '400' : '500'}`]" />
                 <input
                   v-model="industrySearchQuery"
                   type="search"
@@ -206,8 +206,8 @@
                     themeStore.isDarkMode
                       ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
                       : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
-                    `focus:border-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`,
-                    `focus:ring-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`
+                    `focus:border-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`,
+                    `focus:ring-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`
                   ]"
                 />
               </div>
@@ -324,7 +324,7 @@
                   :class="[
                     'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
                     selectedEaseOfEmployment === value
-                      ? `bg-${themeStore.color}-500 text-white`
+                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
                       : themeStore.isDarkMode
                         ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -379,10 +379,10 @@
                   :class="[
                     'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
                     selectedSelfEmployment === value
-                      ? `bg-${themeStore.color}-500 text-white`
+                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
                       : themeStore.isDarkMode
                         ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        : ''
                   ]"
                 >
                   {{ label }}
@@ -409,39 +409,35 @@
                 <label class="filter-label flex items-center gap-2 font-medium">
                   <ClockIcon :class="[
                     'h-4 w-4',
-                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
                   ]" />
-                  <span :class="[
-                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  ]">
+                  <span >
                     Type of Employment
                   </span>
                 </label>
-                <button
+                <span
                   v-if="selectedEmploymentType"
                   @click="selectedEmploymentType = null; handleFilterChange();"
-                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                   Clear
-                </button>
+                </span>
               </div>
 
               <div class="flex flex-wrap gap-2">
-                <button
+                <Button
                   v-for="(label, value) in employmentTypeOptions"
                   :key="value"
                   @click="selectedEmploymentType = value; handleFilterChange();"
                   :class="[
                     'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
                     selectedEmploymentType === value
-                      ? `bg-${themeStore.color}-500 text-white`
+                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
                       : themeStore.isDarkMode
                         ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   ]"
                 >
                   {{ label }}
-                </button>
+                </Button>
               </div>
 
               <!-- Description -->
@@ -459,17 +455,7 @@
             </div>
 
             <!-- Apply Filters Button -->
-            <div class="flex justify-end mt-5">
-              <button
-                @click="applyEmploymentFilters"
-                :class="[
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                  `bg-${themeStore.color}-500 hover:bg-${themeStore.color}-600 text-white`
-                ]"
-              >
-                Apply Filters
-              </button>
-            </div>
+
           </div>
 
 
@@ -479,17 +465,14 @@
 
         <!-- Reset Button -->
         <div class="mt-4">
-          <button
+          <Button
             @click="resetAllFilters"
             :class="[
               'w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200',
-              themeStore.isDarkMode
-                ? 'bg-gray-800 text-white hover:bg-gray-700'
-                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
             ]"
           >
             Reset Filters
-          </button>
+          </Button>
         </div>
 
         <!-- Help Section -->
@@ -522,9 +505,22 @@ import { BuildingOfficeIcon, UserPlusIcon, UserIcon, ClockIcon, AcademicCapIcon,
 import { useThemeStore } from '@/stores/theme';
 import { fetchCareerFilterOptions } from '@/services/careerService';
 import type { CareerFilterParams, FilterOption } from '@/types/career';
+import { currentTheme } from '@/lib/theme-utils';
+import {Button} from "@/components/ui/button";
 
 const emit = defineEmits(['update:filters', 'reset']);
 const themeStore = useThemeStore();
+
+// Get the current theme color (blue, green, purple, amber)
+const currentThemeColor = computed(() => {
+  // Get theme from theme-utils or from theme store
+  const themeId = currentTheme.value || themeStore.currentThemeId || 'blue';
+  // Remove '-theme' suffix if present
+  return themeId.replace('-theme', '');
+});
+
+// For direct use in template (not as a computed property)
+const themeColorName = currentTheme.value?.replace('-theme', '') || themeStore.color || 'blue';
 
 // Loading state
 const isLoading = ref(true);
@@ -739,10 +735,10 @@ const handleFilterChange = () => {
   emitFilters();
 };
 
-const applyEmploymentFilters = () => {
-  // This will trigger the filter update with current employment filter values
-  handleFilterChange();
-};
+// const applyEmploymentFilters = () => {
+//   // This will trigger the filter update with current employment filter values
+//   handleFilterChange();
+// };
 
 const resetAllFilters = () => {
   searchQuery.value = '';

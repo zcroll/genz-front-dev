@@ -45,18 +45,8 @@
       <!-- Action Button -->
       <RouterLink :to="`/degree/${degree.slug}`"
         class="inline-flex items-center justify-between w-full px-4 py-2 font-medium rounded-full transition-all duration-300 text-sm backdrop-blur-sm border"
-        :class="[
-          themeStore.isDarkMode
-            ? [
-              'bg-gray-800/60 text-white border-gray-700/20',
-              `hover:bg-${themeStore.color}-800`
-            ]
-            : [
-              'bg-white/60 text-gray-900 border-white/20 hover:text-white',
-              `hover:bg-${themeStore.color}-400`
-            ]
-        ]">
-      <span>Learn More</span>
+       >
+      <Button>Learn More</Button>
       <ArrowRight :class="['w-4 h-4 transform group-hover:translate-x-1 transition-transform',
         themeStore.isDarkMode ? `text-${themeStore.color}-400` : `text-${themeStore.color}-500`]" />
       </RouterLink>
@@ -71,6 +61,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, DollarSign, ThumbsUp } from 'lucide-vue-next';
 import { AcademicCapIcon } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme';
+ import { Button } from "@/components/ui/button";
 
 const props = defineProps({
   degree: {

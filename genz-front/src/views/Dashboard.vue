@@ -24,10 +24,7 @@
                 v-if="archetypeSlug"
                 :key="avatarKey"
                 :archetype="archetypeSlug"
-                :theme="{
-                  primary: themeStore.currentTheme?.primary || 'indigo',
-                  isDarkMode: themeStore.currentTheme?.isDarkMode || false
-                }"
+                :theme="safeTheme"
                 :class="[
                 'w-full h-full transform relative z-10',
                 isMobile ? 'scale-125' : 'scale-110'
@@ -55,11 +52,7 @@
             <ArchetypePanel
                 :archetype="archetype"
                 :top-traits="topTraits"
-                :theme="{
-                primary: themeStore.currentTheme?.primary || 'indigo',
-                isDarkMode: themeStore.currentTheme?.isDarkMode || false,
-                border: themeStore.currentTheme?.border || 'gray'
-              }"
+                :theme="safeTheme"
             />
           </template>
           <template v-else>
@@ -174,13 +167,24 @@ const shouldShowDetails = computed(() => {
   return showDetails.value
 })
 
-// Safe theme object with fallback values
+// Safe theme object with fallback values based on the new theme system
 const safeTheme = computed(() => {
-  return themeStore.currentTheme || {
-    primary: 'indigo',
-    isDarkMode: false,
-    border: 'gray',
-    button: 'indigo'
+  // Get the current theme ID (blue, green, purple, amber)
+  const currentThemeId = themeStore.currentThemeId?.replace('-theme', '') || 'blue'
+
+  // Get the current archetype and map it to a theme if available
+  const archetypeTheme = props.archetype?.slug ?
+    themeStore.getThemeForArchetype(props.archetype.slug) : currentThemeId
+
+  // Use the archetype-specific theme if available, otherwise use the current theme
+  const themeId = archetypeTheme || currentThemeId
+
+  return {
+    primary: themeId, // blue, green, purple, or amber
+    isDarkMode: themeStore.isDarkMode,
+    border: themeId,
+    button: themeId,
+    themeId: themeId
   }
 })
 

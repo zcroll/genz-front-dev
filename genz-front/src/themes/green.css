@@ -1,0 +1,95 @@
+/* Green Theme - Diplomat (INFJ, INFP, ENFJ, ENFP) */
+/* Based on 16personalities.com green theme */
+
+:root {
+  /* Base colors */
+  --green-50: #edf7f0;
+  --green-100: #d1eeda;
+  --green-200: #a3ddb5;
+  --green-300: #75cc90;
+  --green-400: #47bb6b;
+  --green-500: #19aa46; /* Main green */
+  --green-600: #148838;
+  --green-700: #0f662a;
+  --green-800: #0a441c;
+  --green-900: #05220e;
+
+  /* Theme variables */
+  --background: #ffffff;
+  --foreground: #333333;
+  --card: #ffffff;
+  --card-foreground: #333333;
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+  --primary: var(--green-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--green-100);
+  --secondary-foreground: var(--green-700);
+  --muted: var(--green-50);
+  --muted-foreground: var(--green-600);
+  --accent: var(--green-100);
+  --accent-foreground: var(--green-700);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--green-200);
+  --input: var(--green-100);
+  --ring: var(--green-500);
+  --radius: 0.5rem;
+
+  /* Sidebar specific */
+  --sidebar: var(--green-50);
+  --sidebar-foreground: var(--green-900);
+  --sidebar-primary: var(--green-500);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--green-100);
+  --sidebar-accent-foreground: var(--green-700);
+  --sidebar-border: var(--green-200);
+  --sidebar-ring: var(--green-400);
+
+  /* Chart colors */
+  --chart-1: var(--green-500);
+  --chart-2: var(--green-300);
+  --chart-3: var(--green-700);
+  --chart-4: var(--green-200);
+  --chart-5: var(--green-600);
+}
+
+.dark {
+  /* Base colors - darker variants */
+  --background: #121e17;
+  --foreground: #f3f4f6;
+  --card: #1e2f25;
+  --card-foreground: #f3f4f6;
+  --popover: #1e2f25;
+  --popover-foreground: #f3f4f6;
+  --primary: var(--green-400);
+  --primary-foreground: #000000;
+  --secondary: #1e2f25;
+  --secondary-foreground: #f3f4f6;
+  --muted: #17241d;
+  --muted-foreground: #94a3b8;
+  --accent: #17241d;
+  --accent-foreground: #f3f4f6;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f3f4f6;
+  --border: #2e4a3a;
+  --input: #1e2f25;
+  --ring: var(--green-500);
+
+  /* Sidebar specific */
+  --sidebar: #0f1a14;
+  --sidebar-foreground: #f3f4f6;
+  --sidebar-primary: var(--green-400);
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #17241d;
+  --sidebar-accent-foreground: #f3f4f6;
+  --sidebar-border: #2e4a3a;
+  --sidebar-ring: var(--green-500);
+
+  /* Chart colors */
+  --chart-1: var(--green-400);
+  --chart-2: var(--green-300);
+  --chart-3: var(--green-600);
+  --chart-4: var(--green-200);
+  --chart-5: var(--green-500);
+}

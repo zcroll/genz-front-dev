@@ -18,7 +18,7 @@
           class="w-32 h-32 rounded-full flex items-center justify-center fallback-avatar"
           :class="{ 'dark-mode': props.theme.isDarkMode }"
           :style="{
-            background: `linear-gradient(to bottom right, var(--${props.theme.primary}-500), var(--${props.theme.primary}-700))`
+            background: `linear-gradient(to bottom right, var(--${props.theme.primary || 'blue'}-500), var(--${props.theme.primary || 'blue'}-700))`
           }">
         <span class="text-4xl font-bold text-white">{{ getInitials(archetype) }}</span>
       </div>

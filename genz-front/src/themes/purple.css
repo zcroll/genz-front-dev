@@ -1,0 +1,95 @@
+/* Purple Theme - Analyst (INTJ, INTP, ENTJ, ENTP) */
+/* Based on 16personalities.com purple theme */
+
+:root {
+  /* Base colors */
+  --purple-50: #f3eefb;
+  --purple-100: #e0d1f7;
+  --purple-200: #c1a3ee;
+  --purple-300: #a275e6;
+  --purple-400: #8347dd;
+  --purple-500: #6419d4; /* Main purple */
+  --purple-600: #5014aa;
+  --purple-700: #3c0f7f;
+  --purple-800: #280a55;
+  --purple-900: #14052a;
+
+  /* Theme variables */
+  --background: #ffffff;
+  --foreground: #333333;
+  --card: #ffffff;
+  --card-foreground: #333333;
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+  --primary: var(--purple-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--purple-100);
+  --secondary-foreground: var(--purple-700);
+  --muted: var(--purple-50);
+  --muted-foreground: var(--purple-600);
+  --accent: var(--purple-100);
+  --accent-foreground: var(--purple-700);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--purple-200);
+  --input: var(--purple-100);
+  --ring: var(--purple-500);
+  --radius: 0.5rem;
+
+  /* Sidebar specific */
+  --sidebar: var(--purple-50);
+  --sidebar-foreground: var(--purple-900);
+  --sidebar-primary: var(--purple-500);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--purple-100);
+  --sidebar-accent-foreground: var(--purple-700);
+  --sidebar-border: var(--purple-200);
+  --sidebar-ring: var(--purple-400);
+
+  /* Chart colors */
+  --chart-1: var(--purple-500);
+  --chart-2: var(--purple-300);
+  --chart-3: var(--purple-700);
+  --chart-4: var(--purple-200);
+  --chart-5: var(--purple-600);
+}
+
+.dark {
+  /* Base colors - darker variants */
+  --background: #17121e;
+  --foreground: #f3f4f6;
+  --card: #251e2f;
+  --card-foreground: #f3f4f6;
+  --popover: #251e2f;
+  --popover-foreground: #f3f4f6;
+  --primary: var(--purple-400);
+  --primary-foreground: #000000;
+  --secondary: #251e2f;
+  --secondary-foreground: #f3f4f6;
+  --muted: #1d1724;
+  --muted-foreground: #94a3b8;
+  --accent: #1d1724;
+  --accent-foreground: #f3f4f6;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f3f4f6;
+  --border: #3a2e4a;
+  --input: #251e2f;
+  --ring: var(--purple-500);
+
+  /* Sidebar specific */
+  --sidebar: #140f1a;
+  --sidebar-foreground: #f3f4f6;
+  --sidebar-primary: var(--purple-400);
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1d1724;
+  --sidebar-accent-foreground: #f3f4f6;
+  --sidebar-border: #3a2e4a;
+  --sidebar-ring: var(--purple-500);
+
+  /* Chart colors */
+  --chart-1: var(--purple-400);
+  --chart-2: var(--purple-300);
+  --chart-3: var(--purple-600);
+  --chart-4: var(--purple-200);
+  --chart-5: var(--purple-500);
+}

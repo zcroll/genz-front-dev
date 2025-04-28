@@ -1,0 +1,95 @@
+/* Amber Theme - Explorer (ISTP, ISFP, ESTP, ESFP) */
+/* Based on 16personalities.com yellow/amber theme */
+
+:root {
+  /* Base colors */
+  --amber-50: #fdf7e8;
+  --amber-100: #faeec5;
+  --amber-200: #f5dd8b;
+  --amber-300: #f0cc51;
+  --amber-400: #ebbb17;
+  --amber-500: #e6aa00; /* Main amber */
+  --amber-600: #b88800;
+  --amber-700: #8a6600;
+  --amber-800: #5c4400;
+  --amber-900: #2e2200;
+
+  /* Theme variables */
+  --background: #ffffff;
+  --foreground: #333333;
+  --card: #ffffff;
+  --card-foreground: #333333;
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+  --primary: var(--amber-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--amber-100);
+  --secondary-foreground: var(--amber-700);
+  --muted: var(--amber-50);
+  --muted-foreground: var(--amber-600);
+  --accent: var(--amber-100);
+  --accent-foreground: var(--amber-700);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--amber-200);
+  --input: var(--amber-100);
+  --ring: var(--amber-500);
+  --radius: 0.5rem;
+
+  /* Sidebar specific */
+  --sidebar: var(--amber-50);
+  --sidebar-foreground: var(--amber-900);
+  --sidebar-primary: var(--amber-500);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--amber-100);
+  --sidebar-accent-foreground: var(--amber-700);
+  --sidebar-border: var(--amber-200);
+  --sidebar-ring: var(--amber-400);
+
+  /* Chart colors */
+  --chart-1: var(--amber-500);
+  --chart-2: var(--amber-300);
+  --chart-3: var(--amber-700);
+  --chart-4: var(--amber-200);
+  --chart-5: var(--amber-600);
+}
+
+.dark {
+  /* Base colors - darker variants */
+  --background: #1e1c12;
+  --foreground: #f3f4f6;
+  --card: #2f2a1e;
+  --card-foreground: #f3f4f6;
+  --popover: #2f2a1e;
+  --popover-foreground: #f3f4f6;
+  --primary: var(--amber-400);
+  --primary-foreground: #000000;
+  --secondary: #2f2a1e;
+  --secondary-foreground: #f3f4f6;
+  --muted: #242017;
+  --muted-foreground: #94a3b8;
+  --accent: #242017;
+  --accent-foreground: #f3f4f6;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f3f4f6;
+  --border: #4a442e;
+  --input: #2f2a1e;
+  --ring: var(--amber-500);
+
+  /* Sidebar specific */
+  --sidebar: #1a180f;
+  --sidebar-foreground: #f3f4f6;
+  --sidebar-primary: var(--amber-400);
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #242017;
+  --sidebar-accent-foreground: #f3f4f6;
+  --sidebar-border: #4a442e;
+  --sidebar-ring: var(--amber-500);
+
+  /* Chart colors */
+  --chart-1: var(--amber-400);
+  --chart-2: var(--amber-300);
+  --chart-3: var(--amber-600);
+  --chart-4: var(--amber-200);
+  --chart-5: var(--amber-500);
+}

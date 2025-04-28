@@ -3,17 +3,18 @@
     <!-- Header Section -->
     <div class="space-y-3">
       <div class="flex items-start justify-between">
-        <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+        <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
+            :class="`from-${theme.primary}-700 to-${theme.primary}-500`">
           {{ formatArchetypeName(archetype.slug) }}
         </h2>
         <!-- Rarity Badge -->
         <div class="rarity-badge" :class="{ 'show-badge': true }">
           <div :class="[
-            `border-${theme.border}`,
-            'px-2 md:px-3 py-1 md:py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
+            `border-${theme.primary}-300 dark:border-${theme.primary}-700`,
+            'px-2 md:px-3 py-1 md:py-1.5 bg-white/80 dark:bg-black/20 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
           ]">
             <span :class="[
-              `text-${theme.primary}-600`,
+              `text-${theme.primary}-600 dark:text-${theme.primary}-400`,
               'text-xs md:text-sm font-medium relative z-10'
             ]">
               {{ archetype.rarity_string }}
@@ -22,18 +23,19 @@
           </div>
         </div>
       </div>
-      <p class="text-base md:text-xl text-gray-600 font-light leading-relaxed">
+      <p class="text-base md:text-xl font-light leading-relaxed"
+         :class="`text-${theme.primary}-700 dark:text-${theme.primary}-300`">
         {{ archetype.rationale }}
       </p>
     </div>
 
     <!-- Stats Panels -->
     <div class="space-y-4 md:space-y-6">
-      <TopTraits 
+      <TopTraits
         :traits="topTraits"
         :theme="theme"
       />
-      <PersonalityTraits 
+      <PersonalityTraits
         :theme="theme"
       />
     </div>
@@ -67,7 +69,7 @@ defineProps({
     required: true
   }
 })
-</script> 
+</script>
 <style scoped>
 .rarity-badge {
   opacity: 0;
