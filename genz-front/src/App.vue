@@ -23,6 +23,7 @@ const isLoggedIn = computed(() => userStore.isLoggedIn)
 
 // Determine which layout to use based on the current route and auth status
 const isHomePage = computed(() => route.name === 'home')
+const isFilmDirectorPage = computed(() => route.name === 'film-director-career')
 const isGuestOnlyPage = computed(() => {
   return route.matched.some(record => record.meta.guest)
 })
@@ -30,13 +31,18 @@ const isGuestOnlyPage = computed(() => {
 // Determine if we should use the main layout
 // Only use MainLayout for authenticated users and non-guest pages
 const useMainLayout = computed(() => {
-  return !isHomePage.value && isLoggedIn.value && !isGuestOnlyPage.value
+  return !isHomePage.value && !isFilmDirectorPage.value && isLoggedIn.value && !isGuestOnlyPage.value
+})
+
+// Determine if we should use the home layout for special pages like film-director-career
+const useHomeLayout = computed(() => {
+  return isHomePage.value || isFilmDirectorPage.value
 })
 </script>
 
 <template>
-  <!-- Use HomeMainLayout for home page, MainLayout for authenticated non-guest pages, and no layout for guest pages -->
-  <HomeMainLayout v-if="isHomePage" title="GenZ App">
+  <!-- Use HomeMainLayout for home page and film director page, MainLayout for authenticated non-guest pages, and no layout for guest pages -->
+  <HomeMainLayout v-if="useHomeLayout" title="GenZ App">
     <RouterView />
   </HomeMainLayout>
   <MainLayout v-else-if="useMainLayout" title="GenZ App">

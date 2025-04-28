@@ -15,9 +15,54 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/test',
     name: 'test',
-    component: () => import('../views/Test.vue'),
+    component: () => import('../views/CareerDetails.vue'),
     meta: {
       title: 'Take a Test'
+    }
+  },
+  {
+    path: '/film-director-career',
+    name: 'film-director-career',
+    component: () => import('../views/FilmDirectorCareer.vue'),
+    meta: {
+      title: 'Film Director Career',
+      allowAll: true // Make this accessible to all users
+    }
+  },
+  {
+    path: '/test-view',
+    name: 'test-view',
+    component: () => import('../views/TestView.vue'),
+    meta: {
+      title: 'Test View',
+      allowAll: true // Make this accessible to all users
+    }
+  },
+  {
+    path: '/simple-test',
+    name: 'simple-test',
+    component: () => import('../views/SimpleTest.vue'),
+    meta: {
+      title: 'Simple Test',
+      guest: true // Use guest mode to bypass layouts
+    }
+  },
+  {
+    path: '/standalone-film-director',
+    name: 'standalone-film-director',
+    component: () => import('../views/StandaloneFilmDirector.vue'),
+    meta: {
+      title: 'Film Director Career (Standalone)',
+      guest: true // Use guest mode to bypass layouts
+    }
+  },
+  {
+    path: '/film-director',
+    name: 'film-director',
+    component: () => import('../views/FilmDirectorCareer.vue'),
+    meta: {
+      title: 'Film Director',
+      guest: true // Use guest mode to bypass layouts
     }
   },
   {

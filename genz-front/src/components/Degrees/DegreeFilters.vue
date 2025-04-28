@@ -149,17 +149,15 @@
 
         <!-- Reset Button -->
         <div class="mt-4">
-          <button
+          <Button
             @click="resetAllFilters"
             :class="[
               'w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200',
-              themeStore.isDarkMode
-                ? 'bg-gray-800 text-white hover:bg-gray-700'
-                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+
             ]"
           >
             Reset Filters
-          </button>
+          </Button>
         </div>
 
         <!-- Help Section -->
@@ -192,6 +190,7 @@ import { AcademicCapIcon, BookOpenIcon } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme';
 import { fetchDegreeFilterOptions } from '@/services/degreeService';
 import type { DegreeFilterParams } from '@/types/degree';
+import {Button} from "@/components/ui/button";
 
 const emit = defineEmits(['update:filters', 'reset']);
 const themeStore = useThemeStore();
