@@ -21,15 +21,6 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/film-director-career',
-    name: 'film-director-career',
-    component: () => import('../views/FilmDirectorCareer.vue'),
-    meta: {
-      title: 'Film Director Career',
-      allowAll: true // Make this accessible to all users
-    }
-  },
-  {
     path: '/test-view',
     name: 'test-view',
     component: () => import('../views/TestView.vue'),
@@ -54,6 +45,16 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: 'Film Director Career (Standalone)',
       guest: true // Use guest mode to bypass layouts
+    }
+  },
+  {
+    path: '/career-detail',
+    name: 'career-detail',
+    component: () => import('../views/CareerDetailTailwind.vue'),
+    meta: {
+      title: 'Film Director Career',
+      allowAll: true, // Make this accessible to all users
+      layout: 'main' // Use main layout
     }
   },
   {
