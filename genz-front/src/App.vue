@@ -24,14 +24,19 @@ const isLoggedIn = computed(() => userStore.isLoggedIn)
 // Determine which layout to use based on the current route and auth status
 const isHomePage = computed(() => route.name === 'home')
 const isFilmDirectorPage = computed(() => route.name === 'film-director-career')
+const isCareerDetailPage = computed(() => {
+  return route.name === 'career-detail'
+})
 const isGuestOnlyPage = computed(() => {
   return route.matched.some(record => record.meta.guest)
 })
 
 // Determine if we should use the main layout
 // Only use MainLayout for authenticated users and non-guest pages
+// Also include our new career detail pages
 const useMainLayout = computed(() => {
-  return !isHomePage.value && !isFilmDirectorPage.value && isLoggedIn.value && !isGuestOnlyPage.value
+  return (!isHomePage.value && !isFilmDirectorPage.value && isLoggedIn.value && !isGuestOnlyPage.value) ||
+         isCareerDetailPage.value
 })
 
 // Determine if we should use the home layout for special pages like film-director-career
