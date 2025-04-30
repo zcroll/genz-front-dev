@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="container mx-auto py-8 px-4 max-w-7xl">
     <!-- Breadcrumb navigation with enhanced styling -->
     <nav class="text-sm mb-6">

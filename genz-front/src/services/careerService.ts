@@ -1,5 +1,14 @@
 import { get } from './api';
-import type { Career, CareersResponse, CareerFilterParams, FilterOptionsResponse } from '../types/career';
+import type {
+  Career,
+  CareersResponse,
+  CareerFilterParams,
+  FilterOptionsResponse,
+  CareerOverviewResponse,
+  CareerHowToBecomeResponse,
+  CareerPersonalityResponse,
+  CareerWorkEnvironmentResponse
+} from '../types/career';
 
 /**
  * Fetch all careers with optional filtering
@@ -103,6 +112,86 @@ export const fetchCareerBySlug = async (slug: string): Promise<Career | null> =>
   } catch (error) {
     console.error(`Error fetching career with slug ${slug}:`, error);
     return null;
+  }
+};
+
+/**
+ * Fetch career overview information by slug
+ * @param slug The slug of the career to fetch
+ * @returns Promise with the career overview data
+ */
+export const fetchCareerOverview = async (slug: string): Promise<CareerOverviewResponse> => {
+  try {
+    const response = await get<CareerOverviewResponse>(`/careers/${slug}/detail/overview`);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching career overview for ${slug}:`, error);
+    return {
+      success: false,
+      data: null,
+      meta: null,
+      errors: error
+    };
+  }
+};
+
+/**
+ * Fetch career how-to-become information by slug
+ * @param slug The slug of the career to fetch
+ * @returns Promise with the career how-to-become data
+ */
+export const fetchCareerHowToBecome = async (slug: string): Promise<CareerHowToBecomeResponse> => {
+  try {
+    const response = await get<CareerHowToBecomeResponse>(`/careers/${slug}/detail/how-to-become`);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching career how-to-become for ${slug}:`, error);
+    return {
+      success: false,
+      data: null,
+      meta: null,
+      errors: error
+    };
+  }
+};
+
+/**
+ * Fetch career personality information by slug
+ * @param slug The slug of the career to fetch
+ * @returns Promise with the career personality data
+ */
+export const fetchCareerPersonality = async (slug: string): Promise<CareerPersonalityResponse> => {
+  try {
+    const response = await get<CareerPersonalityResponse>(`/careers/${slug}/detail/personality`);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching career personality for ${slug}:`, error);
+    return {
+      success: false,
+      data: null,
+      meta: null,
+      errors: error
+    };
+  }
+};
+
+/**
+ * Fetch career work environment information by slug
+ * @param slug The slug of the career to fetch
+ * @returns Promise with the career work environment data
+ */
+export const fetchCareerWorkEnvironment = async (slug: string): Promise<CareerWorkEnvironmentResponse> => {
+  try {
+    const response = await get<CareerWorkEnvironmentResponse>(`/careers/${slug}/detail/work-environment`);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching career work environment for ${slug}:`, error);
+    return {
+      success: false,
+      data: null,
+      meta: null,
+      errors: error
+    };
   }
 };
 
