@@ -13,7 +13,11 @@
           <li><router-link to="/careers" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:underline transition-colors">Careers</router-link></li>
           <li v-if="careerOverview?.name" class="flex items-center">
             <span class="mx-2 text-gray-400 dark:text-gray-600">/</span>
-            <span class="text-gray-600 dark:text-gray-400">{{ careerOverview.name }}</span>
+            <router-link :to="{ name: 'career-overview', params: { slug: route.params.slug } }" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:underline transition-colors">{{ careerOverview.name }}</router-link>
+          </li>
+          <li v-if="activeTab !== 'overview'" class="flex items-center">
+            <span class="mx-2 text-gray-400 dark:text-gray-600">/</span>
+            <span class="text-gray-600 dark:text-gray-400">{{ tabs.find(tab => tab.id === activeTab)?.label }}</span>
           </li>
         </ol>
       </nav>
@@ -148,11 +152,10 @@
           <!-- Navigation tabs with enhanced styling -->
           <div class="mb-8 border-b dark:border-gray-700">
             <div class="flex flex-wrap -mb-px">
-              <a
+              <router-link
                 v-for="(tab, index) in tabs"
                 :key="index"
-                href="#"
-                @click.prevent="activeTab = tab.id"
+                :to="{ name: tab.route, params: { slug: route.params.slug } }"
                 :class="[
                   'inline-block py-4 px-4 text-sm font-medium transition-colors duration-200',
                   activeTab === tab.id
@@ -161,33 +164,33 @@
                 ]"
               >
                 {{ tab.label }}
-              </a>
+              </router-link>
             </div>
           </div>
 
           <!-- Tab content with enhanced styling -->
-          <CareerOverview 
-            v-if="activeTab === 'overview'" 
-            :overview="careerOverview" 
-            :isLoading="isLoadingOverview" 
+          <CareerOverview
+            v-if="activeTab === 'overview'"
+            :overview="careerOverview"
+            :isLoading="isLoadingOverview"
           />
 
-          <CareerHowToBecome 
-            v-if="activeTab === 'how-to-become'" 
-            :howToBecome="careerHowToBecome" 
-            :isLoading="isLoadingHowToBecome" 
+          <CareerHowToBecome
+            v-if="activeTab === 'how-to-become'"
+            :howToBecome="careerHowToBecome"
+            :isLoading="isLoadingHowToBecome"
           />
 
-          <CareerPersonality 
-            v-if="activeTab === 'personality'" 
-            :personality="careerPersonality" 
-            :isLoading="isLoadingPersonality" 
+          <CareerPersonality
+            v-if="activeTab === 'personality'"
+            :personality="careerPersonality"
+            :isLoading="isLoadingPersonality"
           />
 
-          <CareerWorkEnvironment 
-            v-if="activeTab === 'work-environment'" 
-            :workEnvironment="careerWorkEnvironment" 
-            :isLoading="isLoadingWorkEnvironment" 
+          <CareerWorkEnvironment
+            v-if="activeTab === 'work-environment'"
+            :workEnvironment="careerWorkEnvironment"
+            :isLoading="isLoadingWorkEnvironment"
           />
         </div>
       </div>
@@ -204,13 +207,13 @@ import CareerOverview from '@/components/Careers/Detail/CareerOverview.vue';
 import CareerHowToBecome from '@/components/Careers/Detail/CareerHowToBecome.vue';
 import CareerPersonality from '@/components/Careers/Detail/CareerPersonality.vue';
 import CareerWorkEnvironment from '@/components/Careers/Detail/CareerWorkEnvironment.vue';
-import { 
-  fetchCareerOverview, 
-  fetchCareerHowToBecome, 
-  fetchCareerPersonality, 
-  fetchCareerWorkEnvironment 
+import {
+  fetchCareerOverview,
+  fetchCareerHowToBecome,
+  fetchCareerPersonality,
+  fetchCareerWorkEnvironment
 } from '@/services/careerService';
-import type { 
+import type {
   CareerOverview as CareerOverviewType,
   CareerHowToBecome as CareerHowToBecomeType,
   CareerPersonality as CareerPersonalityType,
@@ -243,15 +246,17 @@ const careerHowToBecome = ref<CareerHowToBecomeType | null>(null);
 const careerPersonality = ref<CareerPersonalityType | null>(null);
 const careerWorkEnvironment = ref<CareerWorkEnvironmentType | null>(null);
 
-// Active tab state
-const activeTab = ref('overview');
+// Get active section from route
+const activeTab = computed(() => {
+  return route.meta.section as string || 'overview';
+});
 
 // Tabs configuration
 const tabs = [
-  { id: 'overview', label: 'Career Overview' },
-  { id: 'how-to-become', label: 'How to Become' },
-  { id: 'personality', label: 'Personality' },
-  { id: 'work-environment', label: 'Work Environment' }
+  { id: 'overview', label: 'Career Overview', route: 'career-overview' },
+  { id: 'how-to-become', label: 'How to Become', route: 'career-how-to-become' },
+  { id: 'personality', label: 'Personality', route: 'career-personality' },
+  { id: 'work-environment', label: 'Work Environment', route: 'career-work-environment' }
 ];
 
 // Format salary with commas
@@ -260,42 +265,48 @@ const formatSalary = (salary?: number): string => {
   return salary.toLocaleString();
 };
 
-// Fetch career data
+// Fetch career data based on active tab
 const fetchCareerData = async (slug: string) => {
   isLoading.value = true;
-  
+
   try {
-    // Fetch overview data
-    isLoadingOverview.value = true;
-    const overviewResponse = await fetchCareerOverview(slug);
-    if (overviewResponse.success && overviewResponse.data) {
-      careerOverview.value = overviewResponse.data;
+    // Always fetch overview data for the sidebar
+    if (!careerOverview.value) {
+      isLoadingOverview.value = true;
+      const overviewResponse = await fetchCareerOverview(slug);
+      if (overviewResponse.success && overviewResponse.data) {
+        careerOverview.value = overviewResponse.data;
+      }
+      isLoadingOverview.value = false;
     }
-    isLoadingOverview.value = false;
-    
-    // Fetch how-to-become data
-    isLoadingHowToBecome.value = true;
-    const howToBecomeResponse = await fetchCareerHowToBecome(slug);
-    if (howToBecomeResponse.success && howToBecomeResponse.data) {
-      careerHowToBecome.value = howToBecomeResponse.data;
+
+    // Fetch section-specific data based on active tab
+    const currentSection = activeTab.value;
+
+    if (currentSection === 'overview' && !careerOverview.value) {
+      // Overview data already fetched above
+    } else if (currentSection === 'how-to-become' && !careerHowToBecome.value) {
+      isLoadingHowToBecome.value = true;
+      const howToBecomeResponse = await fetchCareerHowToBecome(slug);
+      if (howToBecomeResponse.success && howToBecomeResponse.data) {
+        careerHowToBecome.value = howToBecomeResponse.data;
+      }
+      isLoadingHowToBecome.value = false;
+    } else if (currentSection === 'personality' && !careerPersonality.value) {
+      isLoadingPersonality.value = true;
+      const personalityResponse = await fetchCareerPersonality(slug);
+      if (personalityResponse.success && personalityResponse.data) {
+        careerPersonality.value = personalityResponse.data;
+      }
+      isLoadingPersonality.value = false;
+    } else if (currentSection === 'work-environment' && !careerWorkEnvironment.value) {
+      isLoadingWorkEnvironment.value = true;
+      const workEnvironmentResponse = await fetchCareerWorkEnvironment(slug);
+      if (workEnvironmentResponse.success && workEnvironmentResponse.data) {
+        careerWorkEnvironment.value = workEnvironmentResponse.data;
+      }
+      isLoadingWorkEnvironment.value = false;
     }
-    isLoadingHowToBecome.value = false;
-    
-    // Fetch personality data
-    isLoadingPersonality.value = true;
-    const personalityResponse = await fetchCareerPersonality(slug);
-    if (personalityResponse.success && personalityResponse.data) {
-      careerPersonality.value = personalityResponse.data;
-    }
-    isLoadingPersonality.value = false;
-    
-    // Fetch work environment data
-    isLoadingWorkEnvironment.value = true;
-    const workEnvironmentResponse = await fetchCareerWorkEnvironment(slug);
-    if (workEnvironmentResponse.success && workEnvironmentResponse.data) {
-      careerWorkEnvironment.value = workEnvironmentResponse.data;
-    }
-    isLoadingWorkEnvironment.value = false;
   } catch (error) {
     console.error('Error fetching career data:', error);
   } finally {
@@ -303,19 +314,23 @@ const fetchCareerData = async (slug: string) => {
   }
 };
 
-// Watch for route changes to fetch data for the new career
-watch(() => route.params.slug, (newSlug) => {
-  if (newSlug) {
-    fetchCareerData(newSlug as string);
-  }
-});
-
-// Fetch data on component mount
-onMounted(() => {
-  if (route.params.slug) {
-    fetchCareerData(route.params.slug as string);
-  }
-});
+// Watch for route changes to fetch data for the new career or section
+watch(
+  [() => route.params.slug, () => route.meta.section],
+  ([newSlug, newSection]) => {
+    if (newSlug) {
+      // Reset data when slug changes (new career)
+      if (route.params.slug !== newSlug) {
+        careerOverview.value = null;
+        careerHowToBecome.value = null;
+        careerPersonality.value = null;
+        careerWorkEnvironment.value = null;
+      }
+      fetchCareerData(newSlug as string);
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>

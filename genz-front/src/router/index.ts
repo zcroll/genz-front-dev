@@ -122,12 +122,58 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/careers/:slug',
-    name: 'career-details',
     component: () => import('../views/CareerDetails.vue'),
     meta: {
       title: 'Career Details',
       requiresAuth: true
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'career-details',
+        redirect: { name: 'career-overview' }
+      },
+      {
+        path: 'overview',
+        name: 'career-overview',
+        component: () => import('../views/CareerDetails.vue'),
+        meta: {
+          title: 'Career Overview',
+          requiresAuth: true,
+          section: 'overview'
+        }
+      },
+      {
+        path: 'how-to-become',
+        name: 'career-how-to-become',
+        component: () => import('../views/CareerDetails.vue'),
+        meta: {
+          title: 'How to Become',
+          requiresAuth: true,
+          section: 'how-to-become'
+        }
+      },
+      {
+        path: 'personality',
+        name: 'career-personality',
+        component: () => import('../views/CareerDetails.vue'),
+        meta: {
+          title: 'Personality',
+          requiresAuth: true,
+          section: 'personality'
+        }
+      },
+      {
+        path: 'work-environment',
+        name: 'career-work-environment',
+        component: () => import('../views/CareerDetails.vue'),
+        meta: {
+          title: 'Work Environment',
+          requiresAuth: true,
+          section: 'work-environment'
+        }
+      }
+    ]
   },
   {
     path: '/formations',
@@ -197,7 +243,12 @@ import { useUserStore } from '@/stores/user'
 // Global navigation guard for authentication and page titles
 router.beforeEach(async (to, from, next) => {
   // Set page title based on route meta
-  document.title = `GenZ - ${to.meta.title || 'App'}`
+  if (to.name && to.name.toString().startsWith('career-') && to.name !== 'career-details' && to.params.slug) {
+    // For career detail pages, include the career slug in the title
+    document.title = `GenZ - ${to.meta.title || 'Career'} | ${to.params.slug}`;
+  } else {
+    document.title = `GenZ - ${to.meta.title || 'App'}`;
+  }
 
   // Check if the route requires authentication
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
