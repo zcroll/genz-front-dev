@@ -81,6 +81,7 @@ export interface CareerWorkEnvironment {
   environments: {
     type: string;
     description: string;
+    value?: number;
   }[];
 }
 

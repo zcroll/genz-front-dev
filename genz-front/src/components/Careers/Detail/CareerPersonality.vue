@@ -62,7 +62,7 @@
           <div v-for="code in sortedHollandCodes" :key="code.code"
                :class="[
                  'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
-                 expandedHollandCodes.includes(code.code) ? 'md:col-span-2 order-first' : ''
+                 expandedHollandCodes.includes(code.code) ? 'md:col-span-2' : ''
                ]">
             <div class="p-4 border-b border-gray-200 dark:border-gray-700" :class="getHollandCodeHeaderBg(code.code)">
               <div class="flex justify-between items-center">
@@ -149,7 +149,7 @@
           <div v-for="(trait, index) in sortedBigFiveTraits" :key="trait.trait"
                :class="[
                  'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
-                 expandedBigFiveTraits.includes(trait.trait) ? 'md:col-span-2 order-first' : '',
+                 expandedBigFiveTraits.includes(trait.trait) ? 'md:col-span-2' : '',
                  !expandedBigFiveTraits.includes(trait.trait) && index === 4 && sortedBigFiveTraits.length === 5 ? 'md:col-span-2' : ''
                ]">
             <div class="p-5 border-b border-gray-200 dark:border-gray-700" :class="getBigFiveHeaderBg(trait.trait)">
