@@ -385,18 +385,22 @@ const toggleBigFiveInfo = () => {
 // Toggle individual Holland code information
 const toggleHollandCodeInfo = (code: string) => {
   if (expandedHollandCodes.value.includes(code)) {
-    expandedHollandCodes.value = expandedHollandCodes.value.filter(c => c !== code);
+    // Close the current card
+    expandedHollandCodes.value = [];
   } else {
-    expandedHollandCodes.value.push(code);
+    // Close any open card and open the new one
+    expandedHollandCodes.value = [code];
   }
 };
 
 // Toggle individual Big Five trait information
 const toggleBigFiveTraitInfo = (trait: string) => {
   if (expandedBigFiveTraits.value.includes(trait)) {
-    expandedBigFiveTraits.value = expandedBigFiveTraits.value.filter(t => t !== trait);
+    // Close the current card
+    expandedBigFiveTraits.value = [];
   } else {
-    expandedBigFiveTraits.value.push(trait);
+    // Close any open card and open the new one
+    expandedBigFiveTraits.value = [trait];
   }
 };
 </script>

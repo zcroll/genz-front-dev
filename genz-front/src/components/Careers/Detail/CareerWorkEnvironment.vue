@@ -148,104 +148,25 @@
           Work Schedule
         </h3>
 
-        <div class="bg-gray-50 dark:bg-gray-800/50 p-5 rounded-lg mb-6">
-          <div class="flex items-center justify-between cursor-pointer" @click="toggleScheduleInfo">
-            <p class="text-gray-700 dark:text-gray-300 font-medium">
-              What does the work schedule look like?
-            </p>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': showScheduleInfo }" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </div>
-
-          <div v-if="showScheduleInfo" class="mt-3 transition-all duration-300 ease-in-out">
-            <p class="text-gray-700 dark:text-gray-300 mb-3">
-              {{ workEnvironment?.work_schedule?.schedule_description }}
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm p-5">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center">
-              <div class="w-3 h-3 rounded-full mr-2" :class="`bg-${themeColorName.value}-500`"></div>
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Full-time</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-3 h-3 rounded-full mr-2 bg-purple-500"></div>
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Part-time</span>
-            </div>
-          </div>
-
-          <div class="relative pt-1">
-            <div class="flex mb-2 items-center justify-between">
-              <div>
-                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full" :class="`text-${themeColorName.value}-600 bg-${themeColorName.value}-200 dark:bg-${themeColorName.value}-900 dark:text-${themeColorName.value}-200`">
-                  {{ workEnvironment?.work_schedule?.full_time_percent }}%
-                </span>
-              </div>
-              <div>
-                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full" :class="`text-purple-600 bg-purple-200 dark:bg-purple-900 dark:text-purple-200`">
-                  {{ workEnvironment?.work_schedule?.part_time_percent }}%
-                </span>
-              </div>
-            </div>
-
-            <!-- Two-sided progress bar -->
-            <div class="relative h-6 mb-2">
-              <!-- Container with border -->
-              <div class="absolute inset-0 rounded-full border border-gray-300 dark:border-gray-600 overflow-hidden">
-                <!-- Full-time side (left) -->
-                <div class="absolute left-0 top-0 bottom-0 flex items-center justify-center text-white text-xs font-medium"
-                     :style="`width: ${workEnvironment?.work_schedule?.full_time_percent}%`"
-                     :class="`bg-${themeColorName.value}-500`">
-                  <span v-if="workEnvironment?.work_schedule?.full_time_percent >= 25">Full-time</span>
-                </div>
-                <!-- Part-time side (right) -->
-                <div class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-white text-xs font-medium bg-purple-500"
-                     :style="`width: ${workEnvironment?.work_schedule?.part_time_percent}%`">
-                  <span v-if="workEnvironment?.work_schedule?.part_time_percent >= 25">Part-time</span>
-                </div>
-                <!-- Center divider -->
-                <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-600 transform -translate-x-1/2"></div>
-              </div>
-            </div>
-
-            <!-- Scale indicators -->
-            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>0%</span>
-              <span>50%</span>
-              <span>100%</span>
-            </div>
-          </div>
-
-          <!-- Collapsible additional info section -->
-          <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-            <div class="flex items-center justify-between cursor-pointer text-sm" @click="toggleScheduleDetails">
-              <p class="text-gray-600 dark:text-gray-400 font-medium">Learn more about work schedules</p>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': showScheduleDetails }" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </div>
-
-            <div v-if="showScheduleDetails" class="mt-3 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/30 p-4 rounded-md transition-all duration-300 ease-in-out">
-              <h5 class="font-medium text-gray-800 dark:text-gray-200 mb-2">Understanding work schedules</h5>
-              <p class="leading-relaxed mb-3">
-                Work schedules can significantly impact your work-life balance and overall job satisfaction.
-                {{ workEnvironment?.name }}s typically have the work schedule distribution shown above.
-              </p>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white dark:bg-gray-800/50 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                  <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-1">Full-time work</h6>
-                  <p>Full-time positions typically involve working 35-40+ hours per week and often come with benefits like health insurance and paid time off.</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800/50 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                  <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-1">Part-time work</h6>
-                  <p>Part-time positions typically involve fewer than 35 hours per week and may offer more flexibility but fewer benefits than full-time roles.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Work Schedule InfoGraphic Component -->
+        <div class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm mb-6">
+          <InfoGraphic
+            :questionId="7"
+            :question="`Do ${workEnvironment?.name || 'professionals'} work full-time or part-time?`"
+            :data="[
+              {
+                label: 'Full-time',
+                value: workEnvironment?.work_schedule?.full_time_percent || 0,
+                color: '#8e44ad'
+              },
+              {
+                label: 'Part-time',
+                value: workEnvironment?.work_schedule?.part_time_percent || 0,
+                color: '#3d7a78'
+              }
+            ]"
+            :caption="`${workEnvironment?.work_schedule?.full_time_percent || 0}% of ${workEnvironment?.name || 'professionals'} work in full-time roles while ${workEnvironment?.work_schedule?.part_time_percent || 0}% work part-time.`"
+          />
         </div>
       </div>
 
@@ -273,12 +194,17 @@
                  'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300',
                  expandedEnvironments.includes(env.type) ? 'md:col-span-2' : ''
                ]">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 cursor-pointer" @click="toggleEnvironmentInfo(env.type)">
               <div class="flex justify-between items-center">
                 <h4 class="font-semibold text-gray-800 dark:text-gray-200">{{ env.type }}</h4>
-                <span v-if="env.value !== undefined" class="text-sm font-bold px-3 py-1 rounded-full" :class="getFactorBadgeClass(env.value)">
-                  {{ Math.round(env.value) }}%
-                </span>
+                <div class="flex items-center space-x-2">
+                  <span v-if="env.value !== undefined" class="text-sm font-bold px-3 py-1 rounded-full" :class="getFactorBadgeClass(env.value)">
+                    {{ Math.round(env.value) }}%
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': expandedEnvironments.includes(env.type) }" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </div>
               </div>
             </div>
             <div class="p-4">
@@ -291,34 +217,10 @@
                 <span>Low</span>
                 <span>High</span>
               </div>
-              <p class="text-gray-700 dark:text-gray-300 mb-3">{{ env.description }}</p>
 
-              <!-- Collapsible definition section -->
-              <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                <div class="flex items-center justify-between cursor-pointer text-sm" @click="toggleEnvironmentInfo(env.type)">
-                  <p class="text-gray-600 dark:text-gray-400 font-medium">Learn more about this factor</p>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 transition-transform duration-200" :class="{ 'rotate-180': expandedEnvironments.includes(env.type) }" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-
-                <div v-if="expandedEnvironments.includes(env.type)" class="mt-3 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/30 p-4 rounded-md transition-all duration-300 ease-in-out">
-                  <h5 class="font-medium text-gray-800 dark:text-gray-200 mb-2">Understanding this factor</h5>
-                  <p class="leading-relaxed">
-                    This factor measures how much {{ env.type.toLowerCase() }} is present in the daily work of a {{ workEnvironment?.name }}.
-                    A higher percentage indicates this is a more significant aspect of the job.
-                  </p>
-                  <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white dark:bg-gray-800/50 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                      <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-1">Impact on job satisfaction</h6>
-                      <p>Understanding this aspect of the work environment can help you determine if this career aligns with your preferences and strengths.</p>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800/50 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                      <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-1">Comparison to other careers</h6>
-                      <p>This rating is relative to other careers and can help you compare different job options based on this factor.</p>
-                    </div>
-                  </div>
-                </div>
+              <!-- Description section (shown when expanded) -->
+              <div v-if="expandedEnvironments.includes(env.type)" class="mt-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/30 p-4 rounded-md transition-all duration-300 ease-in-out">
+                <p class="leading-relaxed">{{ env.description }}</p>
               </div>
             </div>
           </div>
@@ -332,6 +234,7 @@
 import { defineProps, computed, ref } from 'vue';
 import { currentTheme } from '@/lib/theme-utils';
 import type { CareerWorkEnvironment as CareerWorkEnvironmentType } from '@/types/career';
+import InfoGraphic from './InfoGraphic.vue';
 
 // Get the current theme color
 const themeColorName = computed(() => {
@@ -360,24 +263,12 @@ const expandedEnvironments = ref<string[]>([]);
 // Toggle environment factor information
 const toggleEnvironmentInfo = (type: string) => {
   if (expandedEnvironments.value.includes(type)) {
-    expandedEnvironments.value = expandedEnvironments.value.filter(t => t !== type);
+    // Close the current card
+    expandedEnvironments.value = [];
   } else {
-    expandedEnvironments.value.push(type);
+    // Close any open card and open the new one
+    expandedEnvironments.value = [type];
   }
-};
-
-// State for work schedule information
-const showScheduleInfo = ref(false);
-const showScheduleDetails = ref(false);
-
-// Toggle work schedule information
-const toggleScheduleInfo = () => {
-  showScheduleInfo.value = !showScheduleInfo.value;
-};
-
-// Toggle work schedule details
-const toggleScheduleDetails = () => {
-  showScheduleDetails.value = !showScheduleDetails.value;
 };
 
 // State for employment details information
