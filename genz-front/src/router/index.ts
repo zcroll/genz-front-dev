@@ -125,7 +125,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/CareerDetails.vue'),
     meta: {
       title: 'Career Details',
-      requiresAuth: true
+      requiresAuth: true,
+      breadcrumb: {
+        label: 'Career Details',
+        icon: 'LucideUser'
+      }
     },
     children: [
       {
@@ -140,7 +144,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: 'Career Overview',
           requiresAuth: true,
-          section: 'overview'
+          section: 'overview',
+          breadcrumb: {
+            label: 'Overview',
+            icon: 'LucideUser'
+          }
         }
       },
       {
@@ -150,7 +158,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: 'How to Become',
           requiresAuth: true,
-          section: 'how-to-become'
+          section: 'how-to-become',
+          breadcrumb: {
+            label: 'How to Become',
+            icon: 'LucideGraduationCap'
+          }
         }
       },
       {
@@ -160,7 +172,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: 'Personality',
           requiresAuth: true,
-          section: 'personality'
+          section: 'personality',
+          breadcrumb: {
+            label: 'Personality',
+            icon: 'LucideHeart'
+          }
         }
       },
       {
@@ -170,7 +186,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: 'Work Environment',
           requiresAuth: true,
-          section: 'work-environment'
+          section: 'work-environment',
+          breadcrumb: {
+            label: 'Work Environment',
+            icon: 'LucideBuilding2'
+          }
         }
       }
     ]

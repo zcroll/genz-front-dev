@@ -7,20 +7,8 @@
     </div>
 
     <template v-else>
-      <!-- Breadcrumb navigation with enhanced styling -->
-      <nav class="text-sm mb-6">
-        <ol class="flex items-center space-x-2">
-          <li><router-link to="/careers" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:underline transition-colors">Careers</router-link></li>
-          <li v-if="careerOverview?.name" class="flex items-center">
-            <span class="mx-2 text-gray-400 dark:text-gray-600">/</span>
-            <router-link :to="{ name: 'career-overview', params: { slug: route.params.slug } }" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:underline transition-colors">{{ careerOverview.name }}</router-link>
-          </li>
-          <li v-if="activeTab !== 'overview'" class="flex items-center">
-            <span class="mx-2 text-gray-400 dark:text-gray-600">/</span>
-            <span class="text-gray-600 dark:text-gray-400">{{ tabs.find(tab => tab.id === activeTab)?.label }}</span>
-          </li>
-        </ol>
-      </nav>
+      <!-- Shadcn Breadcrumb navigation with Lucide icons -->
+      <AppBreadcrumb :items="breadcrumbItems" />
 
       <!-- Career title and compatibility with enhanced styling -->
       <div class="mb-10">
@@ -220,6 +208,19 @@ import type {
   CareerWorkEnvironment as CareerWorkEnvironmentType
 } from '@/types/career';
 
+// Import AppBreadcrumb component
+import AppBreadcrumb from "@/components/ui/breadcrumb/AppBreadcrumb.vue";
+
+// Import Lucide icons for dynamic component resolution
+import {
+  Home as LucideHome,
+  Briefcase as LucideBriefcase,
+  User as LucideUser,
+  GraduationCap as LucideGraduationCap,
+  Heart as LucideHeart,
+  Building2 as LucideBuilding2
+} from "lucide-vue-next";
+
 // Define the layout to use
 defineOptions({
   layout: MainLayout,
@@ -264,6 +265,65 @@ const formatSalary = (salary?: number): string => {
   if (!salary) return 'N/A';
   return salary.toLocaleString();
 };
+
+// Helper function to get the icon for a tab
+const getIconForTab = (tabId: string) => {
+  switch (tabId) {
+    case 'overview':
+      return LucideUser;
+    case 'how-to-become':
+      return LucideGraduationCap;
+    case 'personality':
+      return LucideHeart;
+    case 'work-environment':
+      return LucideBuilding2;
+    default:
+      return LucideUser;
+  }
+};
+
+// Create breadcrumb items based on route and career data
+const breadcrumbItems = computed(() => {
+  // Base items that are always present
+  const items = [
+    {
+      name: 'Home',
+      path: { name: 'home' },
+      icon: LucideHome
+    },
+    {
+      name: 'Careers',
+      path: { name: 'careers.index' },
+      icon: LucideBriefcase
+    }
+  ];
+
+  // Add career name if available
+  if (careerOverview.value?.name) {
+    items.push({
+      name: careerOverview.value.name,
+      // If we're on the overview tab, this is the current page (no path)
+      // Otherwise, it's a link to the overview page
+      path: activeTab.value === 'overview' ? undefined : { name: 'career-overview', params: { slug: route.params.slug } },
+      icon: LucideUser
+    });
+  }
+
+  // Add section tab if not on overview
+  if (activeTab.value !== 'overview') {
+    const currentTab = tabs.find(tab => tab.id === activeTab.value);
+    if (currentTab) {
+      // Add the current section as the last breadcrumb item
+      // This is the current page, so no path needed (current page is not clickable)
+      items.push({
+        name: currentTab.label,
+        icon: getIconForTab(currentTab.id)
+      });
+    }
+  }
+
+  return items;
+});
 
 // Fetch career data based on active tab
 const fetchCareerData = async (slug: string) => {
