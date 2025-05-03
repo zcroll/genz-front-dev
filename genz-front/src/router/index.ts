@@ -231,6 +231,15 @@ const routes: Array<RouteRecordRaw> = [
       allowAll: true
     }
   },
+  {
+    path: '/career-how-to-become-test',
+    name: 'career-how-to-become-test',
+    component: () => import('../views/CareerHowToBecomeTest.vue'),
+    meta: {
+      title: 'Career How To Become Test',
+      allowAll: true
+    }
+  },
 
   // Catch-all route for 404
   {

@@ -35,12 +35,30 @@ export interface CareerHowToBecome {
   id: number;
   name: string;
   education_level: string;
-  degrees: string[];
+  degrees: {
+    id: number;
+    name: string;
+    slug: string;
+    image_url: string;
+  }[];
   education_levels: {
     level: string;
     description: string;
   }[];
-  steps: string[];
+  steps: {
+    number: number;
+    title: string;
+    content: string;
+    sub_steps: any[];
+  }[];
+  path_overview: string;
+  path_structure_type: string;
+  resources: {
+    type: string;
+    name: string;
+    description: string;
+    url: string | null;
+  }[];
 }
 
 export interface CareerPersonality {
