@@ -12,11 +12,6 @@ const themeStore = useThemeStore()
 const userStore = useUserStore()
 const route = useRoute()
 
-// Initialize theme
-onMounted(() => {
-  // Apply the current theme
-  applyTheme(currentTheme.value)
-})
 
 // Check if user is logged in
 const isLoggedIn = computed(() => userStore.isLoggedIn)
