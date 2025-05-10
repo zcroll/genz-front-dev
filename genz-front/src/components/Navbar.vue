@@ -68,10 +68,9 @@ import {
   AcademicCapIcon,
   BookOpenIcon
 } from '@heroicons/vue/24/outline';
-import { useThemeStore } from '@/stores/theme';
+import { useThemeStore } from '@/stores/theme/themeStore';
 import { useNavigationStore } from '@/stores/navigation/navigationStore';
 import { useUserStore } from '@/stores/user';
-import { currentTheme, availableThemes } from '@/lib/theme-utils';
 
 defineProps({
   isMobile: {
@@ -109,18 +108,16 @@ const navigationStore = useNavigationStore();
 
 // Get the current theme color (blue, green, purple, amber)
 const currentThemeColor = computed(() => {
-  // Get theme from theme store or from theme-utils
-  const themeId = themeStore.currentThemeId || currentTheme.value;
+  // Get theme from theme store
+  const themeId = themeStore.currentThemeId;
   // Remove '-theme' suffix if present
   return themeId.replace('-theme', '');
 });
 
 // Get the current theme object with name and category
 const currentThemeObject = computed(() => {
-  const themeId = currentThemeColor.value;
-  // Find the theme object in availableThemes
-  return availableThemes.find(theme => theme.id === themeId) ||
-         themeStore.availableThemes.find(theme => theme.id === `${themeId}-theme`);
+  // Get the theme object directly from the theme store
+  return themeStore.currentThemeObject;
 });
 </script>
 

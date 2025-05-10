@@ -1,7 +1,5 @@
 <template>
-  <Card class="group relative backdrop-blur-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1" :class="[
-      themeStore.isDarkMode ? 'dark:bg-gray-800/40 border-gray-700' : 'bg-white/40 border-gray-200'
-    ]">
+  <Card variant="frosted" class="group relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
     <CardContent class="p-4">
       <!-- Header with Image and Title -->
       <div class="flex items-start gap-3 mb-3">
@@ -15,10 +13,7 @@
           <AcademicCapIcon v-else class="w-8 h-8" :class="`text-${themeStore.color}-500 dark:text-${themeStore.color}-400`" />
         </div>
         <div class="min-w-0">
-          <h3 :class="[
-            'text-base font-bold truncate',
-            themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
-          ]">
+          <h3 class="text-base font-bold truncate" :style="{ color: 'var(--text-primary)' }">
             {{ degree.name }}
           </h3>
           <p :class="['text-sm truncate', themeClasses.accent]">{{ degreeLevelName }}</p>
@@ -26,29 +21,28 @@
       </div>
 
       <!-- Description or Areas -->
-      <p :class="['text-sm line-clamp-2 mb-3 h-10', themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600']">
+      <p class="text-sm line-clamp-2 mb-3 h-10" :style="{ color: 'var(--text-secondary)' }">
         {{ degree.description || (degree.areas && degree.areas.length > 0 ? degree.areas.join(', ') : 'No description available') }}
       </p>
 
       <!-- Key Details -->
       <div class="grid grid-cols-2 gap-2 mb-3">
         <div class="flex items-center gap-1.5">
-          <DollarSign :class="['w-4 h-4', themeStore.isDarkMode ? 'text-gray-500' : 'text-gray-400']" />
-          <span :class="['text-sm', themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600']">{{ formatSalary }}</span>
+          <DollarSign class="w-4 h-4" :style="{ color: 'var(--text-tertiary)' }" />
+          <span class="text-sm" :style="{ color: 'var(--text-secondary)' }">{{ formatSalary }}</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <ThumbsUp :class="['w-4 h-4', themeStore.isDarkMode ? 'text-gray-500' : 'text-gray-400']" />
-          <span :class="['text-sm', themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600']">{{ degree.satisfaction || 'N/A' }}</span>
+          <ThumbsUp class="w-4 h-4" :style="{ color: 'var(--text-tertiary)' }" />
+          <span class="text-sm" :style="{ color: 'var(--text-secondary)' }">{{ degree.satisfaction || 'N/A' }}</span>
         </div>
       </div>
 
       <!-- Action Button -->
-      <RouterLink :to="`/degree/${degree.slug}`"
-        class="inline-flex items-center justify-between w-full px-4 py-2 font-medium rounded-full transition-all duration-300 text-sm backdrop-blur-sm border"
-       >
-      <Button>Learn More</Button>
-      <ArrowRight :class="['w-4 h-4 transform group-hover:translate-x-1 transition-transform',
-        themeStore.isDarkMode ? `text-${themeStore.color}-400` : `text-${themeStore.color}-500`]" />
+      <RouterLink :to="`/degree/${degree.slug}`" class="block w-full">
+        <Button class="w-full justify-between" :class="`hover:bg-${themeStore.color}-600 focus:ring-2 focus:ring-${themeStore.color}-500 focus:ring-offset-2 focus:outline-none`">
+          Learn More
+          <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+        </Button>
       </RouterLink>
     </CardContent>
   </Card>

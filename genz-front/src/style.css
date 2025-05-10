@@ -9,11 +9,20 @@
 /* Import base theme */
 @import "./themes/base.css";
 
+/* Import global theme */
+@import "./themes/global.css";
+
+/* Import RGB color values for rgba usage */
+@import "./themes/color-rgb.css";
+
 /* Import the 4 main themes based on 16personalities.com */
 @import "./themes/blue.css";   /* Sentinel theme */
 @import "./themes/green.css";  /* Diplomat theme */
 @import "./themes/purple.css"; /* Analyst theme */
 @import "./themes/amber.css";  /* Explorer theme */
+
+/* Import matte black theme overrides for dark mode */
+@import "./themes/matte-black.css";
 
 /* Theme classes for dynamic switching */
 .theme-blue .theme-color { @apply text-blue-500; }

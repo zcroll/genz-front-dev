@@ -1,0 +1,111 @@
+/* Matte Black Theme Overrides for Dark Mode */
+
+.dark {
+  /* Base colors - matte black variants */
+  --background: #121212;
+  --foreground: #F5F5F5;
+  --card: #1E1E1E;
+  --card-foreground: #F5F5F5;
+  --popover: #1E1E1E;
+  --popover-foreground: #F5F5F5;
+  
+  /* Keep theme-specific primary colors but adjust other colors */
+  --secondary: #2A2A2A;
+  --secondary-foreground: #F5F5F5;
+  --muted: #1A1A1A;
+  --muted-foreground: #AAAAAA;
+  --accent: #2A2A2A;
+  --accent-foreground: #F5F5F5;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #F5F5F5;
+  --border: #333333;
+  --input: #2A2A2A;
+  
+  /* Sidebar specific */
+  --sidebar: #0A0A0A;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-accent: #1A1A1A;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: #333333;
+}
+
+/* Theme-specific adjustments for dark mode */
+.dark.theme-blue {
+  --blue-900: #0A0A0A;
+  --blue-800: #121212;
+  --blue-700: #1A1A1A;
+  --background: #121212;
+  --card: #1E1E1E;
+  --popover: #1E1E1E;
+  --muted: #1A1A1A;
+  --accent: #1A1A1A;
+  --border: #333333;
+  --sidebar: #0A0A0A;
+}
+
+.dark.theme-green {
+  --green-900: #0A0A0A;
+  --green-800: #121212;
+  --green-700: #1A1A1A;
+  --background: #121212;
+  --card: #1E1E1E;
+  --popover: #1E1E1E;
+  --muted: #1A1A1A;
+  --accent: #1A1A1A;
+  --border: #333333;
+  --sidebar: #0A0A0A;
+}
+
+.dark.theme-purple {
+  --purple-900: #0A0A0A;
+  --purple-800: #121212;
+  --purple-700: #1A1A1A;
+  --background: #121212;
+  --card: #1E1E1E;
+  --popover: #1E1E1E;
+  --muted: #1A1A1A;
+  --accent: #1A1A1A;
+  --border: #333333;
+  --sidebar: #0A0A0A;
+}
+
+.dark.theme-amber {
+  --amber-900: #0A0A0A;
+  --amber-800: #121212;
+  --amber-700: #1A1A1A;
+  --background: #121212;
+  --card: #1E1E1E;
+  --popover: #1E1E1E;
+  --muted: #1A1A1A;
+  --accent: #1A1A1A;
+  --border: #333333;
+  --sidebar: #0A0A0A;
+}
+
+/* Custom scrollbar for dark mode */
+.dark .custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.3);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+/* Background pattern adjustments for dark mode */
+.dark.bg-pattern {
+  background-image: radial-gradient(rgba(100, 100, 100, 0.03) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+/* Glass container adjustments for dark mode */
+.dark .glass-container {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(30, 30, 30, 0.75);
+  border-color: rgba(60, 60, 60, 0.5);
+}

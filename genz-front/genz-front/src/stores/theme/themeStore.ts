@@ -1,10 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref, computed, onMounted, watch } from 'vue'
-import type { ThemeJsonConfig, LegacyThemeConfig, ThemeObject } from '../../types/theme'
-import type { GlobalThemeDefinition } from '../../types/globalTheme'
-import { themeService } from '../../services/themeService'
-import themeData from '../../config/themes.json'
-import globalThemeData from '../../config/globalTheme.json'
+import { ref, computed, onMounted } from 'vue'
+import { themeService } from '@/services/themeService'
+import { ThemeJsonConfig, LegacyThemeConfig, ThemeObject } from '@/stores/theme/jsonTypes'
 
 export const useThemeStore = defineStore('theme', () => {
   // State
@@ -14,10 +11,6 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Store for loaded JSON data
   const loadedThemeData = ref<ThemeJsonConfig | null>(null)
-  const loadedGlobalThemeData = ref<GlobalThemeDefinition | null>(null)
-
-  // Global theme aspects
-  const globalThemeAspects = ref<Record<string, string>>({})
 
   // Watch for system dark mode changes
   const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -93,27 +86,6 @@ export const useThemeStore = defineStore('theme', () => {
     return availableThemes.value.find(theme => theme.id === currentThemeId.value)
   })
 
-  // Global theme getters
-  const currentGlobalTheme = computed(() => {
-    return isDarkMode.value ? 'darkMode' : 'lightMode'
-  })
-
-  // Get all global theme aspects for the current mode
-  const allGlobalThemeAspects = computed(() => {
-    return globalThemeAspects.value
-  })
-
-  // Function to get a specific global theme aspect
-  function getGlobalThemeAspect(aspectKey: string): string {
-    return globalThemeAspects.value[aspectKey] || ''
-  }
-
-  // Function to get a style hint
-  function getStyleHint(hintKey: string): string {
-    if (!loadedGlobalThemeData.value) return ''
-    return loadedGlobalThemeData.value.general_style_hints[hintKey] || ''
-  }
-
   // Theme utility functions
   function getThemeClasses(element: string): string {
     const theme = currentTheme.value
@@ -181,23 +153,12 @@ export const useThemeStore = defineStore('theme', () => {
         return
       }
 
-      // Load global theme data
-      const globalTheme = await themeService.loadGlobalThemeConfig()
-      if (globalTheme) {
-        loadedGlobalThemeData.value = globalTheme
-      } else {
-        console.error("Failed to load or parse global theme JSON data.")
-      }
-
       // Get archetype from Inertia shared data if available
       let userArchetype = null
       try {
-        // Check if Inertia is available
-        if (typeof window !== 'undefined' && window['usePage']) {
-          const page = window['usePage']()
-          userArchetype = page.props.auth?.user?.archetype
-          console.log('User archetype from Inertia:', userArchetype)
-        }
+        const page = usePage()
+        userArchetype = page.props.auth?.user?.archetype
+        console.log('User archetype from Inertia:', userArchetype)
       } catch (error) {
         console.log('Inertia not available, skipping archetype lookup')
       }
@@ -236,9 +197,7 @@ export const useThemeStore = defineStore('theme', () => {
         ? savedDarkMode === 'true'
         : darkModeMediaQuery.matches
 
-      // Update dark mode and global theme aspects
       updateDarkMode()
-      updateGlobalThemeAspects()
 
       // Listen for system dark mode changes
       darkModeMediaQuery.addEventListener('change', (e) => {
@@ -274,26 +233,6 @@ export const useThemeStore = defineStore('theme', () => {
     } else {
       document.documentElement.classList.remove('dark')
     }
-
-    // Update global theme aspects based on dark mode
-    updateGlobalThemeAspects()
-  }
-
-  // Update global theme aspects based on current dark mode
-  function updateGlobalThemeAspects(): void {
-    if (!loadedGlobalThemeData.value) return
-
-    const mode = isDarkMode.value ? 'darkMode' : 'lightMode'
-    const aspects = loadedGlobalThemeData.value.theme_definitions[mode].key_aspects
-
-    // Create a new object with all aspect values
-    const newAspects: Record<string, string> = {}
-    for (const key in aspects) {
-      newAspects[key] = aspects[key].value
-    }
-
-    // Update the reactive state
-    globalThemeAspects.value = newAspects
   }
 
   function setArchetype(archetype: string | null): void {
@@ -323,20 +262,15 @@ export const useThemeStore = defineStore('theme', () => {
     currentThemeId,
     // Getters
     currentTheme,
-    currentGlobalTheme,
-    allGlobalThemeAspects,
     // Actions
     initializeTheme,
     toggleDarkMode,
     setArchetype,
     // Utilities
     getThemeClasses,
-    getGlobalThemeAspect,
-    getStyleHint,
     availableThemes,
     currentThemeObject,
     switchTheme,
-    getThemeForArchetype,
-    updateGlobalThemeAspects
+    getThemeForArchetype
   }
 })

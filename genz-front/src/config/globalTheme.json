@@ -1,0 +1,110 @@
+{
+  "theme_definitions": {
+    "lightMode": {
+      "name": "Global Light (Frosted Optional)",
+      "key_aspects": {
+        "page_background": {
+          "description": "Overall background for the application.",
+          "value": "#EFF2F9"
+        },
+        "content_surface_primary": {
+          "description": "Primary background for content containers like cards (solid variant).",
+          "value": "#FFFFFF"
+        },
+        "content_surface_frosted": {
+          "description": "Background for 'frosted glass' effect cards.",
+          "value": "rgba(248, 249, 253, 0.75)",
+          "backdrop_filter_blur": "16px"
+        },
+        "text_primary": {
+          "description": "Main text color for high emphasis (titles, important info).",
+          "value": "#374151"
+        },
+        "text_secondary": {
+          "description": "Secondary text color for less emphasis (subtitles, descriptions).",
+          "value": "#6B7280"
+        },
+        "text_on_accent_bg": {
+          "description": "Text color on a solid accent background (e.g., primary button).",
+          "value": "#FFFFFF"
+        },
+        "border_subtle": {
+          "description": "Subtle borders for separation or card outlines (if not using shadows alone).",
+          "value": "rgba(190, 200, 220, 0.25)"
+        },
+        "shadow_default": {
+          "description": "Default shadow for elevated elements.",
+          "value": "0px 10px 30px rgba(150, 160, 190, 0.15)"
+        },
+        "interactive_element_bg_primary": {
+          "description": "Background for primary interactive elements (e.g., main buttons).",
+          "value": "#FFFFFF"
+        },
+        "interactive_element_text_primary": {
+          "description": "Text/icon color for primary interactive elements.",
+          "value": "#374151"
+        },
+        "decorative_line_swoosh": {
+          "description": "Color for subtle decorative lines.",
+          "value": "rgba(107, 114, 128, 0.1)"
+        }
+      }
+    },
+    "darkMode": {
+      "name": "Global Dark",
+      "key_aspects": {
+        "page_background": {
+          "description": "Overall background for the application.",
+          "value": "#111827"
+        },
+        "content_surface_primary": {
+          "description": "Primary background for content containers like cards (solid variant).",
+          "value": "#1F2937"
+        },
+        "content_surface_frosted": {
+          "description": "Background for 'frosted glass' effect cards in dark mode.",
+          "value": "rgba(31, 41, 55, 0.75)",
+          "backdrop_filter_blur": "16px"
+        },
+        "text_primary": {
+          "description": "Main text color for high emphasis.",
+          "value": "#F3F4F6"
+        },
+        "text_secondary": {
+          "description": "Secondary text color for less emphasis.",
+          "value": "#9CA3AF"
+        },
+        "text_on_accent_bg": {
+          "description": "Text color on a solid accent background.",
+          "value": "#FFFFFF"
+        },
+        "border_subtle": {
+          "description": "Subtle borders for separation.",
+          "value": "rgba(75, 85, 99, 0.5)"
+        },
+        "shadow_default": {
+          "description": "Default shadow for elevated elements (often more subtle or using pure black with low alpha).",
+          "value": "0px 8px 25px rgba(0, 0, 0, 0.25)"
+        },
+        "interactive_element_bg_primary": {
+          "description": "Background for primary interactive elements.",
+          "value": "#374151"
+        },
+        "interactive_element_text_primary": {
+          "description": "Text/icon color for primary interactive elements.",
+          "value": "#F3F4F6"
+        },
+        "decorative_line_swoosh": {
+          "description": "Color for subtle decorative lines.",
+          "value": "rgba(107, 114, 128, 0.2)"
+        }
+      }
+    }
+  },
+  "general_style_hints": {
+    "font_family_primary": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    "card_corner_radius_default": "20px",
+    "button_corner_radius_pill": "100px",
+    "button_corner_radius_standard": "8px"
+  }
+}

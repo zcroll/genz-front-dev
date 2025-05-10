@@ -1,10 +1,7 @@
 <template>
-  <div :class="[
-    'group relative overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md',
-    themeStore.isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
-  ]">
+  <Card variant="frosted" class="group relative overflow-hidden transition-all duration-200 hover:shadow-lg">
     <!-- Career Image -->
-    <div class="relative h-40 overflow-hidden">
+    <div class="relative h-40 overflow-hidden rounded-t-xl">
       <img
         v-if="career.image"
         :src="career.image"
@@ -15,28 +12,25 @@
         v-else
         :class="[
           'h-full w-full flex items-center justify-center',
-          themeStore.isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
+          themeStore.isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100/70'
         ]"
       >
-        <BriefcaseIcon class="h-16 w-16 text-gray-400" />
+        <BriefcaseIcon class="h-16 w-16" :style="{ color: 'var(--text-secondary)' }" />
       </div>
     </div>
 
     <!-- Career Content -->
-    <div class="p-4">
-      <h3 :class="[
-        'text-lg font-semibold mb-2 line-clamp-2',
-        themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
-      ]">
+    <CardContent>
+      <CardTitle variant="frosted" class="mb-2 line-clamp-2">
         {{ career.name }}
-      </h3>
+      </CardTitle>
 
       <!-- Career Details -->
-      <div class="space-y-2 mb-3">
+      <div class="space-y-3 mb-4">
         <!-- Salary -->
         <div v-if="career.salary" class="flex items-center text-sm">
           <CurrencyDollarIcon class="h-4 w-4 mr-2 text-green-500" />
-          <span :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+          <span :style="{ color: 'var(--text-secondary)' }">
             {{ formatSalary(career.salary) }}
           </span>
         </div>
@@ -44,7 +38,7 @@
         <!-- Satisfaction -->
         <div v-if="career.satisfaction" class="flex items-center text-sm">
           <StarIcon class="h-4 w-4 mr-2 text-yellow-500" />
-          <span :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+          <span :style="{ color: 'var(--text-secondary)' }">
             {{ career.satisfaction }} Satisfaction
           </span>
         </div>
@@ -52,7 +46,7 @@
         <!-- Industries -->
         <div v-if="career.industries && career.industries.length > 0" class="flex items-start text-sm">
           <BuildingOfficeIcon class="h-4 w-4 mr-2 text-blue-500 mt-0.5" />
-          <span :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+          <span :style="{ color: 'var(--text-secondary)' }" class="line-clamp-2">
             {{ career.industries.join(', ') }}
           </span>
         </div>
@@ -60,7 +54,7 @@
         <!-- Employment Type -->
         <div v-if="career.employment_type" class="flex items-center text-sm">
           <ClockIcon class="h-4 w-4 mr-2 text-purple-500" />
-          <span :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+          <span :style="{ color: 'var(--text-secondary)' }">
             {{ career.employment_type }}
           </span>
         </div>
@@ -69,34 +63,42 @@
       <!-- View Details Button -->
       <router-link
         :to="{ name: 'career-details', params: { slug: career.slug } }"
-
+        class="w-full block"
       >
-        <Button>        View Details
-        </Button>
+        <Button class="w-full" :class="`hover:bg-${themeColorName}-600 focus:ring-2 focus:ring-${themeColorName}-500 focus:ring-offset-2 focus:outline-none`">View Details</Button>
       </router-link>
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-import { useThemeStore } from '@/stores/theme';
-import { 
-  BriefcaseIcon, 
-  CurrencyDollarIcon, 
-  StarIcon, 
+import { defineProps, computed } from 'vue';
+import { useThemeStore } from '@/stores/theme/themeStore';
+import { currentTheme } from '@/lib/theme-utils';
+import {
+  BriefcaseIcon,
+  CurrencyDollarIcon,
+  StarIcon,
   BuildingOfficeIcon,
-  ClockIcon,
-  ArrowRightIcon
+  ClockIcon
 } from '@heroicons/vue/24/outline';
 import type { Career } from '@/types/career';
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 const props = defineProps<{
   career: Career;
 }>();
 
 const themeStore = useThemeStore();
+
+// Get the current theme color (blue, green, purple, amber)
+const themeColorName = computed(() => {
+  // Get theme from theme-utils
+  const themeId = currentTheme.value;
+  // Remove '-theme' suffix if present
+  return themeId.replace('-theme', '');
+});
 
 // Format salary with commas and dollar sign
 const formatSalary = (salary: number): string => {

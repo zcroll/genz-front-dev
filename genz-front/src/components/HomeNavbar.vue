@@ -62,11 +62,10 @@
 
 <script setup>
 import { RouterLink, useRouter } from 'vue-router';
-import { useThemeStore } from '@/stores/theme';
+import { useThemeStore } from '@/stores/theme/themeStore';
 import { useUserStore } from '@/stores/user';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { computed } from 'vue';
-import { currentTheme, availableThemes } from '@/lib/theme-utils';
 
 const themeStore = useThemeStore();
 const userStore = useUserStore();
@@ -74,18 +73,16 @@ const router = useRouter();
 
 // Get the current theme color (blue, green, purple, amber)
 const currentThemeColor = computed(() => {
-  // Get theme from theme store or from theme-utils
-  const themeId = themeStore.currentThemeId || currentTheme.value;
+  // Get theme from theme store
+  const themeId = themeStore.currentThemeId;
   // Remove '-theme' suffix if present
   return themeId.replace('-theme', '');
 });
 
 // Get the current theme object with name and category
 const currentThemeObject = computed(() => {
-  const themeId = currentThemeColor.value;
-  // Find the theme object in availableThemes
-  return availableThemes.find(theme => theme.id === themeId) ||
-         themeStore.availableThemes.find(theme => theme.id === `${themeId}-theme`);
+  // Get the theme object directly from the theme store
+  return themeStore.currentThemeObject;
 });
 
 // Check if user is logged in

@@ -1,0 +1,59 @@
+/* RGB values for theme colors to support rgba() usage */
+
+:root {
+  /* Matte black theme RGB values */
+  --matte-black-rgb: 18, 18, 18;
+  --matte-black-light-rgb: 30, 30, 30;
+  --matte-black-lighter-rgb: 42, 42, 42;
+  --matte-black-dark-rgb: 10, 10, 10;
+  --matte-white-rgb: 245, 245, 245;
+  --matte-gray-rgb: 170, 170, 170;
+  --matte-border-rgb: 51, 51, 51;
+  /* Blue theme RGB values */
+  --blue-50-rgb: 238, 243, 251;
+  --blue-100-rgb: 209, 224, 247;
+  --blue-200-rgb: 163, 193, 238;
+  --blue-300-rgb: 117, 162, 230;
+  --blue-400-rgb: 71, 131, 221;
+  --blue-500-rgb: 25, 100, 212;
+  --blue-600-rgb: 20, 80, 170;
+  --blue-700-rgb: 15, 60, 127;
+  --blue-800-rgb: 10, 40, 85;
+  --blue-900-rgb: 5, 20, 42;
+
+  /* Green theme RGB values */
+  --green-50-rgb: 237, 247, 240;
+  --green-100-rgb: 209, 238, 218;
+  --green-200-rgb: 163, 221, 181;
+  --green-300-rgb: 117, 204, 144;
+  --green-400-rgb: 71, 187, 107;
+  --green-500-rgb: 25, 170, 70;
+  --green-600-rgb: 20, 136, 56;
+  --green-700-rgb: 15, 102, 42;
+  --green-800-rgb: 10, 68, 28;
+  --green-900-rgb: 5, 34, 14;
+
+  /* Purple theme RGB values */
+  --purple-50-rgb: 245, 243, 255;
+  --purple-100-rgb: 233, 226, 255;
+  --purple-200-rgb: 205, 190, 255;
+  --purple-300-rgb: 177, 154, 255;
+  --purple-400-rgb: 149, 118, 255;
+  --purple-500-rgb: 126, 34, 206;
+  --purple-600-rgb: 101, 27, 165;
+  --purple-700-rgb: 76, 20, 124;
+  --purple-800-rgb: 50, 14, 82;
+  --purple-900-rgb: 25, 7, 41;
+
+  /* Amber theme RGB values */
+  --amber-50-rgb: 255, 251, 235;
+  --amber-100-rgb: 254, 243, 199;
+  --amber-200-rgb: 253, 230, 138;
+  --amber-300-rgb: 252, 211, 77;
+  --amber-400-rgb: 251, 191, 36;
+  --amber-500-rgb: 245, 158, 11;
+  --amber-600-rgb: 217, 119, 6;
+  --amber-700-rgb: 180, 83, 9;
+  --amber-800-rgb: 146, 64, 14;
+  --amber-900-rgb: 120, 53, 15;
+}

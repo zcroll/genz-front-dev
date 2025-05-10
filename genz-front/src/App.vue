@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { useThemeStore } from './stores/theme'
+import { useThemeStore } from './stores/theme/themeStore'
 import { useUserStore } from './stores/user'
 import MainLayout from "@/layout/Main-layout.vue";
 import HomeMainLayout from "@/layout/Home-main-layout.vue";
 import { RouterView, useRoute } from 'vue-router'
 import { computed, onMounted } from 'vue'
-import { applyTheme, currentTheme } from './lib/theme-utils'
 
 // Initialize stores
 const themeStore = useThemeStore()
 const userStore = useUserStore()
 const route = useRoute()
+
+// Initialize theme
+onMounted(() => {
+  themeStore.initializeTheme()
+})
 
 
 // Check if user is logged in

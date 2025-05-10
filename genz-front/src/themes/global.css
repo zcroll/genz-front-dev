@@ -1,0 +1,41 @@
+/* Global Theme CSS Variables */
+
+:root {
+  /* Light Mode Variables */
+  --page-background: #EFF2F9;
+  --content-surface-primary: #FFFFFF;
+  --content-surface-frosted: rgba(248, 249, 253, 0.75);
+  --content-surface-frosted-blur: 16px;
+  --text-primary: #374151;
+  --text-secondary: #6B7280;
+  --text-on-accent-bg: #FFFFFF;
+  --border-subtle: rgba(190, 200, 220, 0.25);
+  --shadow-default: 0px 10px 30px rgba(150, 160, 190, 0.15);
+  --interactive-element-bg-primary: #FFFFFF;
+  --interactive-element-text-primary: #374151;
+  --decorative-line-swoosh: rgba(107, 114, 128, 0.1);
+
+  /* Style Hints */
+  --font-family-primary: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+  --card-corner-radius-default: 20px;
+  --button-corner-radius-pill: 100px;
+  --button-corner-radius-standard: 8px;
+}
+
+.dark {
+  /* Dark Mode Variables - Matte Black */
+  --page-background: #121212; /* Matte black background */
+  --content-surface-primary: #1E1E1E; /* Slightly lighter matte black for cards */
+  --content-surface-frosted: rgba(30, 30, 30, 0.75); /* Frosted matte black */
+  --content-surface-frosted-blur: 16px;
+  --text-primary: #F5F5F5; /* Bright white for primary text */
+  --text-secondary: #AAAAAA; /* Light gray for secondary text */
+  --text-on-accent-bg: #FFFFFF;
+  --border-subtle: rgba(60, 60, 60, 0.5); /* Subtle dark gray border */
+  --shadow-default: 0px 8px 25px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+  --interactive-element-bg-primary: #2A2A2A; /* Slightly lighter for interactive elements */
+  --interactive-element-text-primary: #F5F5F5;
+  --decorative-line-swoosh: rgba(100, 100, 100, 0.2); /* Subtle decorative elements */
+}
+
+/* Theme-specific color variables remain in their respective theme files */

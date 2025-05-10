@@ -2,9 +2,11 @@
   <div :class="[
     // Use the theme system with 16personalities-inspired themes
     'h-screen p-4 overflow-hidden transition-colors duration-300 bg-pattern',
-    themeStore.isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50',
+    themeStore.isDarkMode ? 'dark' : '',
     `theme-${currentThemeColor}` // Apply theme class based on current theme
-  ]">
+  ]" :style="{
+    backgroundColor: 'var(--page-background)'
+  }">
     <!-- Background pattern overlay -->
     <div class="fixed inset-0 bg-pattern-overlay opacity-5 dark:opacity-10 pointer-events-none"></div>
     <!-- Theme-colored gradient background -->
@@ -12,15 +14,12 @@
     <div
         class="w-full h-full max-w-[120rem] relative overflow-hidden glass-container"
         :class="[
-        themeStore.isDarkMode
-          ? `bg-gray-800/60 md:border-${currentThemeColor}-800/30`
-          : `bg-white/80 md:border-${currentThemeColor}-200/40`,
         'md:p-12 p-4 md:rounded-[32px] rounded-none md:border'
       ]" :style="{
-        backdropFilter: 'blur(16px)',
-        boxShadow: themeStore.isDarkMode
-          ? `0 20px 40px -12px rgba(0, 0, 0, 0.6), 0 0 20px -5px var(--${currentThemeColor}-glow-dark)`
-          : `0 20px 40px -12px rgba(0, 0, 0, 0.1), 0 0 20px -5px var(--${currentThemeColor}-glow-light)`
+        backgroundColor: 'var(--content-surface-frosted)',
+        backdropFilter: `blur(var(--content-surface-frosted-blur))`,
+        borderColor: `var(--border-subtle)`,
+        boxShadow: `var(--shadow-default), 0 0 20px -5px var(--${currentThemeColor}-glow-${themeStore.isDarkMode ? 'dark' : 'light'})`
       }">
       <!-- Refined decorative elements using 16personalities-inspired theme colors -->
       <!-- Main background gradient -->
@@ -28,19 +27,19 @@
 
       <!-- Top right accent blob -->
       <div :class="[
-        themeStore.isDarkMode
-          ? `bg-${currentThemeColor}-800/15`
-          : `bg-${currentThemeColor}-200/30`,
+        !themeStore.isDarkMode && `bg-${currentThemeColor}-200/30`,
         'absolute -top-20 -right-20 w-96 h-96 rounded-full blur-3xl -z-5 transition-colors duration-300 animate-float'
-      ]" />
+      ]" :style="{
+        backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.15)' : undefined
+      }" />
 
       <!-- Bottom left accent blob -->
       <div :class="[
-        themeStore.isDarkMode
-          ? `bg-${currentThemeColor}-900/10`
-          : `bg-${currentThemeColor}-100/25`,
+        !themeStore.isDarkMode && `bg-${currentThemeColor}-100/25`,
         'absolute -bottom-32 -left-32 w-[30rem] h-[30rem] rounded-full blur-3xl -z-5 transition-colors duration-300 animate-float-delay'
-      ]" />
+      ]" :style="{
+        backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.1)' : undefined
+      }" />
 
       <!-- Subtle accent elements -->
       <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-30 dark:opacity-20"></div>
@@ -58,21 +57,21 @@
     </div>
   </div>
 
-  <!-- Theme Debug Panel with 16personalities-inspired theme support -->
-  <div :class="[
-    'fixed bottom-4 right-4 rounded-lg p-3 shadow-lg z-50 text-sm transition-colors duration-300',
-    themeStore.isDarkMode
-      ? `bg-${currentThemeColor}-900/80 text-white`
-      : `bg-${currentThemeColor}-50/80 text-gray-900`
-  ]">
+  <!-- Theme Debug Panel with global theme support -->
+  <div class="fixed bottom-4 right-4 rounded-lg p-3 shadow-lg z-50 text-sm transition-colors duration-300" :style="{
+    backgroundColor: themeStore.isDarkMode
+      ? `rgba(var(--matte-black-light-rgb), 0.9)`
+      : `rgba(var(--${currentThemeColor}-50-rgb), 0.8)`,
+    color: 'var(--text-primary)'
+  }">
     <div class="font-medium">Theme Debug:</div>
-    <div :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'">
+    <div :style="{ color: 'var(--text-secondary)' }">
       Theme: {{ currentThemeObject?.name || currentThemeColor }}
     </div>
-    <div :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'">
+    <div :style="{ color: 'var(--text-secondary)' }">
       Category: {{ currentThemeObject?.category || 'Default' }}
     </div>
-    <div :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'">
+    <div :style="{ color: 'var(--text-secondary)' }">
       Dark Mode: {{ themeStore.isDarkMode ? 'On' : 'Off' }}
     </div>
   </div>
@@ -81,26 +80,23 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import HomeNavbar from '@/components/HomeNavbar.vue'
-import { useThemeStore } from '@/stores/theme'
-import { currentTheme, availableThemes } from '@/lib/theme-utils'
+import { useThemeStore } from '@/stores/theme/themeStore'
 
 const themeStore = useThemeStore()
 const isLayoutInitialized = ref(false)
 
 // Get the current theme color (blue, green, purple, amber)
 const currentThemeColor = computed(() => {
-  // Get theme from theme store or from theme-utils
-  const themeId = themeStore.currentThemeId || currentTheme.value
+  // Get theme from theme store
+  const themeId = themeStore.currentThemeId
   // Remove '-theme' suffix if present
   return themeId.replace('-theme', '')
 })
 
 // Get the current theme object with name and category
 const currentThemeObject = computed(() => {
-  const themeId = currentThemeColor.value
-  // Find the theme object in availableThemes
-  return availableThemes.find(theme => theme.id === themeId) ||
-         themeStore.availableThemes.find(theme => theme.id === `${themeId}-theme`)
+  // Get the theme object directly from the theme store
+  return themeStore.currentThemeObject
 })
 
 onMounted(() => {

@@ -30,6 +30,15 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/global-theme',
+    name: 'global-theme',
+    component: () => import('../views/GlobalThemeExampleView.vue'),
+    meta: {
+      title: 'Global Theme Examples',
+      allowAll: true // Make this accessible to all users
+    }
+  },
+  {
     path: '/simple-test',
     name: 'simple-test',
     component: () => import('../views/SimpleTest.vue'),
@@ -237,6 +246,24 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/CareerHowToBecomeTest.vue'),
     meta: {
       title: 'Career How To Become Test',
+      allowAll: true
+    }
+  },
+  {
+    path: '/feature-card-test',
+    name: 'feature-card-test',
+    component: () => import('../views/FeatureCardTest.vue'),
+    meta: {
+      title: 'Feature Card Test',
+      allowAll: true
+    }
+  },
+  {
+    path: '/favorites-list-test',
+    name: 'favorites-list-test',
+    component: () => import('../views/FavoritesListTest.vue'),
+    meta: {
+      title: 'Favorites List Test',
       allowAll: true
     }
   },

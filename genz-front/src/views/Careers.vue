@@ -1,16 +1,13 @@
 <template>
   <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
-    <Card :class="['relative p-8 overflow-hidden']">
-      <CardContent>
+    <Card variant="frosted" padding="large" class="relative overflow-hidden">
+      <CardContent variant="frosted" padding="none">
         <div class="relative">
-          <h1 :class="[
-            'text-3xl md:text-4xl font-bold mb-4',
-            themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
-          ]">
+          <h1 class="text-3xl md:text-4xl font-bold mb-4" :style="{ color: 'var(--text-primary)' }">
             Explore Careers
           </h1>
-          <p>
+          <p :style="{ color: 'var(--text-secondary)' }">
             Discover career paths and professional opportunities
           </p>
         </div>
@@ -65,7 +62,7 @@
         <!-- Loading State -->
         <div v-if="isLoading" class="text-center py-8">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-t-2" :class="`border-${themeStore.color}-500`"></div>
-          <p class="mt-2 text-gray-500 dark:text-gray-400">Loading careers...</p>
+          <p class="mt-2" :style="{ color: 'var(--text-secondary)' }">Loading careers...</p>
         </div>
 
         <!-- Empty State -->
@@ -245,7 +242,7 @@ const fetchCareersData = async (filters: CareerFilterParams = {}, preserveScroll
     if (preserveScroll) {
       saveScrollPosition();
     }
-    
+
     isLoading.value = true;
 
     // Store the active filters
@@ -309,7 +306,7 @@ const fetchCareersData = async (filters: CareerFilterParams = {}, preserveScroll
     currentPage.value = 1;
   } finally {
     isLoading.value = false;
-    
+
     // Restore scroll position if needed
     if (preserveScroll) {
       restoreScrollPosition();

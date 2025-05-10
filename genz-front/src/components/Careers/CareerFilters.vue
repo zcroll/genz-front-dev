@@ -1,59 +1,44 @@
 <template>
   <div class="sticky top-20 transition-all duration-200" style="max-height: calc(100vh - 6rem);">
-    <div :class="[
-      'backdrop-blur-xl rounded-3xl border shadow-sm overflow-hidden',
-      themeStore.isDarkMode ? 'dark:bg-gray-800/40' : 'bg-white/40',
-      themeStore.isDarkMode ? `border-gray-700` : `border-gray-200`
-    ]">
+    <Card variant="frosted" class="overflow-hidden">
       <!-- Header -->
-      <div :class="[
-        'p-6 border-b',
-        themeStore.isDarkMode ? 'border-gray-800/20 bg-gray-900/30' : 'border-gray-100/20 bg-gray-50/50'
-      ]">
+      <CardHeader variant="frosted" class="border-b" :style="{ borderColor: 'var(--border-subtle)' }">
         <div class="relative">
-          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
-            :class="[`text-${themeStore.color}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" :style="{ color: `var(--${themeColorName}-500)` }" />
           <input
             v-model="searchQuery"
             type="search"
             placeholder="Search careers"
-            :class="[
-              'w-full h-11 pl-10 rounded-3xl shadow-sm transition-colors duration-200',
-              themeStore.isDarkMode
-                ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
-                : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
-              `focus:border-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`,
-              `focus:ring-${themeStore.color}-${themeStore.isDarkMode ? '500' : '400'}`
-            ]"
+            class="w-full h-11 pl-10 rounded-3xl shadow-sm transition-colors duration-200 border focus:outline-none"
+            :style="{
+              backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+              borderColor: 'var(--border-subtle)',
+              color: 'var(--text-primary)',
+              '::placeholder': { color: 'var(--text-secondary)' }
+            }"
+            :class="`focus:ring-2 focus:ring-${themeColorName}-500 focus:border-${themeColorName}-500`"
             @input="debouncedSearch"
           />
         </div>
-      </div>
+      </CardHeader>
 
       <!-- Scrollable Content -->
-      <div class="p-6 space-y-6 overflow-y-auto" style="max-height: calc(100vh - 12rem);">
+      <CardContent variant="frosted" class="space-y-6 overflow-y-auto" style="max-height: calc(100vh - 12rem);">
         <!-- Loading State -->
         <div v-if="isLoading" class="flex justify-center py-4">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2" :class="`border-${themeColorName}-500`"></div>
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2" :style="{ borderColor: `var(--${themeColorName}-500)` }"></div>
         </div>
 
         <!-- Filter Groups -->
         <div v-else class="space-y-6">
           <!-- Related Degrees Filter -->
-          <div :class="[
-            'filter-section transition-all duration-200 rounded-lg p-4',
-            themeStore.isDarkMode
-              ? 'bg-gray-900/50 border-gray-800/30'
-              : 'bg-white/50 border-white/20'
-          ]">
+          <div class="filter-section transition-all duration-200 rounded-lg p-4" :style="{
+            backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+            borderColor: 'var(--border-subtle)'
+          }">
             <label class="filter-label flex items-center gap-2 mb-3 font-medium">
-              <AcademicCapIcon :class="[
-                'h-4 w-4',
-                themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-              ]" />
-              <span :class="[
-                themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-              ]">
+              <AcademicCapIcon class="h-4 w-4" :style="{ color: 'var(--text-tertiary)' }" />
+              <span :style="{ color: 'var(--text-primary)' }">
                 Related Degrees
               </span>
             </label>
@@ -63,17 +48,17 @@
               <div
                 v-for="degree in selectedDegreesWithNames"
                 :key="degree.id"
-                :class="[
-                  'inline-flex items-center px-2 py-1 rounded-full text-xs',
-                  themeStore.isDarkMode
-                    ? 'bg-gray-700 text-gray-200'
-                    : 'bg-gray-200 text-gray-800'
-                ]"
+                class="inline-flex items-center px-2 py-1 rounded-full text-xs"
+                :style="{
+                  backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.8)' : 'rgba(240, 240, 240, 0.8)',
+                  color: 'var(--text-primary)'
+                }"
               >
                 {{ degree.name }}
                 <button
                   @click.stop="removeDegree(degree.id)"
-                  class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  class="ml-1 hover:opacity-80"
+                  :style="{ color: 'var(--text-secondary)' }"
                 >
                   <span class="sr-only">Remove</span>
                   <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,45 +71,45 @@
             <!-- Search for degrees with dropdown -->
             <div class="relative degree-dropdown-container">
               <div class="relative">
-                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
-                  :class="[`text-${themeColorName}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3" :style="{ color: `var(--${themeColorName}-500)` }" />
                 <input
                   v-model="degreeSearchQuery"
                   type="search"
                   placeholder="Search and select degrees"
                   @focus="showDegreeDropdown = true"
                   @click.stop="showDegreeDropdown = true"
-                  :class="[
-                    'w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm',
-                    themeStore.isDarkMode
-                      ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
-                      : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
-                    `focus:border-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`,
-                    `focus:ring-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`
-                  ]"
+                  class="w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm border focus:outline-none"
+                  :class="`focus:ring-2 focus:ring-${themeColorName}-500 focus:border-${themeColorName}-500`"
+                  :style="{
+                    backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+                    borderColor: 'var(--border-subtle)',
+                    color: 'var(--text-primary)'
+                  }"
                 />
               </div>
 
               <!-- Dropdown for degrees -->
               <div
                 v-if="showDegreeDropdown && filteredDegrees.length > 0"
-                class="absolute z-10 mt-1 w-full rounded-md shadow-lg"
-                :class="[
-                  themeStore.isDarkMode
-                    ? 'bg-gray-800 border border-gray-700'
-                    : 'bg-white border border-gray-200'
-                ]"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg border"
+                :style="{
+                  backgroundColor: themeStore.isDarkMode ? 'var(--content-surface-primary)' : 'var(--content-surface-primary)',
+                  borderColor: 'var(--border-subtle)'
+                }"
               >
                 <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
                   <div
                     v-for="degree in filteredDegrees"
                     :key="degree.id"
                     @click.stop="addDegree(degree.id)"
-                    class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                    :class="[
-                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700',
-                      selectedDegrees.includes(degree.id) ? 'bg-gray-100 dark:bg-gray-700' : ''
-                    ]"
+                    class="px-3 py-2 cursor-pointer text-sm"
+                    :class="{
+                      'bg-gray-100 dark:bg-gray-700': selectedDegrees.includes(degree.id)
+                    }"
+                    :style="{
+                      color: 'var(--text-primary)',
+                      ':hover': { backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.5)' : 'rgba(240, 240, 240, 0.5)' }
+                    }"
                   >
                     {{ degree.name }}
                   </div>
@@ -134,12 +119,12 @@
               <!-- No results message -->
               <div
                 v-if="showDegreeDropdown && degreeSearchQuery && filteredDegrees.length === 0"
-                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center"
-                :class="[
-                  themeStore.isDarkMode
-                    ? 'bg-gray-800 border border-gray-700 text-gray-400'
-                    : 'bg-white border border-gray-200 text-gray-500'
-                ]"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center border"
+                :style="{
+                  backgroundColor: 'var(--content-surface-primary)',
+                  borderColor: 'var(--border-subtle)',
+                  color: 'var(--text-secondary)'
+                }"
               >
                 No matching degrees found
               </div>
@@ -147,20 +132,13 @@
           </div>
 
           <!-- Industries Filter -->
-          <div :class="[
-            'filter-section transition-all duration-200 rounded-lg p-4',
-            themeStore.isDarkMode
-              ? 'bg-gray-900/50 border-gray-800/30'
-              : 'bg-white/50 border-white/20'
-          ]">
+          <div class="filter-section transition-all duration-200 rounded-lg p-4" :style="{
+            backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+            borderColor: 'var(--border-subtle)'
+          }">
             <label class="filter-label flex items-center gap-2 mb-3 font-medium">
-              <BuildingOfficeIcon :class="[
-                'h-4 w-4',
-                themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-              ]" />
-              <span :class="[
-                themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-              ]">
+              <BuildingOfficeIcon class="h-4 w-4" :style="{ color: 'var(--text-tertiary)' }" />
+              <span :style="{ color: 'var(--text-primary)' }">
                 Industries
               </span>
             </label>
@@ -170,17 +148,17 @@
               <div
                 v-for="industry in selectedIndustriesWithNames"
                 :key="industry.id"
-                :class="[
-                  'inline-flex items-center px-2 py-1 rounded-full text-xs',
-                  themeStore.isDarkMode
-                    ? 'bg-gray-700 text-gray-200'
-                    : 'bg-gray-200 text-gray-800'
-                ]"
+                class="inline-flex items-center px-2 py-1 rounded-full text-xs"
+                :style="{
+                  backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.8)' : 'rgba(240, 240, 240, 0.8)',
+                  color: 'var(--text-primary)'
+                }"
               >
                 {{ industry.name }}
                 <button
                   @click.stop="removeIndustry(industry.id)"
-                  class="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  class="ml-1 hover:opacity-80"
+                  :style="{ color: 'var(--text-secondary)' }"
                 >
                   <span class="sr-only">Remove</span>
                   <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -193,45 +171,45 @@
             <!-- Search for industries with dropdown -->
             <div class="relative industry-dropdown-container">
               <div class="relative">
-                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3"
-                  :class="[`text-${themeColorName}-${themeStore.isDarkMode ? '400' : '500'}`]" />
+                <Search class="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3" :style="{ color: `var(--${themeColorName}-500)` }" />
                 <input
                   v-model="industrySearchQuery"
                   type="search"
                   placeholder="Search and select industries"
                   @focus="showIndustryDropdown = true"
                   @click.stop="showIndustryDropdown = true"
-                  :class="[
-                    'w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm',
-                    themeStore.isDarkMode
-                      ? 'bg-gray-900/50 border-gray-700 text-white placeholder-gray-400'
-                      : 'bg-white/50 border-gray-200 text-gray-900 placeholder-gray-500',
-                    `focus:border-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`,
-                    `focus:ring-${themeColorName}-${themeStore.isDarkMode ? '500' : '400'}`
-                  ]"
+                  class="w-full h-10 pl-7 pr-2 rounded-lg shadow-sm transition-colors duration-200 text-sm border focus:outline-none"
+                  :class="`focus:ring-2 focus:ring-${themeColorName}-500 focus:border-${themeColorName}-500`"
+                  :style="{
+                    backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+                    borderColor: 'var(--border-subtle)',
+                    color: 'var(--text-primary)'
+                  }"
                 />
               </div>
 
               <!-- Dropdown for industries -->
               <div
                 v-if="showIndustryDropdown && filteredIndustries.length > 0"
-                class="absolute z-10 mt-1 w-full rounded-md shadow-lg"
-                :class="[
-                  themeStore.isDarkMode
-                    ? 'bg-gray-800 border border-gray-700'
-                    : 'bg-white border border-gray-200'
-                ]"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg border"
+                :style="{
+                  backgroundColor: 'var(--content-surface-primary)',
+                  borderColor: 'var(--border-subtle)'
+                }"
               >
                 <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
                   <div
                     v-for="industry in filteredIndustries"
                     :key="industry.id"
                     @click.stop="addIndustry(industry.id)"
-                    class="px-3 py-2 cursor-pointer text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                    :class="[
-                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700',
-                      selectedIndustries.includes(industry.id) ? 'bg-gray-100 dark:bg-gray-700' : ''
-                    ]"
+                    class="px-3 py-2 cursor-pointer text-sm"
+                    :class="{
+                      'bg-gray-100 dark:bg-gray-700': selectedIndustries.includes(industry.id)
+                    }"
+                    :style="{
+                      color: 'var(--text-primary)',
+                      ':hover': { backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.5)' : 'rgba(240, 240, 240, 0.5)' }
+                    }"
                   >
                     {{ industry.name }}
                   </div>
@@ -241,12 +219,12 @@
               <!-- No results message -->
               <div
                 v-if="showIndustryDropdown && industrySearchQuery && filteredIndustries.length === 0"
-                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center"
-                :class="[
-                  themeStore.isDarkMode
-                    ? 'bg-gray-800 border border-gray-700 text-gray-400'
-                    : 'bg-white border border-gray-200 text-gray-500'
-                ]"
+                class="absolute z-10 mt-1 w-full rounded-md shadow-lg p-3 text-sm text-center border"
+                :style="{
+                  backgroundColor: 'var(--content-surface-primary)',
+                  borderColor: 'var(--border-subtle)',
+                  color: 'var(--text-secondary)'
+                }"
               >
                 No matching industries found
               </div>
@@ -254,23 +232,19 @@
           </div>
 
           <!-- Employment Filters Section -->
-          <div :class="[
-            'filter-section transition-all duration-200 rounded-lg p-5',
-            themeStore.isDarkMode
-              ? 'bg-gray-900/50 border-gray-800/30'
-              : 'bg-white/50 border-white/20'
-          ]">
+          <div class="filter-section transition-all duration-200 rounded-lg p-5" :style="{
+            backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+            borderColor: 'var(--border-subtle)'
+          }">
             <!-- Section Title -->
             <div class="flex items-center justify-between mb-5">
-              <h3 :class="[
-                'text-lg font-medium',
-                themeStore.isDarkMode ? 'text-white' : 'text-gray-800'
-              ]">
+              <h3 class="text-lg font-medium" :style="{ color: 'var(--text-primary)' }">
                 Employment
               </h3>
               <button
                 @click="showEmploymentInfo = !showEmploymentInfo"
-                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                class="transition-colors hover:opacity-80"
+                :style="{ color: 'var(--text-secondary)' }"
                 aria-label="Show employment filter information"
               >
                 <InformationCircleIcon class="h-5 w-5" />
@@ -281,9 +255,10 @@
             <div
               v-if="showEmploymentInfo"
               class="mb-5 p-3 rounded-lg text-sm"
-              :class="[
-                themeStore.isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
-              ]"
+              :style="{
+                backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                color: 'var(--text-secondary)'
+              }"
             >
               <p class="mb-2">Select options below to filter careers based on employment characteristics:</p>
               <ul class="list-disc pl-5 space-y-1">
@@ -297,20 +272,16 @@
             <div class="mb-5">
               <div class="flex items-center justify-between mb-3">
                 <label class="filter-label flex items-center gap-2 font-medium">
-                  <UserPlusIcon :class="[
-                    'h-4 w-4',
-                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                  ]" />
-                  <span :class="[
-                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  ]">
+                  <UserPlusIcon class="h-4 w-4" :style="{ color: 'var(--text-tertiary)' }" />
+                  <span :style="{ color: 'var(--text-primary)' }">
                     Ease of Employment
                   </span>
                 </label>
                 <button
                   v-if="selectedEaseOfEmployment"
                   @click="selectedEaseOfEmployment = null; handleFilterChange();"
-                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  class="text-xs hover:opacity-80"
+                  :style="{ color: 'var(--text-secondary)' }"
                 >
                   Clear
                 </button>
@@ -321,21 +292,27 @@
                   v-for="(label, value) in easeOfEmploymentOptions"
                   :key="value"
                   @click="selectedEaseOfEmployment = value; handleFilterChange();"
-                  :class="[
-                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
-                    selectedEaseOfEmployment === value
-                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
-                      : themeStore.isDarkMode
-                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  ]"
+                  class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 border hover:opacity-90"
+                  :class="selectedEaseOfEmployment === value ? `hover:bg-${themeColorName}-600` : ''"
+                  :style="{
+                    backgroundColor: selectedEaseOfEmployment === value
+                      ? `var(--${themeColorName}-500)`
+                      : themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                    color: selectedEaseOfEmployment === value
+                      ? 'white'
+                      : 'var(--text-primary)',
+                    borderColor: 'var(--border-subtle)'
+                  }"
                 >
                   {{ label }}
                 </button>
               </div>
 
               <!-- Description -->
-              <div v-if="selectedEaseOfEmployment" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+              <div v-if="selectedEaseOfEmployment" class="mt-3 text-xs p-2 rounded" :style="{
+                backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                color: 'var(--text-secondary)'
+              }">
                 <p v-if="selectedEaseOfEmployment === 'Easy'">
                   Jobs are generally available and hiring is frequent.
                 </p>
@@ -352,20 +329,16 @@
             <div class="mb-5">
               <div class="flex items-center justify-between mb-3">
                 <label class="filter-label flex items-center gap-2 font-medium">
-                  <UserIcon :class="[
-                    'h-4 w-4',
-                    themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                  ]" />
-                  <span :class="[
-                    themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                  ]">
+                  <UserIcon class="h-4 w-4" :style="{ color: 'var(--text-tertiary)' }" />
+                  <span :style="{ color: 'var(--text-primary)' }">
                     Self-employment
                   </span>
                 </label>
                 <button
                   v-if="selectedSelfEmployment"
                   @click="selectedSelfEmployment = null; handleFilterChange();"
-                  class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  class="text-xs hover:opacity-80"
+                  :style="{ color: 'var(--text-secondary)' }"
                 >
                   Clear
                 </button>
@@ -376,21 +349,27 @@
                   v-for="(label, value) in selfEmploymentOptions"
                   :key="value"
                   @click="selectedSelfEmployment = value; handleFilterChange();"
-                  :class="[
-                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
-                    selectedSelfEmployment === value
-                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
-                      : themeStore.isDarkMode
-                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : ''
-                  ]"
+                  class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 border hover:opacity-90"
+                  :class="selectedSelfEmployment === value ? `hover:bg-${themeColorName}-600` : ''"
+                  :style="{
+                    backgroundColor: selectedSelfEmployment === value
+                      ? `var(--${themeColorName}-500)`
+                      : themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                    color: selectedSelfEmployment === value
+                      ? 'white'
+                      : 'var(--text-primary)',
+                    borderColor: 'var(--border-subtle)'
+                  }"
                 >
                   {{ label }}
                 </button>
               </div>
 
               <!-- Description -->
-              <div v-if="selectedSelfEmployment" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+              <div v-if="selectedSelfEmployment" class="mt-3 text-xs p-2 rounded" :style="{
+                backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                color: 'var(--text-secondary)'
+              }">
                 <p v-if="selectedSelfEmployment === 'Easy'">
                   Easy to start your own business in that field.
                 </p>
@@ -407,41 +386,47 @@
             <div class="mb-4">
               <div class="flex items-center justify-between mb-3">
                 <label class="filter-label flex items-center gap-2 font-medium">
-                  <ClockIcon :class="[
-                    'h-4 w-4',
-                  ]" />
-                  <span >
+                  <ClockIcon class="h-4 w-4" :style="{ color: 'var(--text-tertiary)' }" />
+                  <span :style="{ color: 'var(--text-primary)' }">
                     Type of Employment
                   </span>
                 </label>
-                <span
+                <button
                   v-if="selectedEmploymentType"
                   @click="selectedEmploymentType = null; handleFilterChange();"
+                  class="text-xs hover:opacity-80"
+                  :style="{ color: 'var(--text-secondary)' }"
                 >
                   Clear
-                </span>
+                </button>
               </div>
 
               <div class="flex flex-wrap gap-2">
-                <Button
+                <button
                   v-for="(label, value) in employmentTypeOptions"
                   :key="value"
                   @click="selectedEmploymentType = value; handleFilterChange();"
-                  :class="[
-                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1',
-                    selectedEmploymentType === value
-                      ? `bg-${themeColorName}-500 text-white dark:bg-${themeColorName}-600 shadow-sm`
-                      : themeStore.isDarkMode
-                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  ]"
+                  class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 border hover:opacity-90"
+                  :class="selectedEmploymentType === value ? `hover:bg-${themeColorName}-600` : ''"
+                  :style="{
+                    backgroundColor: selectedEmploymentType === value
+                      ? `var(--${themeColorName}-500)`
+                      : themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                    color: selectedEmploymentType === value
+                      ? 'white'
+                      : 'var(--text-primary)',
+                    borderColor: 'var(--border-subtle)'
+                  }"
                 >
                   {{ label }}
-                </Button>
+                </button>
               </div>
 
               <!-- Description -->
-              <div v-if="selectedEmploymentType" class="mt-3 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+              <div v-if="selectedEmploymentType" class="mt-3 text-xs p-2 rounded" :style="{
+                backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(245, 245, 245, 0.5)',
+                color: 'var(--text-secondary)'
+              }">
                 <p v-if="selectedEmploymentType === 'Part-time'">
                   Mostly part-time roles.
                 </p>
@@ -467,33 +452,28 @@
         <div class="mt-4">
           <Button
             @click="resetAllFilters"
-            :class="[
-              'w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200',
-            ]"
+            class="w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-200"
+            variant="outline"
           >
             Reset Filters
           </Button>
         </div>
 
         <!-- Help Section -->
-        <div :class="[
-          'mt-8 p-4 rounded-lg border transition-colors duration-200',
-          themeStore.isDarkMode
-            ? 'bg-gray-900/30 border-gray-800/30 text-gray-300'
-            : 'bg-gray-50/50 border-gray-100/20 text-gray-600'
-        ]">
-          <h4 :class="[
-            'text-sm font-medium mb-2',
-            themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-          ]">
+        <div class="mt-8 p-4 rounded-lg border transition-colors duration-200" :style="{
+          backgroundColor: themeStore.isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+          borderColor: 'var(--border-subtle)',
+          color: 'var(--text-secondary)'
+        }">
+          <h4 class="text-sm font-medium mb-2" :style="{ color: 'var(--text-primary)' }">
             Need Help?
           </h4>
           <p class="text-sm">
             Use the filters above to narrow down your career search results.
           </p>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
@@ -502,11 +482,12 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
 import { BuildingOfficeIcon, UserPlusIcon, UserIcon, ClockIcon, AcademicCapIcon, InformationCircleIcon } from '@heroicons/vue/24/outline';
-import { useThemeStore } from '@/stores/theme';
+import { useThemeStore } from '@/stores/theme/themeStore';
 import { fetchCareerFilterOptions } from '@/services/careerService';
 import type { CareerFilterParams, FilterOption } from '@/types/career';
 import { currentTheme } from '@/lib/theme-utils';
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const emit = defineEmits(['update:filters', 'reset']);
 const themeStore = useThemeStore();
@@ -614,6 +595,15 @@ watch(searchQuery, () => {
   debouncedSearch();
 });
 
+// Watch for changes in theme color
+watch(() => themeStore.currentThemeId, () => {
+  // Update the ring color when theme changes
+  document.documentElement.style.setProperty(
+    '--ring-color',
+    `var(--${themeColorName}-500)`
+  );
+});
+
 // Watch for changes in industry search query
 watch(industrySearchQuery, () => {
   if (industrySearchQuery.value.length > 0) {
@@ -655,6 +645,12 @@ const handleClickOutside = (event) => {
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
   fetchFilterOptions();
+
+  // Set CSS variable for the ring color based on the current theme
+  document.documentElement.style.setProperty(
+    '--ring-color',
+    `var(--${themeColorName}-500)`
+  );
 });
 
 // Remove event listener when component is unmounted
@@ -778,5 +774,16 @@ const resetAllFilters = () => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(156, 163, 175, 0.7);
+}
+
+/* Input focus styling - dynamically uses the current theme color */
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ring-color, rgba(59, 130, 246, 0.5));
+}
+
+/* Hover effect for buttons */
+button:not(.active):hover {
+  background-color: rgba(var(--hover-bg, 0, 0, 0), 0.05);
 }
 </style>
