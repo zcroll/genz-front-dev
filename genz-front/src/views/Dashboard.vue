@@ -96,6 +96,7 @@ import { ref, computed, onMounted, watch, nextTick, inject, onUnmounted } from '
 import { useThemeStore } from '@/stores/theme/themeStore'
 import { useNavigationStore } from '@/stores/navigation/navigationStore'
 import MainLayout from '@/layout/Main-layout.vue'
+import { Card, CardContent } from '@/components/ui/card'
 
 // Import components with correct paths
 import GlowContainer from '../components/Dashboard/shared/GlowContainer.vue'

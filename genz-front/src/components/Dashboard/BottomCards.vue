@@ -3,18 +3,19 @@
     isMobile ? 'grid-cols-1 relative z-10' : 'md:grid-cols-2 lg:grid-cols-3'
   ]">
     <!-- Favorite Jobs Card -->
-    <div class="unlock-card group" 
+    <div class="unlock-card group"
          :style="{ '--delay': '200ms' }">
-      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
-           @click="toggleCard('complete')" 
+      <Card variant="frosted" class="relative overflow-hidden transition-all duration-300 hover:shadow-xl"
+           @click="toggleCard('complete')"
            @mouseenter="!isMobile && (activeCard = 'complete')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
         <!-- Background Gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
 
-        <div class="relative flex items-start space-x-4">
-          <!-- Icon -->
+        <CardContent class="p-0">
+          <div class="relative flex items-start space-x-4">
+            <!-- Icon -->
           <div :class="[
             'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
             `bg-${safeTheme.primary}-100 dark:bg-${safeTheme.primary}-900/50`
@@ -24,7 +25,7 @@
 
           <!-- Content -->
           <div class="flex-1 space-y-1">
-            <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+            <h3 class="font-semibold flex items-center" :style="{ color: 'var(--text-primary)' }">
               Favorite Jobs
               <span :class="[
                 `bg-${safeTheme.primary}-100/30 ml-2`,
@@ -32,24 +33,29 @@
                 'text-xs px-2 py-0.5 rounded-full'
               ]">{{ favoriteJobs.length }}</span>
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Your saved career opportunities</p>
+            <p class="text-sm" :style="{ color: 'var(--text-secondary)' }">Your saved career opportunities</p>
 
             <!-- Expandable content -->
             <div class="pt-2 overflow-hidden transition-all duration-300"
               :class="{ 'max-h-[200px]': activeCard === 'complete', 'max-h-0': activeCard !== 'complete' }">
               <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
-                <RouterLink v-for="(job, index) in favoriteJobs" 
-                      :key="job.id" 
+                <RouterLink v-for="(job, index) in favoriteJobs"
+                      :key="job.id"
                       :to="`/career/${job.slug}`"
-                      class="flex items-center gap-1.5 p-1.5 rounded-lg bg-white/50 backdrop-blur-sm mb-1 group/job hover:bg-white/70 active:bg-white/90 transition-all duration-200"
-                      :style="{ transitionDelay: `${index * 50}ms` }"
-                      :class="{ 'translate-x-0 opacity-100': activeCard === 'complete', 'translate-x-4 opacity-0': activeCard !== 'complete' }"
+                      class="flex items-center gap-1.5 p-1.5 rounded-lg mb-1 group/job transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      :class="[`focus:ring-${safeTheme.primary}-500`, { 'translate-x-0 opacity-100': activeCard === 'complete', 'translate-x-4 opacity-0': activeCard !== 'complete' }]"
+                      :style="{
+                        transitionDelay: `${index * 50}ms`,
+                        backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+                        backdropFilter: 'blur(8px)',
+                        ':hover': { backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.7)' : 'rgba(255, 255, 255, 0.7)' }
+                      }"
                 >
                   <div class="w-6 md:w-7 h-6 md:h-7 rounded-lg overflow-hidden bg-white/50 p-1.5 backdrop-blur-sm">
                     <img :src="job.image" :alt="job.name" class="w-full h-full object-contain filter contrast-125" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-xs md:text-sm font-medium text-gray-700 truncate">{{ job.name }}</h4>
+                    <h4 class="text-xs md:text-sm font-medium truncate" :style="{ color: 'var(--text-primary)' }">{{ job.name }}</h4>
                   </div>
                   <ArrowRight :class="[
                     `text-${safeTheme.primary}-600`,
@@ -59,23 +65,25 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
 
     <!-- Favorite Degrees Card -->
-    <div class="unlock-card group" 
+    <div class="unlock-card group"
          :style="{ '--delay': '400ms' }">
-      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
-           @click="toggleCard('degrees')" 
+      <Card variant="frosted" class="relative overflow-hidden transition-all duration-300 hover:shadow-xl"
+           @click="toggleCard('degrees')"
            @mouseenter="!isMobile && (activeCard = 'degrees')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
         <!-- Background Gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
 
-        <div class="relative flex items-start space-x-4">
-          <!-- Icon -->
+        <CardContent class="p-0">
+          <div class="relative flex items-start space-x-4">
+            <!-- Icon -->
           <div :class="[
             'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
             `bg-purple-100 dark:bg-purple-900/50`
@@ -85,7 +93,7 @@
 
           <!-- Content -->
           <div class="flex-1 space-y-1">
-            <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+            <h3 class="font-semibold flex items-center" :style="{ color: 'var(--text-primary)' }">
               Favorite Degrees
               <span :class="[
                 `bg-${safeTheme.primary}-100/30 ml-2`,
@@ -93,24 +101,29 @@
                 'text-xs px-2 py-0.5 rounded-full'
               ]">{{ favoriteDegrees.length }}</span>
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Your saved educational paths</p>
+            <p class="text-sm" :style="{ color: 'var(--text-secondary)' }">Your saved educational paths</p>
 
             <!-- Expandable content -->
             <div class="pt-2 overflow-hidden transition-all duration-300"
               :class="{ 'max-h-[200px]': activeCard === 'degrees', 'max-h-0': activeCard !== 'degrees' }">
               <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
-                <RouterLink v-for="(degree, index) in favoriteDegrees" 
-                      :key="degree.id" 
+                <RouterLink v-for="(degree, index) in favoriteDegrees"
+                      :key="degree.id"
                       :to="`/degree/${degree.slug}`"
-                      class="flex items-center gap-1.5 p-1.5 rounded-lg bg-white/50 backdrop-blur-sm mb-1 group/degree hover:bg-white/70 active:bg-white/90 transition-all duration-200"
-                      :style="{ transitionDelay: `${index * 50}ms` }"
-                      :class="{ 'translate-x-0 opacity-100': activeCard === 'degrees', 'translate-x-4 opacity-0': activeCard !== 'degrees' }"
+                      class="flex items-center gap-1.5 p-1.5 rounded-lg mb-1 group/degree transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      :class="[`focus:ring-${safeTheme.primary}-500`, { 'translate-x-0 opacity-100': activeCard === 'degrees', 'translate-x-4 opacity-0': activeCard !== 'degrees' }]"
+                      :style="{
+                        transitionDelay: `${index * 50}ms`,
+                        backgroundColor: themeStore.isDarkMode ? 'rgba(40, 40, 40, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+                        backdropFilter: 'blur(8px)',
+                        ':hover': { backgroundColor: themeStore.isDarkMode ? 'rgba(50, 50, 50, 0.7)' : 'rgba(255, 255, 255, 0.7)' }
+                      }"
                 >
                   <div class="w-6 md:w-7 h-6 md:h-7 rounded-lg overflow-hidden bg-white/50 p-1.5 backdrop-blur-sm">
                     <img :src="degree.image" :alt="degree.name" class="w-full h-full object-contain filter contrast-125" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-xs md:text-sm font-medium text-gray-700 truncate">{{ degree.name }}</h4>
+                    <h4 class="text-xs md:text-sm font-medium truncate" :style="{ color: 'var(--text-primary)' }">{{ degree.name }}</h4>
                   </div>
                   <ArrowRight :class="[
                     `text-${safeTheme.primary}-600`,
@@ -120,23 +133,25 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
 
     <!-- Watch Card -->
-    <div class="unlock-card group" 
+    <div class="unlock-card group"
          :style="{ '--delay': '600ms' }">
-      <div class="relative overflow-hidden rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-4 border border-indigo-100/50 dark:border-indigo-900/50 transition-all duration-300 hover:shadow-xl" 
-           @click="toggleCard('watch')" 
+      <Card variant="frosted" class="relative overflow-hidden transition-all duration-300 hover:shadow-xl"
+           @click="toggleCard('watch')"
            @mouseenter="!isMobile && (activeCard = 'watch')"
            @mouseleave="!isMobile && (activeCard = null)"
       >
         <!-- Background Gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
 
-        <div class="relative flex items-start space-x-4">
-          <!-- Icon -->
+        <CardContent class="p-0">
+          <div class="relative flex items-start space-x-4">
+            <!-- Icon -->
           <div :class="[
             'w-12 h-12 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110',
             `bg-blue-100 dark:bg-blue-900/50`
@@ -160,7 +175,7 @@
             <div class="pt-2 overflow-hidden transition-all duration-300"
               :class="{ 'max-h-[200px]': activeCard === 'watch', 'max-h-0': activeCard !== 'watch' }">
               <div class="max-h-[140px] overflow-y-auto custom-scrollbar pr-2">
-                <RouterLink v-for="(platform, index) in streamingPlatforms" 
+                <RouterLink v-for="(platform, index) in streamingPlatforms"
                       :key="platform.name"
                       :to="`/watch/${platform.name.toLowerCase()}`"
                       class="flex items-center gap-1.5 p-1.5 rounded-lg bg-white/50 backdrop-blur-sm mb-1 group/platform hover:bg-white/70 active:bg-white/90 transition-all duration-200"
@@ -181,8 +196,9 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
@@ -192,6 +208,7 @@ import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ArrowRight, Play, Tv, Monitor, Laptop } from 'lucide-vue-next'
 import { useThemeStore } from '@/stores/theme/themeStore'
+import { Card, CardContent } from '@/components/ui/card'
 
 const props = defineProps({
   favoriteJobs: {

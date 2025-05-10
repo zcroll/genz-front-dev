@@ -14,6 +14,8 @@
 </template>
 
 <script setup>
+import { Card, CardContent } from '@/components/ui/card'
+
 defineProps({
   theme: {
     type: Object,
