@@ -7,7 +7,8 @@ import type {
   CareerOverviewResponse,
   CareerHowToBecomeResponse,
   CareerPersonalityResponse,
-  CareerWorkEnvironmentResponse
+  CareerWorkEnvironmentResponse,
+  CareerTechSkillsResponse
 } from '../types/career';
 
 /**
@@ -186,6 +187,26 @@ export const fetchCareerWorkEnvironment = async (slug: string): Promise<CareerWo
     return response;
   } catch (error) {
     console.error(`Error fetching career work environment for ${slug}:`, error);
+    return {
+      success: false,
+      data: null,
+      meta: null,
+      errors: error
+    };
+  }
+};
+
+/**
+ * Fetch career tech skills information by slug
+ * @param slug The slug of the career to fetch
+ * @returns Promise with the career tech skills data
+ */
+export const fetchCareerTechSkills = async (slug: string): Promise<CareerTechSkillsResponse> => {
+  try {
+    const response = await get<CareerTechSkillsResponse>(`/careers/${slug}/detail/tech-skills`);
+    return response;
+  } catch (error) {
+    console.error(`Error fetching career tech skills for ${slug}:`, error);
     return {
       success: false,
       data: null,

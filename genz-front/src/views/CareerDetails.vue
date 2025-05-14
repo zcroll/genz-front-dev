@@ -180,6 +180,12 @@ q
             :workEnvironment="careerWorkEnvironment"
             :isLoading="isLoadingWorkEnvironment"
           />
+
+          <CareerTechSkills
+            v-if="activeTab === 'tech-skills'"
+            :techSkills="careerTechSkills"
+            :isLoading="isLoadingTechSkills"
+          />
         </div>
       </div>
     </template>
@@ -195,17 +201,20 @@ import CareerOverview from '@/components/Careers/Detail/CareerOverview.vue';
 import CareerHowToBecome from '@/components/Careers/Detail/CareerHowToBecome.vue';
 import CareerPersonality from '@/components/Careers/Detail/CareerPersonality.vue';
 import CareerWorkEnvironment from '@/components/Careers/Detail/CareerWorkEnvironment.vue';
+import CareerTechSkills from '@/components/Careers/Detail/CareerTechSkills.vue';
 import {
   fetchCareerOverview,
   fetchCareerHowToBecome,
   fetchCareerPersonality,
-  fetchCareerWorkEnvironment
+  fetchCareerWorkEnvironment,
+  fetchCareerTechSkills
 } from '@/services/careerService';
 import type {
   CareerOverview as CareerOverviewType,
   CareerHowToBecome as CareerHowToBecomeType,
   CareerPersonality as CareerPersonalityType,
-  CareerWorkEnvironment as CareerWorkEnvironmentType
+  CareerWorkEnvironment as CareerWorkEnvironmentType,
+  CareerTechSkills as CareerTechSkillsType
 } from '@/types/career';
 
 // Import AppBreadcrumb component
@@ -218,7 +227,8 @@ import {
   User as LucideUser,
   GraduationCap as LucideGraduationCap,
   Heart as LucideHeart,
-  Building2 as LucideBuilding2
+  Building2 as LucideBuilding2,
+  Code as LucideCode
 } from "lucide-vue-next";
 
 // Define the layout to use
@@ -240,12 +250,14 @@ const isLoadingOverview = ref(true);
 const isLoadingHowToBecome = ref(true);
 const isLoadingPersonality = ref(true);
 const isLoadingWorkEnvironment = ref(true);
+const isLoadingTechSkills = ref(true);
 
 // Career data
 const careerOverview = ref<CareerOverviewType | null>(null);
 const careerHowToBecome = ref<CareerHowToBecomeType | null>(null);
 const careerPersonality = ref<CareerPersonalityType | null>(null);
 const careerWorkEnvironment = ref<CareerWorkEnvironmentType | null>(null);
+const careerTechSkills = ref<CareerTechSkillsType | null>(null);
 
 // Get active section from route
 const activeTab = computed(() => {
@@ -257,7 +269,8 @@ const tabs = [
   { id: 'overview', label: 'Career Overview', route: 'career-overview' },
   { id: 'how-to-become', label: 'How to Become', route: 'career-how-to-become' },
   { id: 'personality', label: 'Personality', route: 'career-personality' },
-  { id: 'work-environment', label: 'Work Environment', route: 'career-work-environment' }
+  { id: 'work-environment', label: 'Work Environment', route: 'career-work-environment' },
+  { id: 'tech-skills', label: 'Tech Skills', route: 'career-tech-skills' }
 ];
 
 // Format salary with commas
@@ -277,6 +290,8 @@ const getIconForTab = (tabId: string) => {
       return LucideHeart;
     case 'work-environment':
       return LucideBuilding2;
+    case 'tech-skills':
+      return LucideCode;
     default:
       return LucideUser;
   }
@@ -366,6 +381,13 @@ const fetchCareerData = async (slug: string) => {
         careerWorkEnvironment.value = workEnvironmentResponse.data;
       }
       isLoadingWorkEnvironment.value = false;
+    } else if (currentSection === 'tech-skills' && !careerTechSkills.value) {
+      isLoadingTechSkills.value = true;
+      const techSkillsResponse = await fetchCareerTechSkills(slug);
+      if (techSkillsResponse.success && techSkillsResponse.data) {
+        careerTechSkills.value = techSkillsResponse.data;
+      }
+      isLoadingTechSkills.value = false;
     }
   } catch (error) {
     console.error('Error fetching career data:', error);
@@ -385,6 +407,7 @@ watch(
         careerHowToBecome.value = null;
         careerPersonality.value = null;
         careerWorkEnvironment.value = null;
+        careerTechSkills.value = null;
       }
       fetchCareerData(newSlug as string);
     }

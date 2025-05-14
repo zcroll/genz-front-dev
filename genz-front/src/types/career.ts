@@ -103,6 +103,39 @@ export interface CareerWorkEnvironment {
   }[];
 }
 
+export interface CareerTechSkills {
+  id: number;
+  name: string;
+  slug: string;
+  technologies: {
+    category: string;
+    technologies: {
+      tech_id: number;
+      name: string;
+      description: string;
+      category: string | null;
+      is_hot: boolean;
+      is_in_demand: boolean;
+      last_updated: string;
+    }[];
+  }[];
+  skills: {
+    element_id: string;
+    element_name: string;
+    skills: {
+      skill_id: number;
+      name: string;
+      element_id: string;
+      element_name: string;
+      description: string;
+      scale_id: string;
+      scale_name: string;
+      data_value: number;
+      last_updated: string;
+    }[];
+  }[];
+}
+
 export interface CareerFilterParams {
   name?: string;
   industry_ids?: number[];
@@ -172,6 +205,13 @@ export interface CareerPersonalityResponse {
 export interface CareerWorkEnvironmentResponse {
   success: boolean;
   data: CareerWorkEnvironment;
+  meta: any;
+  errors: any;
+}
+
+export interface CareerTechSkillsResponse {
+  success: boolean;
+  data: CareerTechSkills;
   meta: any;
   errors: any;
 }

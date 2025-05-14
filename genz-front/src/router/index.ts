@@ -201,6 +201,20 @@ const routes: Array<RouteRecordRaw> = [
             icon: 'LucideBuilding2'
           }
         }
+      },
+      {
+        path: 'tech-skills',
+        name: 'career-tech-skills',
+        component: () => import('../views/CareerDetails.vue'),
+        meta: {
+          title: 'Tech Skills',
+          requiresAuth: true,
+          section: 'tech-skills',
+          breadcrumb: {
+            label: 'Tech Skills',
+            icon: 'LucideCode'
+          }
+        }
       }
     ]
   },
