@@ -1,332 +1,97 @@
 <template>
-  <div class="container mx-auto py-8 px-4 max-w-7xl">
-    <!-- Loading state -->
-    <div
-      v-if="isLoading"
-      class="flex flex-col items-center justify-center py-12"
-    >
-      <div
-        class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-t-2"
-        :class="`border-${themeColorName}-500`"
-      ></div>
-      <p class="mt-4 text-gray-500 dark:text-gray-400">
-        Loading career details...
-      </p>
-    </div>
-
-    <template v-else>
-      <!-- Shadcn Breadcrumb navigation with Lucide icons -->
+  <CareerSectionLayout
+    :slug="route.params.slug as string"
+    :activeTab="activeTab"
+    :careerOverview="careerOverview"
+    :careerHowToBecome="careerHowToBecome"
+    :careerPersonality="careerPersonality"
+    :careerWorkEnvironment="careerWorkEnvironment"
+    :navigationItems="navigationItems"
+    :isLoading="isLoading"
+    :isLoadingSidebar="isLoadingOverview || isLoadingWorkEnvironment"
+    :isLoadingNavigation="isLoadingNavigation"
+    @tab-changed="handleTabChanged"
+  >
+    <!-- Breadcrumb slot -->
+    <template #breadcrumb>
       <AppBreadcrumb :items="breadcrumbItems" />
-
-      <!-- Career title and compatibility with enhanced styling -->
-      <div class="mb-10">
-        <h1 class="text-4xl font-bold mb-3 text-gray-900 dark:text-white">
-          What does a {{ careerOverview?.name?.toLowerCase() }} do?
-        </h1>
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <span
-            :class="[
-              'px-3 py-1 text-sm font-medium rounded-full text-white inline-flex items-center justify-center shadow-sm',
-              `bg-${themeColorName}-500 hover:bg-${themeColorName}-600 transition-colors`,
-            ]"
-          >
-            {{ careerOverview?.satisfaction }} Satisfaction
-          </span>
-          <p class="text-gray-600 dark:text-gray-400">
-            <strong
-              >Would you make a good
-              {{ careerOverview?.name?.toLowerCase() }}?</strong
-            >
-            Take our career test and find your match with over 800 careers.
-          </p>
-        </div>
-      </div>
-
-      <!-- Career content -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Left sidebar with career summary - enhanced styling -->
-        <div class="lg:col-span-1">
-          <div
-            class="sticky top-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden transition-shadow duration-300 hover:shadow-md"
-          >
-            <!-- Card header with enhanced styling -->
-            <div
-              class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80"
-            >
-              <div class="flex items-center space-x-4">
-                <img
-                  v-if="careerOverview?.image"
-                  :src="careerOverview.image"
-                  :alt="careerOverview.name"
-                  class="w-16 h-16 rounded-lg object-cover shadow-sm border border-gray-100 dark:border-gray-700"
-                />
-                <div
-                  v-else
-                  class="w-16 h-16 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-gray-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect
-                      x="2"
-                      y="7"
-                      width="20"
-                      height="14"
-                      rx="2"
-                      ry="2"
-                    ></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-                    {{ careerOverview?.name }}
-                  </h2>
-                  <div class="mt-1">
-                    <span
-                      :class="[
-                        'px-2 py-1 text-xs font-medium rounded-full text-white shadow-sm',
-                        `bg-${themeColorName}-500`,
-                      ]"
-                    >
-                      {{ careerOverview?.satisfaction }} Satisfaction
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            q
-            <!-- Card content -->
-            <div class="p-6">
-              <div class="space-y-4">
-                <!-- Career test CTA with enhanced styling -->
-                <div
-                  class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm"
-                >
-                  <p class="text-sm mb-3 text-gray-700 dark:text-gray-300">
-                    <strong
-                      >Would you make a good
-                      {{ careerOverview?.name?.toLowerCase() }}?</strong
-                    >
-                    Take our career test and find your match with over 800
-                    careers.
-                  </p>
-                  <div class="flex flex-col sm:flex-row gap-3">
-                    <button
-                      :class="[
-                        'px-4 py-2 rounded-md text-white font-medium transition-colors shadow-sm',
-                        `bg-${themeColorName}-500 hover:bg-${themeColorName}-600`,
-                      ]"
-                    >
-                      Take the free test now
-                    </button>
-                    <button
-                      class="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium transition-colors hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm"
-                    >
-                      Learn more
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Career stats with enhanced styling -->
-                <div class="space-y-3">
-                  <div
-                    class="flex justify-between items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-green-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                      </svg>
-                      <span class="font-medium text-gray-700 dark:text-gray-300"
-                        >Avg Salary</span
-                      >
-                    </div>
-                    <span class="text-gray-900 dark:text-white font-medium"
-                      >${{ formatSalary(careerOverview?.salary) }}</span
-                    >
-                  </div>
-
-                  <div
-                    class="flex justify-between items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-red-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path
-                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                        ></path>
-                      </svg>
-                      <span class="font-medium text-gray-700 dark:text-gray-300"
-                        >Satisfaction</span
-                      >
-                    </div>
-                    <span class="text-gray-900 dark:text-white font-medium">{{
-                      careerOverview?.satisfaction
-                    }}</span>
-                  </div>
-
-                  <div
-                    v-if="careerWorkEnvironment?.employment"
-                    class="h-px bg-gray-200 dark:bg-gray-700"
-                  ></div>
-
-                  <div
-                    v-if="careerWorkEnvironment?.employment?.ease_of_employment"
-                    class="flex justify-between items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-blue-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <rect
-                          x="2"
-                          y="7"
-                          width="20"
-                          height="14"
-                          rx="2"
-                          ry="2"
-                        ></rect>
-                        <path
-                          d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
-                        ></path>
-                      </svg>
-                      <span class="font-medium text-gray-700 dark:text-gray-300"
-                        >Employment</span
-                      >
-                    </div>
-                    <span class="text-gray-900 dark:text-white font-medium">{{
-                      careerWorkEnvironment.employment.ease_of_employment
-                    }}</span>
-                  </div>
-
-                  <div
-                    v-if="careerWorkEnvironment?.employment?.employment_type"
-                    class="flex justify-between items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-purple-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                      </svg>
-                      <span class="font-medium text-gray-700 dark:text-gray-300"
-                        >Schedule</span
-                      >
-                    </div>
-                    <span class="text-gray-900 dark:text-white font-medium">{{
-                      careerWorkEnvironment.employment.employment_type
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Main content area -->
-        <div class="lg:col-span-2">
-          <!-- Navigation tabs are handled by CareerNavigation component -->
-          <CareerNavigation 
-            :slug="route.params.slug as string" 
-            :active-tab="activeTab" 
-            :is-loading="isLoadingNavigation"
-            @navigation-loaded="handleNavigationLoaded"
-          />
-
-          <!-- Tab content with enhanced styling -->
-          <CareerOverview
-            v-if="activeTab === 'overview'"
-            :overview="careerOverview"
-            :isLoading="isLoadingOverview"
-          />
-
-          <CareerHowToBecome
-            v-if="activeTab === 'how-to-become'"
-            :howToBecome="careerHowToBecome"
-            :isLoading="isLoadingHowToBecome"
-          />
-
-          <CareerPersonality
-            v-if="activeTab === 'personality'"
-            :personality="careerPersonality"
-            :isLoading="isLoadingPersonality"
-          />
-
-          <CareerWorkEnvironment
-            v-if="activeTab === 'work-environment'"
-            :workEnvironment="careerWorkEnvironment"
-            :isLoading="isLoadingWorkEnvironment"
-          />
-
-          <CareerTechSkills
-            v-if="activeTab === 'tech-skills' || activeTab === 'technologies' || activeTab === 'skills'"
-            :techSkills="careerTechSkills"
-            :isLoading="isLoadingTechSkills"
-          />
-        </div>
-      </div>
     </template>
-  </div>
+
+    <!-- Header slot -->
+    <template #header>
+      <CareerDetailHeader
+        :careerOverview="careerOverview"
+        :isLoading="isLoadingOverview"
+      />
+    </template>
+
+    <!-- Content slot -->
+    <template #content>
+      <!-- Overview tab -->
+      <CareerOverview
+        v-if="activeTab === 'overview'"
+        :overview="careerOverview"
+        :isLoading="isLoadingOverview"
+      />
+
+      <!-- How to Become tab -->
+      <CareerHowToBecome
+        v-if="activeTab === 'how-to-become'"
+        :howToBecome="careerHowToBecome"
+        :isLoading="isLoadingHowToBecome"
+      />
+
+      <!-- Personality tab -->
+      <CareerPersonality
+        v-if="activeTab === 'personality'"
+        :personality="careerPersonality"
+        :isLoading="isLoadingPersonality"
+      />
+
+      <!-- Work Environment tab -->
+      <CareerWorkEnvironment
+        v-if="activeTab === 'work-environment'"
+        :workEnvironment="careerWorkEnvironment"
+        :isLoading="isLoadingWorkEnvironment"
+      />
+
+      <!-- Tech Skills tab -->
+      <CareerTechSkills
+        v-if="
+          activeTab === 'tech-skills' ||
+          activeTab === 'technologies' ||
+          activeTab === 'skills'
+        "
+        :techSkills="careerTechSkills"
+        :isLoading="isLoadingTechSkills"
+      />
+    </template>
+
+    <!-- Related content slot -->
+    <template #related-content>
+      <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        Related Content
+      </h2>
+      <p class="text-gray-600 dark:text-gray-400">
+        Explore related careers, degrees, and resources.
+      </p>
+    </template>
+  </CareerSectionLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { currentTheme } from "@/lib/theme-utils";
 import MainLayout from "@/layout/Main-layout.vue";
-import CareerOverview from "@/components/Careers/Detail/CareerOverview.vue";
-import CareerHowToBecome from "@/components/Careers/Detail/CareerHowToBecome.vue";
-import CareerPersonality from "@/components/Careers/Detail/CareerPersonality.vue";
-import CareerWorkEnvironment from "@/components/Careers/Detail/CareerWorkEnvironment.vue";
-import CareerTechSkills from "@/components/Careers/Detail/CareerTechSkills.vue";
-import CareerNavigation from '@/components/Careers/Detail/CareerNavigation.vue';
+import { useCareerCacheStore } from "@/stores/careerCacheStore";
 import {
   fetchCareerOverview,
   fetchCareerHowToBecome,
   fetchCareerPersonality,
   fetchCareerWorkEnvironment,
   fetchCareerTechSkills,
+  fetchCareerNavigation,
 } from "@/services/careerService";
 import type {
   CareerOverview as CareerOverviewType,
@@ -334,11 +99,20 @@ import type {
   CareerPersonality as CareerPersonalityType,
   CareerWorkEnvironment as CareerWorkEnvironmentType,
   CareerTechSkills as CareerTechSkillsType,
-  CareerNavigationItem
+  CareerNavigationItem,
 } from "@/types/career";
 
 // Import AppBreadcrumb component
 import AppBreadcrumb from "@/components/ui/breadcrumb/AppBreadcrumb.vue";
+
+// Import our new section layout components
+import CareerSectionLayout from "@/components/Careers/Detail/CareerSectionLayout.vue";
+import CareerDetailHeader from "@/components/Careers/Detail/CareerDetailHeader.vue";
+import CareerOverview from "@/components/Careers/Detail/CareerOverview.vue";
+import CareerHowToBecome from "@/components/Careers/Detail/CareerHowToBecome.vue";
+import CareerPersonality from "@/components/Careers/Detail/CareerPersonality.vue";
+import CareerWorkEnvironment from "@/components/Careers/Detail/CareerWorkEnvironment.vue";
+import CareerTechSkills from "@/components/Careers/Detail/CareerTechSkills.vue";
 
 // Import Lucide icons for dynamic component resolution
 import {
@@ -356,12 +130,43 @@ defineOptions({
   layout: MainLayout,
 });
 
-
-
-// Get the current route
+// Get the current route and router
 const route = useRoute();
+const router = useRouter();
 
-// Get the current theme color
+// Initialize the cache store
+const cacheStore = useCareerCacheStore();
+
+// Cache invalidation function when data is stale
+const invalidateStaleCache = (endpoint: string, slug: string) => {
+  if (!cacheStore.hasCacheData(endpoint, slug)) {
+    // If there's no cache entry, create a loading state but don't clear existing data
+    return false;
+  }
+  return true;
+};
+
+// Function to reset career data when switching between careers
+const resetCareerData = () => {
+  careerOverview.value = null;
+  careerHowToBecome.value = null;
+  careerPersonality.value = null;
+  careerWorkEnvironment.value = null;
+  careerTechSkills.value = null;
+  navigationItems.value = [];
+
+  // Reset all loading states
+  isLoading.value = true;
+  isLoadingNavigation.value = true;
+  isLoadingOverview.value = true;
+  isLoadingHowToBecome.value = true;
+  isLoadingPersonality.value = true;
+  isLoadingWorkEnvironment.value = true;
+  isLoadingTechSkills.value = true;
+};
+
+// Theme color is now primarily handled in individual components,
+// but we keep this for breadcrumbs and other main view elements
 const themeColorName = computed(() => {
   return currentTheme.value.replace("-theme", "") || "blue";
 });
@@ -388,27 +193,85 @@ const activeTab = computed(() => {
   return (route.meta.section as string) || "overview";
 });
 
-// Handle navigation loaded event
-const handleNavigationLoaded = (items: CareerNavigationItem[]) => {
-  navigationItems.value = items;
-  isLoadingNavigation.value = false;
+// Navigation data is loaded in the fetchCareerData function and passed to components
+
+// Handle tab change event
+const handleTabChanged = (tabKey: string) => {
+  // Navigate to the correct route based on tab key
+  const routeMap: Record<string, string> = {
+    overview: "career-overview",
+    "how-to-become": "career-how-to-become",
+    personality: "career-personality",
+    "work-environment": "career-work-environment",
+    "tech-skills": "career-tech-skills",
+    technologies: "career-tech-skills",
+    skills: "career-tech-skills",
+  };
+
+  const routeName = routeMap[tabKey] || "career-overview";
+
+  // Preload section data if not already loaded to avoid flash of loading state
+  const preloadSectionData = async () => {
+    const slug = route.params.slug as string;
+
+    switch(tabKey) {
+      case 'how-to-become':
+        if (!careerHowToBecome.value && !isLoadingHowToBecome.value) {
+          fetchCareerData(slug);
+        }
+        break;
+      case 'personality':
+        if (!careerPersonality.value && !isLoadingPersonality.value) {
+          fetchCareerData(slug);
+        }
+        break;
+      case 'work-environment':
+        if (!careerWorkEnvironment.value && !isLoadingWorkEnvironment.value) {
+          fetchCareerData(slug);
+        }
+        break;
+      case 'tech-skills':
+      case 'technologies':
+      case 'skills':
+        if (!careerTechSkills.value && !isLoadingTechSkills.value) {
+          fetchCareerData(slug);
+        }
+        break;
+    }
+  };
+
+  // Preload data then navigate
+  preloadSectionData();
+
+  router.push({
+    name: routeName,
+    params: { slug: route.params.slug as string },
+  });
 };
 
 // Computed property to get available navigation items
 const tabs = computed(() => {
   const defaultTabs = [
-    { id: 'overview', label: 'Career Overview', route: 'career-overview' },
-    { id: 'how-to-become', label: 'How to Become', route: 'career-how-to-become' },
-    { id: 'personality', label: 'Personality', route: 'career-personality' },
-    { id: 'work-environment', label: 'Work Environment', route: 'career-work-environment' },
-    { id: 'tech-skills', label: 'Tech Skills', route: 'career-tech-skills' }
+    { id: "overview", label: "Career Overview", route: "career-overview" },
+    {
+      id: "how-to-become",
+      label: "How to Become",
+      route: "career-how-to-become",
+    },
+    { id: "personality", label: "Personality", route: "career-personality" },
+    {
+      id: "work-environment",
+      label: "Work Environment",
+      route: "career-work-environment",
+    },
+    { id: "tech-skills", label: "Tech Skills", route: "career-tech-skills" },
   ];
-  
+
   if (!navigationItems.value || navigationItems.value.length === 0) {
     // Default tabs when navigation items are not yet loaded
     return defaultTabs;
   }
-  
+
   return navigationItems.value
     .filter((item) => item.available)
     .map((item) => ({
@@ -436,34 +299,50 @@ const getRouteFromKey = (key: string): string => {
 
 // Handle navigation loaded event
 
-
-// Format salary with commas
-const formatSalary = (salary?: number): string => {
-  if (!salary) return "N/A";
-  return salary.toLocaleString();
-};
+// Format salary function has been moved to CareerDetailSidebar component
 
 // Helper function to get the icon for a tab
 const getIconForTab = (tabId: string) => {
   switch (tabId) {
-    case 'overview':
+    case "overview":
       return LucideBriefcase;
-    case 'how-to-become':
+    case "how-to-become":
       return LucideGraduationCap;
-    case 'personality':
+    case "personality":
       return LucideUser;
-    case 'work-environment':
+    case "work-environment":
       return LucideBuilding2;
-    case 'tech-skills':
-    case 'technologies':
-    case 'skills':
+    case "tech-skills":
+    case "technologies":
+    case "skills":
       return LucideCode;
     default:
       return LucideBriefcase;
   }
 };
 
-// Create breadcrumb items based on route and career data
+// Helper function to get label for navigation key
+const getNavLabel = (key: string): string => {
+  if (!navigationItems.value || navigationItems.value.length === 0) {
+    // Default labels if navigation items are not loaded
+    const defaultLabels: Record<string, string> = {
+      overview: "Career Overview",
+      "how-to-become": "How to Become",
+      personality: "Personality",
+      "work-environment": "Work Environment",
+      "tech-skills": "Tech Skills",
+      technologies: "Technologies",
+      skills: "Skills",
+    };
+    return defaultLabels[key] || key;
+  }
+
+  // Find the label from navigation items
+  const navItem = navigationItems.value.find((item) => item.key === key);
+  return navItem ? navItem.name : key;
+};
+
+// Breadcrumb items construction
 const breadcrumbItems = computed(() => {
   // Base items that are always present
   const items = [
@@ -480,7 +359,7 @@ const breadcrumbItems = computed(() => {
   ];
 
   // Add career name if available
-  if (careerOverview.value?.name) {
+  if (careerOverview.value) {
     items.push({
       name: careerOverview.value.name,
       // If we're on the overview tab, this is the current page (no path)
@@ -495,29 +374,76 @@ const breadcrumbItems = computed(() => {
 
   // Add section tab if not on overview
   if (activeTab.value !== "overview") {
-    const currentTab = tabs.value.find((tab) => tab.id === activeTab.value);
-    if (currentTab) {
-      // Add the current section as the last breadcrumb item
-      // This is the current page, so no path needed (current page is not clickable)
-      items.push({
-        name: currentTab.label,
-        icon: getIconForTab(currentTab.id),
-      });
-    }
+    // Add the current section as the last breadcrumb item
+    // This is the current page, so no path needed (current page is not clickable)
+    items.push({
+      name: getNavLabel(activeTab.value),
+      icon: getIconForTab(activeTab.value),
+    });
   }
 
   return items;
 });
 
 // Fetch career data based on active tab
+// Function to fetch career data with cache support
 const fetchCareerData = async (slug: string) => {
+  // Reset loading states
   isLoading.value = true;
+  isLoadingNavigation.value = true;
+  isLoadingOverview.value = !careerOverview.value;
+  isLoadingHowToBecome.value = !careerHowToBecome.value;
+  isLoadingPersonality.value = !careerPersonality.value;
+  isLoadingWorkEnvironment.value = !careerWorkEnvironment.value;
+  isLoadingTechSkills.value = !careerTechSkills.value;
 
   try {
-    // Always fetch overview data for the sidebar
+      // Check if we already have the data in memory first
+      if (navigationItems.value.length > 0) {
+        isLoadingNavigation.value = false;
+      } else {
+        // Fetch navigation data from cache or API (15 minute expiry)
+        isLoadingNavigation.value = true;
+        const navigationResponse = await cacheStore.getOrFetchData(
+          "careerNavigation",
+          slug,
+          async () => await fetchCareerNavigation(slug),
+          15 * 60 * 1000 // 15 minutes expiry
+        );
+
+    if (navigationResponse.success && navigationResponse.data) {
+      navigationItems.value = navigationResponse.data.navigation;
+      // Check if current section is available
+      const currentSectionAvailable = navigationItems.value.some(
+        (item) => item.key === activeTab.value && item.available,
+      );
+
+      // If current section is not available, redirect to the first available section
+      if (
+        !currentSectionAvailable &&
+        navigationItems.value.filter((item) => item.available).length > 0
+      ) {
+        const firstAvailableItem = navigationItems.value.find(
+          (item) => item.available,
+        );
+        if (firstAvailableItem) {
+          handleTabChanged(firstAvailableItem.key);
+        }
+      }
+    }
+      isLoadingNavigation.value = false;
+    }
+
+    // Fetch overview data for the sidebar - with caching and memory check
     if (!careerOverview.value) {
       isLoadingOverview.value = true;
-      const overviewResponse = await fetchCareerOverview(slug);
+      const overviewResponse = await cacheStore.getOrFetchData(
+        "careerOverview",
+        slug,
+        async () => await fetchCareerOverview(slug),
+        30 * 60 * 1000 // 30 minutes expiry
+      );
+
       if (overviewResponse.success && overviewResponse.data) {
         careerOverview.value = overviewResponse.data;
       }
@@ -527,39 +453,84 @@ const fetchCareerData = async (slug: string) => {
     // Fetch section-specific data based on active tab
     const currentSection = activeTab.value;
 
-    if (currentSection === 'overview' && !careerOverview.value) {
+    if (currentSection === "overview") {
       // Overview data already fetched above
-    } else if ((currentSection === 'how-to-become') && !careerHowToBecome.value) {
-      isLoadingHowToBecome.value = true;
-      const howToBecomeResponse = await fetchCareerHowToBecome(slug);
-      if (howToBecomeResponse.success && howToBecomeResponse.data) {
-        careerHowToBecome.value = howToBecomeResponse.data;
+      isLoadingOverview.value = false;
+    } else if (currentSection === "how-to-become") {
+      if (careerHowToBecome.value) {
+        isLoadingHowToBecome.value = false;
+      } else {
+        isLoadingHowToBecome.value = true;
+        const howToBecomeResponse = await cacheStore.getOrFetchData(
+          "careerHowToBecome",
+          slug,
+          async () => await fetchCareerHowToBecome(slug),
+          20 * 60 * 1000 // 20 minutes expiry
+        );
+
+        if (howToBecomeResponse.success && howToBecomeResponse.data) {
+          careerHowToBecome.value = howToBecomeResponse.data;
+        }
+        isLoadingHowToBecome.value = false;
       }
-      isLoadingHowToBecome.value = false;
-    } else if (currentSection === 'personality' && !careerPersonality.value) {
-      isLoadingPersonality.value = true;
-      const personalityResponse = await fetchCareerPersonality(slug);
-      if (personalityResponse.success && personalityResponse.data) {
-        careerPersonality.value = personalityResponse.data;
+    } else if (currentSection === "personality") {
+      if (careerPersonality.value) {
+        isLoadingPersonality.value = false;
+      } else {
+        isLoadingPersonality.value = true;
+        const personalityResponse = await cacheStore.getOrFetchData(
+          "careerPersonality",
+          slug,
+          async () => await fetchCareerPersonality(slug),
+          20 * 60 * 1000 // 20 minutes expiry
+        );
+
+        if (personalityResponse.success && personalityResponse.data) {
+          careerPersonality.value = personalityResponse.data;
+        }
+        isLoadingPersonality.value = false;
       }
-      isLoadingPersonality.value = false;
-    } else if (currentSection === 'work-environment' && !careerWorkEnvironment.value) {
-      isLoadingWorkEnvironment.value = true;
-      const workEnvironmentResponse = await fetchCareerWorkEnvironment(slug);
-      if (workEnvironmentResponse.success && workEnvironmentResponse.data) {
-        careerWorkEnvironment.value = workEnvironmentResponse.data;
+    } else if (currentSection === "work-environment") {
+      if (careerWorkEnvironment.value) {
+        isLoadingWorkEnvironment.value = false;
+      } else {
+        isLoadingWorkEnvironment.value = true;
+        const workEnvironmentResponse = await cacheStore.getOrFetchData(
+          'careerWorkEnvironment',
+          slug,
+          async () => await fetchCareerWorkEnvironment(slug),
+          20 * 60 * 1000 // 20 minutes expiry
+        );
+
+        if (workEnvironmentResponse.success && workEnvironmentResponse.data) {
+          careerWorkEnvironment.value = workEnvironmentResponse.data;
+        }
+        isLoadingWorkEnvironment.value = false;
       }
-      isLoadingWorkEnvironment.value = false;
-    } else if ((currentSection === 'tech-skills' || currentSection === 'technologies' || currentSection === 'skills') && !careerTechSkills.value) {
-      isLoadingTechSkills.value = true;
-      const techSkillsResponse = await fetchCareerTechSkills(slug);
-      if (techSkillsResponse.success && techSkillsResponse.data) {
-        careerTechSkills.value = techSkillsResponse.data;
+    } else if (
+      currentSection === "tech-skills" ||
+      currentSection === "technologies" ||
+      currentSection === "skills"
+    ) {
+      if (careerTechSkills.value) {
+        isLoadingTechSkills.value = false;
+      } else {
+        isLoadingTechSkills.value = true;
+        const techSkillsResponse = await cacheStore.getOrFetchData(
+          'careerTechSkills',
+          slug,
+          async () => await fetchCareerTechSkills(slug),
+          20 * 60 * 1000 // 20 minutes expiry
+        );
+
+        if (techSkillsResponse.success && techSkillsResponse.data) {
+          careerTechSkills.value = techSkillsResponse.data;
+        }
+        isLoadingTechSkills.value = false;
       }
-      isLoadingTechSkills.value = false;
     }
   } catch (error) {
-    console.error('Error fetching career data:', error);
+    console.error("Error fetching career data:", error);
   } finally {
     isLoading.value = false;
   }
@@ -568,16 +539,27 @@ const fetchCareerData = async (slug: string) => {
 // Watch for route changes to fetch data for the new career or section
 watch(
   [() => route.params.slug, () => route.meta.section],
-  ([newSlug, newSection]) => {
+  ([newSlug, newSection], oldValues) => {
     if (newSlug) {
-      // Reset data when slug changes (new career)
-      if (route.params.slug !== newSlug) {
-        careerOverview.value = null;
-        careerHowToBecome.value = null;
-        careerPersonality.value = null;
-        careerWorkEnvironment.value = null;
-        careerTechSkills.value = null;
+      const oldSlug = oldValues?.[0];
+
+      // Reset data and clear cache when slug changes (new career)
+      if (oldSlug && newSlug !== oldSlug) {
+        // Clear cache for the previous career
+        cacheStore.clearEndpointCache('careerOverview');
+        cacheStore.clearEndpointCache('careerHowToBecome');
+        cacheStore.clearEndpointCache('careerPersonality');
+        cacheStore.clearEndpointCache('careerWorkEnvironment');
+        cacheStore.clearEndpointCache('careerTechSkills');
+
+        // Reset component state
+        resetCareerData();
+      } else if (newSection !== oldValues?.[1]) {
+        // Just navigating between sections - use cached data
+        console.log(`Navigating to section: ${newSection}`);
       }
+
+      // Fetch data for the current career/section
       fetchCareerData(newSlug as string);
     }
   },
