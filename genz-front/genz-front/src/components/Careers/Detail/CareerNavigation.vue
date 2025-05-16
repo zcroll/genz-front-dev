@@ -60,18 +60,16 @@ const getRouteFromUri = (uri: string): { name: string, params: { slug: string } 
   // Example URI: /careers/multimedia-animator/detail/overview
   const parts = uri.split('/');
   const sectionKey = parts[parts.length - 1];
-  
+
   // Map section key to route name
   const routeMap: Record<string, string> = {
     'overview': 'career-overview',
     'how-to-become': 'career-how-to-become',
     'personality': 'career-personality',
     'work-environment': 'career-work-environment',
-    'tech-skills': 'career-tech-skills',
-    'technologies': 'career-tech-skills',
-    'skills': 'career-tech-skills'
+    'tech-skills': 'career-tech-skills'
   };
-  
+
   return {
     name: routeMap[sectionKey] || 'career-overview',
     params: { slug: props.slug }
@@ -86,12 +84,12 @@ const fetchNavigationData = async () => {
     if (response.success && response.data) {
       navigationItems.value = response.data.navigation;
       emit('navigation-loaded', navigationItems.value);
-      
+
       // If current section is not available, redirect to the first available section
       const currentSectionAvailable = navigationItems.value.some(
         item => item.key === props.activeTab && item.available
       );
-      
+
       if (!currentSectionAvailable && availableNavItems.value.length > 0) {
         const firstAvailableItem = availableNavItems.value[0];
         router.replace(getRouteFromUri(firstAvailableItem.uri));

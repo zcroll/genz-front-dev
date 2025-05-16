@@ -191,9 +191,7 @@ const getRouteFromUri = (
     "how-to-become": "career-how-to-become",
     personality: "career-personality",
     "work-environment": "career-work-environment",
-    "tech-skills": "career-tech-skills",
-    technologies: "career-tech-skills",
-    skills: "career-tech-skills",
+    "tech-skills": "career-tech-skills"
   };
 
   return {
@@ -271,9 +269,6 @@ const getIconForItem = (tabId: string) => {
     case "work-environment":
       return LucideBuilding2;
     case "tech-skills":
-    case "technologies":
-    case "skills":
-      return LucideCode;
     default:
       return LucideBookOpen;
   }
@@ -308,9 +303,7 @@ const getCurrentSectionDescription = (): string => {
     case "work-environment":
       return "Typical workplace settings, conditions, and employment arrangements.";
     case "tech-skills":
-    case "technologies":
-    case "skills":
-      return "Technical skills, tools, and technologies commonly used in this profession.";
+      return "Technical skills and technologies used in this profession.";
     default:
       return "Information about this career section.";
   }

@@ -232,10 +232,6 @@ const handleTabChanged = (tabKey: string) => {
         break;
       case 'tech-skills':
       case 'technologies':
-      case 'skills':
-        if (!careerTechSkills.value && !isLoadingTechSkills.value) {
-          fetchCareerData(slug);
-        }
         break;
     }
   };
@@ -264,7 +260,6 @@ const tabs = computed(() => {
       label: "Work Environment",
       route: "career-work-environment",
     },
-    { id: "tech-skills", label: "Tech Skills", route: "career-tech-skills" },
   ];
 
   if (!navigationItems.value || navigationItems.value.length === 0) {
@@ -290,9 +285,7 @@ const getRouteFromKey = (key: string): string => {
     personality: "career-personality",
     "work-environment": "career-work-environment",
     "tech-skills": "career-tech-skills",
-    technologies: "career-tech-skills",
-    skills: "career-tech-skills",
-  };
+    technologies: "career-tech-skills",};
 
   return routeMap[key] || "career-overview";
 };
@@ -314,8 +307,7 @@ const getIconForTab = (tabId: string) => {
       return LucideBuilding2;
     case "tech-skills":
     case "technologies":
-    case "skills":
-      return LucideCode;
+
     default:
       return LucideBriefcase;
   }
@@ -332,7 +324,6 @@ const getNavLabel = (key: string): string => {
       "work-environment": "Work Environment",
       "tech-skills": "Tech Skills",
       technologies: "Technologies",
-      skills: "Skills",
     };
     return defaultLabels[key] || key;
   }

@@ -114,9 +114,9 @@
         <!-- Main content area -->
         <div class="lg:col-span-2">
           <!-- Dynamic Navigation tabs with enhanced styling -->
-          <CareerNavigation 
-            :slug="route.params.slug as string" 
-            :active-tab="activeTab" 
+          <CareerNavigation
+            :slug="route.params.slug as string"
+            :active-tab="activeTab"
             :is-loading="isLoadingNavigation"
             @navigation-loaded="handleNavigationLoaded"
           />
@@ -251,8 +251,6 @@ const getIconForTab = (tabId: string) => {
     case 'work-environment':
       return LucideBuilding2;
     case 'tech-skills':
-    case 'technologies':
-    case 'skills':
       return LucideCode;
     default:
       return LucideUser;
@@ -296,7 +294,7 @@ const breadcrumbItems = computed(() => {
   if (activeTab.value !== 'overview') {
     // Find the current tab in the navigation items
     const currentTab = navigationItems.value.find(item => item.key === activeTab.value);
-    
+
     if (currentTab) {
       // Add the current section as the last breadcrumb item
       // This is the current page, so no path needed (current page is not clickable)
@@ -351,7 +349,7 @@ const fetchCareerData = async (slug: string) => {
         careerWorkEnvironment.value = workEnvironmentResponse.data;
       }
       isLoadingWorkEnvironment.value = false;
-    } else if ((currentSection === 'tech-skills' || currentSection === 'technologies' || currentSection === 'skills') && !careerTechSkills.value) {
+    } else if (currentSection === 'tech-skills' && !careerTechSkills.value) {
       isLoadingTechSkills.value = true;
       const techSkillsResponse = await fetchCareerTechSkills(slug);
       if (techSkillsResponse.success && techSkillsResponse.data) {
