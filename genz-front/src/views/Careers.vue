@@ -14,14 +14,14 @@
       </CardContent>
     </Card>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
       <!-- Filters Sidebar -->
       <div class="lg:col-span-1">
         <CareerFilters @update:filters="handleFiltersUpdate" @reset="resetFilters" />
       </div>
 
       <!-- Careers List -->
-      <div class="lg:col-span-3">
+      <div class="lg:col-span-4">
         <!-- Results Count -->
         <div class="mb-6 flex justify-between items-center">
           <p>
@@ -46,7 +46,7 @@
         <TransitionGroup
             name="career-list"
             tag="div"
-            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
             v-if="careers.data.length > 0 && !isLoading"
             appear
         >

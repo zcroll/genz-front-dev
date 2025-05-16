@@ -1,61 +1,76 @@
 <template>
-  <Card variant="frosted" class="group relative overflow-hidden transition-all duration-200 hover:shadow-lg">
+  <Card
+    variant="frosted"
+    class="group relative overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col"
+    :style="{ borderRadius: 'var(--card-corner-radius-default, 20px)' }"
+  >
     <!-- Career Image -->
-    <div class="relative h-40 overflow-hidden rounded-t-xl">
+    <div class="relative h-40 overflow-hidden">
       <img
         v-if="career.image"
         :src="career.image"
         :alt="career.name"
-        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div
         v-else
         :class="[
           'h-full w-full flex items-center justify-center',
-          themeStore.isDarkMode ? 'bg-gray-700/50' : 'bg-gray-100/70'
+          themeStore.isDarkMode ? 'bg-gray-800/70' : 'bg-gray-100/70'
         ]"
       >
-        <BriefcaseIcon class="h-16 w-16" :style="{ color: 'var(--text-secondary)' }" />
+        <BriefcaseIcon class="h-20 w-20 opacity-70" :style="{ color: 'var(--text-secondary)' }" />
+      </div>
+
+      <!-- Career Badge (if applicable) -->
+      <div
+        v-if="career.employment_type"
+        class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium shadow-sm"
+        :class="getEmploymentTypeClass(career.employment_type)"
+      >
+        {{ career.employment_type }}
       </div>
     </div>
 
     <!-- Career Content -->
-    <CardContent>
-      <CardTitle variant="frosted" class="mb-2 line-clamp-2">
+    <CardContent class="flex-1 flex flex-col p-4">
+      <CardTitle
+        variant="frosted"
+        class="mb-2 text-lg font-bold"
+        :style="{ color: 'var(--text-primary)' }"
+      >
         {{ career.name }}
       </CardTitle>
 
       <!-- Career Details -->
-      <div class="space-y-3 mb-4">
+      <div class="space-y-2 mb-4 flex-1">
         <!-- Salary -->
         <div v-if="career.salary" class="flex items-center text-sm">
-          <CurrencyDollarIcon class="h-4 w-4 mr-2 text-green-500" />
-          <span :style="{ color: 'var(--text-secondary)' }">
+          <div class="flex-shrink-0 w-6 flex justify-center">
+            <CurrencyDollarIcon class="h-4 w-4 text-green-500" />
+          </div>
+          <span :style="{ color: 'var(--text-secondary)' }" class="font-medium">
             {{ formatSalary(career.salary) }}
           </span>
         </div>
 
         <!-- Satisfaction -->
         <div v-if="career.satisfaction" class="flex items-center text-sm">
-          <StarIcon class="h-4 w-4 mr-2 text-yellow-500" />
-          <span :style="{ color: 'var(--text-secondary)' }">
+          <div class="flex-shrink-0 w-6 flex justify-center">
+            <StarIcon class="h-4 w-4 text-yellow-500" />
+          </div>
+          <span :style="{ color: 'var(--text-secondary)' }" class="font-medium">
             {{ career.satisfaction }} Satisfaction
           </span>
         </div>
 
         <!-- Industries -->
         <div v-if="career.industries && career.industries.length > 0" class="flex items-start text-sm">
-          <BuildingOfficeIcon class="h-4 w-4 mr-2 text-blue-500 mt-0.5" />
-          <span :style="{ color: 'var(--text-secondary)' }" class="line-clamp-2">
-            {{ career.industries.join(', ') }}
-          </span>
-        </div>
-
-        <!-- Employment Type -->
-        <div v-if="career.employment_type" class="flex items-center text-sm">
-          <ClockIcon class="h-4 w-4 mr-2 text-purple-500" />
-          <span :style="{ color: 'var(--text-secondary)' }">
-            {{ career.employment_type }}
+          <div class="flex-shrink-0 w-6 flex justify-center mt-0.5">
+            <BuildingOfficeIcon class="h-4 w-4 text-blue-500" />
+          </div>
+          <span :style="{ color: 'var(--text-secondary)' }" class="font-medium">
+            {{ formatIndustries(career.industries) }}
           </span>
         </div>
       </div>
@@ -63,9 +78,14 @@
       <!-- View Details Button -->
       <router-link
         :to="{ name: 'career-details', params: { slug: career.slug } }"
-        class="w-full block"
+        class="w-full block mt-auto"
       >
-        <Button class="w-full" :class="`hover:bg-${themeColorName}-600 focus:ring-2 focus:ring-${themeColorName}-500 focus:ring-offset-2 focus:outline-none`">View Details</Button>
+        <Button
+          class="w-full transition-all duration-300 transform hover:translate-y-[-2px]"
+          :class="`bg-${themeColorName}-500 hover:bg-${themeColorName}-600 focus:ring-2 focus:ring-${themeColorName}-500 focus:ring-offset-2 focus:outline-none text-white`"
+        >
+          View Details
+        </Button>
       </router-link>
     </CardContent>
   </Card>
@@ -104,13 +124,49 @@ const themeColorName = computed(() => {
 const formatSalary = (salary: number): string => {
   return `$${salary.toLocaleString()}`;
 };
+
+// Format industries to show first 2 and indicate if there are more
+const formatIndustries = (industries: string[]): string => {
+  if (industries.length <= 2) {
+    return industries.join(', ');
+  }
+  return `${industries.slice(0, 2).join(', ')} +${industries.length - 2} more`;
+};
+
+// Get appropriate class for employment type badge
+const getEmploymentTypeClass = (type: string): string => {
+  const baseClasses = 'backdrop-blur-sm';
+
+  switch (type.toLowerCase()) {
+    case 'full-time':
+      return `${baseClasses} bg-blue-500/80 text-white`;
+    case 'part-time':
+      return `${baseClasses} bg-purple-500/80 text-white`;
+    case 'mixed':
+      return `${baseClasses} bg-amber-500/80 text-white`;
+    default:
+      return `${baseClasses} bg-${themeColorName.value}-500/80 text-white`;
+  }
+};
 </script>
 
 <style scoped>
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+/* Add smooth transitions for all interactive elements */
+.card-hover-effect {
+  transition: all 0.3s ease;
+}
+
+/* Ensure the card takes full height in the grid */
+:deep(.card) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure content area takes remaining space */
+:deep(.card-content) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 </style>

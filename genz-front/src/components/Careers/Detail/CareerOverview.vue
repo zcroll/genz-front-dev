@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-8">
     <!-- Main Overview Section -->
-    <div id="overview" class="mb-8 overflow-hidden transition-all duration-300">
+    <div id="overview" class="overflow-hidden transition-all duration-300 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
       <!-- Header -->
-      <div class="border-b border-gray-100 dark:border-gray-800 pb-4 mb-6">
+      <div class="border-b border-gray-100 dark:border-gray-800 p-6">
         <div class="flex items-center gap-3">
           <div class="p-2 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
             <Briefcase :class="`h-6 w-6 text-${themeColorName}-500`" />
@@ -25,9 +25,9 @@
         <p class="text-gray-500 dark:text-gray-400">No overview information available for this career.</p>
       </div>
 
-      <div v-else class="pt-6">
+      <div v-else class="p-6">
         <!-- What is a Career section -->
-        <div id="what-is" class="mb-8 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-6">
+        <div id="what-is" class="mb-8">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
               <HelpCircle :class="`h-5 w-5 text-${themeColorName}-500`" />
@@ -42,7 +42,7 @@
         </div>
 
         <!-- What does a Career do section -->
-        <div id="what-does" class="mb-8 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-6">
+        <div id="what-does" class="mb-8">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
               <ClipboardList :class="`h-5 w-5 text-${themeColorName}-500`" />
@@ -73,7 +73,8 @@
               <div
                 v-for="(type, index) in overview.career_types"
                 :key="index"
-                class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-200"
+                :class="`hover:border-${themeColorName}-200 dark:hover:border-${themeColorName}-800`"
                 :style="{animationDelay: getAnimationDelay(index)}"
               >
                 <div class="flex flex-col gap-2">
@@ -95,7 +96,7 @@
         </div>
 
         <!-- Are you suited to be a career? -->
-        <div id="suited" class="mb-8 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-6">
+        <div id="suited" class="mb-8">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
               <UserCheck :class="`h-5 w-5 text-${themeColorName}-500`" />
@@ -128,7 +129,7 @@
         </div>
 
         <!-- Career Stats Section with Badges -->
-        <div v-if="overview" class="mb-8 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm p-6">
+        <div v-if="overview" class="mb-8">
           <div class="flex items-center gap-3 mb-4">
             <div class="p-1.5 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
               <BarChart :class="`h-5 w-5 text-${themeColorName}-500`" />
@@ -225,22 +226,7 @@ const isDarkMode = computed(() => {
   return themeStore.isDarkMode;
 });
 
-// Get card style based on theme
-const cardStyle = computed(() => {
-  if (isDarkMode.value) {
-    return {
-      backgroundColor: 'rgba(17, 24, 39, 0.7)', // Matte black in dark mode
-      backdropFilter: 'blur(8px)',
-      borderColor: 'rgba(55, 65, 81, 0.5)'
-    };
-  } else {
-    return {
-      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Frosted glass in light mode
-      backdropFilter: 'blur(8px)',
-      borderColor: 'rgba(229, 231, 235, 0.8)'
-    };
-  }
-});
+// Get card style based on theme - simplified as we're using Tailwind classes directly
 </script>
 
 <style scoped>

@@ -1,9 +1,9 @@
 <template>
   <div class="space-y-8">
     <!-- Main Tech Skills Section -->
-    <div id="tech-skills" class="mb-8 overflow-hidden transition-all duration-300">
+    <div id="tech-skills" class="overflow-hidden transition-all duration-300 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
       <!-- Header -->
-      <div class="border-b border-gray-100 dark:border-gray-800 pb-4 mb-6">
+      <div class="border-b border-gray-100 dark:border-gray-800 p-6">
         <div class="flex items-center gap-3">
           <div class="p-2 rounded-full" :class="`bg-${themeColorName}-100 dark:bg-${themeColorName}-900/30`">
             <Code :class="`h-6 w-6 text-${themeColorName}-500`" />
@@ -25,7 +25,7 @@
         <p class="text-gray-500 dark:text-gray-400">No tech skills information available for this career.</p>
       </div>
 
-      <div v-else class="pt-6">
+      <div v-else class="p-6">
         <!-- Introduction section -->
 <!--        <div class="mb-8 bg-gradient-to-r from-transparent via-gray-50/50 dark:via-gray-800/30 to-transparent p-4 rounded-lg border border-gray-100/50 dark:border-gray-800/50 shadow-sm">-->
 <!--          <div class="flex items-start gap-3">-->
@@ -67,7 +67,8 @@
                   <div
                     v-for="(tech, techIndex) in techCategory.technologies"
                     :key="techIndex"
-                    class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-200"
+                    :class="`hover:border-${themeColorName}-200 dark:hover:border-${themeColorName}-800`"
                     :style="{animationDelay: getAnimationDelay(techIndex + (categoryIndex * 5))}"
                   >
                     <div class="flex flex-col gap-2">
@@ -129,7 +130,8 @@
             <div
               v-for="(skill, index) in topSkills"
               :key="index"
-              class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+              class="relative p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-200"
+              :class="`hover:border-${themeColorName}-200 dark:hover:border-${themeColorName}-800`"
               :style="{animationDelay: getAnimationDelay(index)}"
             >
               <div class="flex flex-col gap-2">
@@ -167,7 +169,7 @@
         </div>
 
         <!-- Take the test CTA -->
-        <div class="mt-10 p-6 rounded-lg border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-sm transition-all duration-300 cta-card">
+        <div class="mt-10 p-6 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 cta-card">
           <div class="flex flex-col md:flex-row md:items-center gap-6">
             <div class="flex-1">
               <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200 flex items-center gap-2">
@@ -230,22 +232,7 @@ const isDarkMode = computed(() => {
   return themeStore.isDarkMode;
 });
 
-// Get card style based on theme
-const cardStyle = computed(() => {
-  if (isDarkMode.value) {
-    return {
-      backgroundColor: 'rgba(17, 24, 39, 0.7)', // Matte black in dark mode
-      backdropFilter: 'blur(8px)',
-      borderColor: 'rgba(55, 65, 81, 0.5)'
-    };
-  } else {
-    return {
-      backgroundColor: 'rgba(255, 255, 255, 0.7)', // Frosted glass in light mode
-      backdropFilter: 'blur(8px)',
-      borderColor: 'rgba(229, 231, 235, 0.8)'
-    };
-  }
-});
+// Get card style based on theme - simplified as we're using Tailwind classes directly
 
 // State for expanded tech descriptions
 const expandedTechs = ref<{ categoryIndex: number; techIndex: number }[]>([]);
