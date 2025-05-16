@@ -215,3 +215,24 @@ export interface CareerTechSkillsResponse {
   meta: any;
   errors: any;
 }
+
+export interface CareerNavigationItem {
+  name: string;
+  uri: string;
+  available: boolean;
+  key: string;
+}
+
+export interface CareerNavigation {
+  id: number;
+  name: string;
+  slug: string;
+  navigation: CareerNavigationItem[];
+}
+
+export interface CareerNavigationResponse {
+  success: boolean;
+  data: CareerNavigation;
+  meta: any;
+  errors: any;
+}
