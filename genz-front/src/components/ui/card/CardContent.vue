@@ -33,9 +33,9 @@ const bgClass = computed(() => {
 const paddingClass = computed(() => {
   switch (props.padding) {
     case 'horizontal':
-      return 'px-6'
+      return 'px-1'
     case 'vertical':
-      return 'py-4'
+      return 'py-2'
     case 'none':
       return ''
     default:

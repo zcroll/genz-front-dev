@@ -33,9 +33,9 @@ const bgClass = computed(() => {
 const paddingClass = computed(() => {
   switch (props.padding) {
     case 'horizontal':
-      return 'px-6'
+      return 'px-2'
     case 'vertical':
-      return 'py-4'
+      return 'py-2'
     case 'none':
       return ''
     default:
@@ -57,7 +57,7 @@ const headerStyle = computed(() => {
 <template>
   <div
     data-slot="card-header"
-    :class="cn('@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6', paddingClass, bgClass, props.class)"
+    :class="cn('@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start  has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6', paddingClass, bgClass, props.class)"
     :style="headerStyle"
   >
     <slot />

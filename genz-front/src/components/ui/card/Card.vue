@@ -35,11 +35,11 @@ const paddingClass = computed(() => {
     case 'large':
       return 'p-7'
     case 'small':
-      return 'p-4'
+      return 'p-2'
     case 'none':
       return 'p-0'
     default:
-      return 'p-6'
+      return 'p-2'
   }
 })
 
