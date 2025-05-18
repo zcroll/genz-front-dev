@@ -8,7 +8,7 @@
     :careerWorkEnvironment="careerWorkEnvironment"
     :navigationItems="navigationItems"
     :isLoading="isLoading"
-    :isLoadingSidebar="isLoadingOverview || isLoadingWorkEnvironment"
+    :isLoadingSidebar="isLoadingOverview"
     :isLoadingNavigation="isLoadingNavigation"
     @tab-changed="handleTabChanged"
   >
@@ -108,6 +108,7 @@ import AppBreadcrumb from "@/components/ui/breadcrumb/AppBreadcrumb.vue";
 // Import our new section layout components
 import CareerSectionLayout from "@/components/Careers/Detail/CareerSectionLayout.vue";
 import CareerDetailHeader from "@/components/Careers/Detail/CareerDetailHeader.vue";
+import CareerSectionSidebar from "@/components/Careers/Detail/CareerSectionSidebar.vue";
 import CareerOverview from "@/components/Careers/Detail/CareerOverview.vue";
 import CareerHowToBecome from "@/components/Careers/Detail/CareerHowToBecome.vue";
 import CareerPersonality from "@/components/Careers/Detail/CareerPersonality.vue";
@@ -204,8 +205,7 @@ const handleTabChanged = (tabKey: string) => {
     personality: "career-personality",
     "work-environment": "career-work-environment",
     "tech-skills": "career-tech-skills",
-    technologies: "career-tech-skills",
-    skills: "career-tech-skills",
+
   };
 
   const routeName = routeMap[tabKey] || "career-overview";
@@ -231,7 +231,6 @@ const handleTabChanged = (tabKey: string) => {
         }
         break;
       case 'tech-skills':
-      case 'technologies':
         break;
     }
   };
@@ -402,28 +401,28 @@ const fetchCareerData = async (slug: string) => {
           15 * 60 * 1000 // 15 minutes expiry
         );
 
-    if (navigationResponse.success && navigationResponse.data) {
-      navigationItems.value = navigationResponse.data.navigation;
-      // Check if current section is available
-      const currentSectionAvailable = navigationItems.value.some(
-        (item) => item.key === activeTab.value && item.available,
-      );
+        if (navigationResponse.success && navigationResponse.data) {
+          navigationItems.value = navigationResponse.data.navigation;
+          // Check if current section is available
+          const currentSectionAvailable = navigationItems.value.some(
+            (item) => item.key === activeTab.value && item.available,
+          );
 
-      // If current section is not available, redirect to the first available section
-      if (
-        !currentSectionAvailable &&
-        navigationItems.value.filter((item) => item.available).length > 0
-      ) {
-        const firstAvailableItem = navigationItems.value.find(
-          (item) => item.available,
-        );
-        if (firstAvailableItem) {
-          handleTabChanged(firstAvailableItem.key);
+          // If current section is not available, redirect to the first available section
+          if (
+            !currentSectionAvailable &&
+            navigationItems.value.filter((item) => item.available).length > 0
+          ) {
+            const firstAvailableItem = navigationItems.value.find(
+              (item) => item.available,
+            );
+            if (firstAvailableItem) {
+              handleTabChanged(firstAvailableItem.key);
+            }
+          }
         }
+        isLoadingNavigation.value = false;
       }
-    }
-      isLoadingNavigation.value = false;
-    }
 
     // Fetch overview data for the sidebar - with caching and memory check
     if (!careerOverview.value) {
@@ -438,6 +437,9 @@ const fetchCareerData = async (slug: string) => {
       if (overviewResponse.success && overviewResponse.data) {
         careerOverview.value = overviewResponse.data;
       }
+      isLoadingOverview.value = false;
+    } else {
+      // If we already have the overview data, make sure loading state is false
       isLoadingOverview.value = false;
     }
 
