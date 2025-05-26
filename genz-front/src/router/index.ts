@@ -281,6 +281,24 @@ const routes: Array<RouteRecordRaw> = [
       allowAll: true
     }
   },
+  {
+    path: '/timeline-test',
+    name: 'timeline-test',
+    component: () => import('../views/TimelineTest.vue'),
+    meta: {
+      title: 'Timeline Component Test',
+      allowAll: true
+    }
+  },
+  {
+    path: '/career-constellation',
+    name: 'career-constellation',
+    component: () => import('../views/CareerConstellationView.vue'),
+    meta: {
+      title: 'Career Constellation View',
+      allowAll: true
+    }
+  },
 
   // Catch-all route for 404
   {
