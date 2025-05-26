@@ -1,9 +1,17 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">Career How To Become Test</h1>
-    
+
+    <div class="flex justify-end mb-4">
+      <button
+        @click="toggleDarkMode"
+        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-200"
+      >
+        Toggle Dark Mode
+      </button>
+    </div>
+
     <CareerHowToBecome
-      :howToBecome="careerData"
       :isLoading="isLoading"
     />
   </div>
@@ -12,12 +20,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import CareerHowToBecome from '@/components/Careers/Detail/CareerHowToBecome.vue';
-import type { CareerHowToBecome as CareerHowToBecomeType } from '@/types/career';
 
 const isLoading = ref(false);
 
-// Sample data matching the API response
-const careerData = ref<CareerHowToBecomeType>({
+// Toggle dark mode function
+const toggleDarkMode = () => {
+  document.documentElement.classList.toggle('dark');
+};
+
+// Old sample data - no longer needed as we're using hardcoded data in the component
+/*
+const careerData = ref({
   id: 1,
   name: "Pastry Chef",
   education_level: "High School",
@@ -101,5 +114,5 @@ const careerData = ref<CareerHowToBecomeType>({
       url: null
     }
   ]
-});
+});*/
 </script>
