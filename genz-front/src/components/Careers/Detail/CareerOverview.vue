@@ -289,7 +289,6 @@
 <script setup lang="ts">
 import { defineProps, computed } from "vue";
 import { currentTheme } from "@/lib/theme-utils";
-import { useThemeStore } from "@/stores/theme/themeStore";
 import type { CareerOverview as CareerOverviewType } from "@/types/career";
 import {
   Briefcase,
@@ -300,16 +299,16 @@ import {
   DollarSign,
   ThumbsUp,
   Building,
-  Info,
+  // Info, // Removed unused import
 } from "lucide-vue-next";
 
 const props = defineProps<{
-  overview?: CareerOverviewType;
+  overview?: CareerOverviewType | null;
   isLoading: boolean;
 }>();
 
 // Get theme store
-const themeStore = useThemeStore();
+// const themeStore = useThemeStore(); // Removed as themeStore is no longer used
 
 // Get the current theme color
 const themeColorName = computed(() => {
@@ -322,9 +321,9 @@ const getAnimationDelay = (index: number) => {
 };
 
 // Determine if we're in dark mode
-const isDarkMode = computed(() => {
-  return themeStore.isDarkMode;
-});
+// const isDarkMode = computed(() => { // Removed unused computed property
+//   return themeStore.isDarkMode;
+// });
 
 // Get card style based on theme - simplified as we're using Tailwind classes directly
 </script>

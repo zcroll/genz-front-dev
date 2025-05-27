@@ -12,7 +12,7 @@
     <!-- Theme-colored gradient background -->
     <div class="fixed inset-0 theme-gradient opacity-20 dark:opacity-15 pointer-events-none"></div>
     <div
-        class="w-full h-full max-w-[120rem] relative overflow-hidden glass-container"
+        class="w-full h-full  relative overflow-hidden glass-container"
         :class="[
         'md:p-12 p-4 md:rounded-[32px] rounded-none md:border'
       ]" :style="{

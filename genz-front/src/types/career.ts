@@ -14,6 +14,63 @@ export interface Career {
   degrees?: string[];
 }
 
+// Nested types for CareerHowToBecome
+export interface AdmissionRequirementsType {
+  previous_education: string;
+  minimum_score: string | null; // Can be "N/A" or other string, or null
+  entrance_exam: boolean | null;
+  language_requirements: string[] | null;
+}
+
+export interface ProgramType {
+  program_id: string;
+  program_name: string;
+  degree_level: string;
+  duration_years: number;
+  admission_requirements: AdmissionRequirementsType | null; // Now explicitly nullable
+  curriculum_strength: string | null;
+  industry_connections: string | null;
+  certification: {
+    degree_awarded: string;
+    recognition_level: string;
+  } | null;
+  career_outcomes: string[] | null;
+}
+
+export interface InstitutionType {
+  institution_id: string;
+  name: string;
+  tier: string;
+  location: string;
+  public_or_private: string;
+  language_of_instruction: string[]; // Assuming this is always present if institution is detailed
+  admission_competitiveness: string | null;
+  programs: ProgramType[] | null;
+}
+
+export interface AcademicPathway {
+  pathway_id: string;
+  pathway_name: string;
+  rank: number;
+  ranking_reason: string;
+  description: string;
+  duration_years: number;
+  estimated_total_cost_MAD: number;
+  institutions: InstitutionType[]; // institutions array can be empty
+  similar_structure_to_P1: boolean | null;
+}
+
+export interface ComparisonFactorValue {
+  factor: string;
+  [key: string]: string; // For P1_value, P2_value etc.
+}
+
+export interface ProgressionOpportunityItem {
+  from_pathway_id: string;
+  options?: string[]; // For further education
+  typical_progression?: string[]; // For career advancement
+}
+
 // Career detail interfaces for the new API endpoints
 export interface CareerOverview {
   id: number;
@@ -32,33 +89,23 @@ export interface CareerOverview {
 }
 
 export interface CareerHowToBecome {
-  id: number;
-  name: string;
+  career: string;
+  country: string;
+  pathway_ranking_criteria: string[];
+  academic_pathways: AcademicPathway[];
+  pathway_comparisons: {
+    comparison_factors: ComparisonFactorValue[];
+  }[];
+  progression_opportunities: {
+    further_education: ProgressionOpportunityItem[] | null;
+    career_advancement: ProgressionOpportunityItem[] | null;
+  };
+  career_id: number;
+  industries: {
+    industry_id: number;
+    industry_name: string;
+  }[];
   education_level: string;
-  degrees: {
-    id: number;
-    name: string;
-    slug: string;
-    image_url: string;
-  }[];
-  education_levels: {
-    level: string;
-    description: string;
-  }[];
-  steps: {
-    number: number;
-    title: string;
-    content: string;
-    sub_steps: any[];
-  }[];
-  path_overview: string;
-  path_structure_type: string;
-  resources: {
-    type: string;
-    name: string;
-    description: string;
-    url: string | null;
-  }[];
 }
 
 export interface CareerPersonality {
@@ -183,35 +230,35 @@ export interface FilterOptionsResponse {
 // Response interfaces for the career detail API endpoints
 export interface CareerOverviewResponse {
   success: boolean;
-  data: CareerOverview;
+  data: CareerOverview | null;
   meta: any;
   errors: any;
 }
 
 export interface CareerHowToBecomeResponse {
   success: boolean;
-  data: CareerHowToBecome;
+  data: CareerHowToBecome | null;
   meta: any;
   errors: any;
 }
 
 export interface CareerPersonalityResponse {
   success: boolean;
-  data: CareerPersonality;
+  data: CareerPersonality | null;
   meta: any;
   errors: any;
 }
 
 export interface CareerWorkEnvironmentResponse {
   success: boolean;
-  data: CareerWorkEnvironment;
+  data: CareerWorkEnvironment | null;
   meta: any;
   errors: any;
 }
 
 export interface CareerTechSkillsResponse {
   success: boolean;
-  data: CareerTechSkills;
+  data: CareerTechSkills | null;
   meta: any;
   errors: any;
 }
@@ -232,7 +279,7 @@ export interface CareerNavigation {
 
 export interface CareerNavigationResponse {
   success: boolean;
-  data: CareerNavigation;
+  data: CareerNavigation | null;
   meta: any;
   errors: any;
 }

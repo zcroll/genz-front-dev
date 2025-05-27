@@ -80,9 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { currentTheme } from "@/lib/theme-utils";
 import MainLayout from "@/layout/Main-layout.vue";
 import { useCareerCacheStore } from "@/stores/careerCacheStore";
 import {
@@ -108,7 +107,6 @@ import AppBreadcrumb from "@/components/ui/breadcrumb/AppBreadcrumb.vue";
 // Import our new section layout components
 import CareerSectionLayout from "@/components/Careers/Detail/CareerSectionLayout.vue";
 import CareerDetailHeader from "@/components/Careers/Detail/CareerDetailHeader.vue";
-import CareerSectionSidebar from "@/components/Careers/Detail/CareerSectionSidebar.vue";
 import CareerOverview from "@/components/Careers/Detail/CareerOverview.vue";
 import CareerHowToBecome from "@/components/Careers/Detail/CareerHowToBecome.vue";
 import CareerPersonality from "@/components/Careers/Detail/CareerPersonality.vue";
@@ -121,9 +119,7 @@ import {
   Briefcase as LucideBriefcase,
   User as LucideUser,
   GraduationCap as LucideGraduationCap,
-  Heart as LucideHeart,
   Building2 as LucideBuilding2,
-  Code as LucideCode,
 } from "lucide-vue-next";
 
 // Define the layout to use
@@ -137,15 +133,6 @@ const router = useRouter();
 
 // Initialize the cache store
 const cacheStore = useCareerCacheStore();
-
-// Cache invalidation function when data is stale
-const invalidateStaleCache = (endpoint: string, slug: string) => {
-  if (!cacheStore.hasCacheData(endpoint, slug)) {
-    // If there's no cache entry, create a loading state but don't clear existing data
-    return false;
-  }
-  return true;
-};
 
 // Function to reset career data when switching between careers
 const resetCareerData = () => {
@@ -165,12 +152,6 @@ const resetCareerData = () => {
   isLoadingWorkEnvironment.value = true;
   isLoadingTechSkills.value = true;
 };
-
-// Theme color is now primarily handled in individual components,
-// but we keep this for breadcrumbs and other main view elements
-const themeColorName = computed(() => {
-  return currentTheme.value.replace("-theme", "") || "blue";
-});
 
 // Loading states
 const isLoading = ref(true);
@@ -205,7 +186,6 @@ const handleTabChanged = (tabKey: string) => {
     personality: "career-personality",
     "work-environment": "career-work-environment",
     "tech-skills": "career-tech-skills",
-
   };
 
   const routeName = routeMap[tabKey] || "career-overview";
@@ -244,94 +224,6 @@ const handleTabChanged = (tabKey: string) => {
   });
 };
 
-// Computed property to get available navigation items
-const tabs = computed(() => {
-  const defaultTabs = [
-    { id: "overview", label: "Career Overview", route: "career-overview" },
-    {
-      id: "how-to-become",
-      label: "How to Become",
-      route: "career-how-to-become",
-    },
-    { id: "personality", label: "Personality", route: "career-personality" },
-    {
-      id: "work-environment",
-      label: "Work Environment",
-      route: "career-work-environment",
-    },
-  ];
-
-  if (!navigationItems.value || navigationItems.value.length === 0) {
-    // Default tabs when navigation items are not yet loaded
-    return defaultTabs;
-  }
-
-  return navigationItems.value
-    .filter((item) => item.available)
-    .map((item) => ({
-      id: item.key,
-      label: item.name,
-      route: getRouteFromKey(item.key),
-      uri: item.uri,
-    }));
-});
-
-// Function to map navigation key to route name
-const getRouteFromKey = (key: string): string => {
-  const routeMap: Record<string, string> = {
-    overview: "career-overview",
-    "how-to-become": "career-how-to-become",
-    personality: "career-personality",
-    "work-environment": "career-work-environment",
-    "tech-skills": "career-tech-skills",
-    technologies: "career-tech-skills",};
-
-  return routeMap[key] || "career-overview";
-};
-
-// Handle navigation loaded event
-
-// Format salary function has been moved to CareerDetailSidebar component
-
-// Helper function to get the icon for a tab
-const getIconForTab = (tabId: string) => {
-  switch (tabId) {
-    case "overview":
-      return LucideBriefcase;
-    case "how-to-become":
-      return LucideGraduationCap;
-    case "personality":
-      return LucideUser;
-    case "work-environment":
-      return LucideBuilding2;
-    case "tech-skills":
-    case "technologies":
-
-    default:
-      return LucideBriefcase;
-  }
-};
-
-// Helper function to get label for navigation key
-const getNavLabel = (key: string): string => {
-  if (!navigationItems.value || navigationItems.value.length === 0) {
-    // Default labels if navigation items are not loaded
-    const defaultLabels: Record<string, string> = {
-      overview: "Career Overview",
-      "how-to-become": "How to Become",
-      personality: "Personality",
-      "work-environment": "Work Environment",
-      "tech-skills": "Tech Skills",
-      technologies: "Technologies",
-    };
-    return defaultLabels[key] || key;
-  }
-
-  // Find the label from navigation items
-  const navItem = navigationItems.value.find((item) => item.key === key);
-  return navItem ? navItem.name : key;
-};
-
 // Breadcrumb items construction
 const breadcrumbItems = computed(() => {
   // Base items that are always present
@@ -352,23 +244,19 @@ const breadcrumbItems = computed(() => {
   if (careerOverview.value) {
     items.push({
       name: careerOverview.value.name,
-      // If we're on the overview tab, this is the current page (no path)
-      // Otherwise, it's a link to the overview page
-      path:
-        activeTab.value === "overview"
+      path: activeTab.value === "overview"
           ? undefined
-          : { name: "career-overview", params: { slug: route.params.slug } },
+          : { name: "career-overview", params: { slug: route.params.slug as string } },
       icon: LucideUser,
     });
   }
 
   // Add section tab if not on overview
   if (activeTab.value !== "overview") {
-    // Add the current section as the last breadcrumb item
-    // This is the current page, so no path needed (current page is not clickable)
     items.push({
       name: getNavLabel(activeTab.value),
       icon: getIconForTab(activeTab.value),
+      path: undefined, // Current page, so path is undefined
     });
   }
 
@@ -558,6 +446,44 @@ watch(
   },
   { immediate: true },
 );
+
+// Helper function to get the icon for a tab
+const getIconForTab = (tabId: string) => {
+  switch (tabId) {
+    case "overview":
+      return LucideBriefcase;
+    case "how-to-become":
+      return LucideGraduationCap;
+    case "personality":
+      return LucideUser;
+    case "work-environment":
+      return LucideBuilding2;
+    case "tech-skills":
+    case "technologies":
+    default:
+      return LucideBriefcase;
+  }
+};
+
+// Helper function to get label for navigation key
+const getNavLabel = (key: string): string => {
+  if (!navigationItems.value || navigationItems.value.length === 0) {
+    // Default labels if navigation items are not loaded
+    const defaultLabels: Record<string, string> = {
+      overview: "Career Overview",
+      "how-to-become": "How to Become",
+      personality: "Personality",
+      "work-environment": "Work Environment",
+      "tech-skills": "Tech Skills",
+      technologies: "Technologies",
+    };
+    return defaultLabels[key] || key;
+  }
+
+  // Find the label from navigation items
+  const navItem = navigationItems.value.find((item) => item.key === key);
+  return navItem ? navItem.name : key;
+};
 </script>
 
 <style scoped>

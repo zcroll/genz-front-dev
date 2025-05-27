@@ -71,7 +71,7 @@ export const fetchCareers = async (filters?: CareerFilterParams): Promise<Career
     console.log(`Making request to: ${url}`);
     const response = await get<CareersResponse>(url);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching careers:', error);
 
     // Log more detailed information about the error
@@ -126,7 +126,7 @@ export const fetchCareerOverview = async (slug: string): Promise<CareerOverviewR
   try {
     const response = await get<CareerOverviewResponse>(`/careers/${slug}/detail/overview`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career overview for ${slug}:`, error);
     return {
       success: false,
@@ -146,7 +146,7 @@ export const fetchCareerHowToBecome = async (slug: string): Promise<CareerHowToB
   try {
     const response = await get<CareerHowToBecomeResponse>(`/careers/${slug}/detail/how-to-become`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career how-to-become for ${slug}:`, error);
     return {
       success: false,
@@ -166,7 +166,7 @@ export const fetchCareerPersonality = async (slug: string): Promise<CareerPerson
   try {
     const response = await get<CareerPersonalityResponse>(`/careers/${slug}/detail/personality`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career personality for ${slug}:`, error);
     return {
       success: false,
@@ -186,7 +186,7 @@ export const fetchCareerWorkEnvironment = async (slug: string): Promise<CareerWo
   try {
     const response = await get<CareerWorkEnvironmentResponse>(`/careers/${slug}/detail/work-environment`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career work environment for ${slug}:`, error);
     return {
       success: false,
@@ -206,7 +206,7 @@ export const fetchCareerTechSkills = async (slug: string): Promise<CareerTechSki
   try {
     const response = await get<CareerTechSkillsResponse>(`/careers/${slug}/detail/tech-skills`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career tech skills for ${slug}:`, error);
     return {
       success: false,
@@ -226,7 +226,7 @@ export const fetchCareerNavigation = async (slug: string): Promise<CareerNavigat
   try {
     const response = await get<CareerNavigationResponse>(`/careers/${slug}/detail/navigation`);
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching career navigation for ${slug}:`, error);
     return {
       success: false,
@@ -245,7 +245,7 @@ export const fetchCareerFilterOptions = async (): Promise<FilterOptionsResponse>
   try {
     const response = await get<FilterOptionsResponse>('/careers/filter-options');
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching career filter options:', error);
     // Return an empty response instead of throwing
     return {

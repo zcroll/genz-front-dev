@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router"; // useRoute removed as it's unused
 import { currentTheme } from "@/lib/theme-utils";
 import { fetchCareerNavigation } from "@/services/careerService";
 import type { CareerNavigationItem } from "@/types/career";
@@ -118,10 +118,10 @@ import {
   Briefcase as LucideBriefcase,
   User as LucideUser,
   GraduationCap as LucideGraduationCap,
-  Heart as LucideHeart,
+  // Heart as LucideHeart, // Removed unused import
   Building2 as LucideBuilding2,
   Code as LucideCode,
-  ChevronDown as LucideChevronDown,
+  // ChevronDown as LucideChevronDown, // Removed unused import
 } from "lucide-vue-next";
 
 const props = defineProps({
@@ -153,8 +153,8 @@ const props = defineProps({
 
 const emit = defineEmits(["tab-changed"]);
 
-// Get the current route and router
-const route = useRoute();
+// Get the current router
+// const route = useRoute(); // Removed unused variable
 const router = useRouter();
 
 // Get the current theme color
@@ -269,6 +269,7 @@ const getIconForItem = (tabId: string) => {
     case "work-environment":
       return LucideBuilding2;
     case "tech-skills":
+      return LucideCode; // Use LucideCode for tech-skills
     default:
       return LucideBookOpen;
   }
@@ -303,7 +304,7 @@ const getCurrentSectionDescription = (): string => {
     case "work-environment":
       return "Typical workplace settings, conditions, and employment arrangements.";
     case "tech-skills":
-      return "Technical skills and technologies used in this profession.";
+      return "no skils or teck"; // Updated description for tech-skills
     default:
       return "Information about this career section.";
   }

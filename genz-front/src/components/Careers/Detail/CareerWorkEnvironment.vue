@@ -232,14 +232,13 @@
 
 <script setup lang="ts">
 import { defineProps, computed, ref } from 'vue';
-import { currentTheme } from '@/lib/theme-utils';
 import type { CareerWorkEnvironment as CareerWorkEnvironmentType } from '@/types/career';
 import InfoGraphic from './InfoGraphic.vue';
 
-// Get the current theme color
-const themeColorName = computed(() => {
-  return currentTheme.value.replace('-theme', '') || 'blue';
-});
+const props = defineProps<{
+  workEnvironment?: CareerWorkEnvironmentType | null;
+  isLoading: boolean;
+}>();
 
 // Sort environments by value (highest first)
 const sortedEnvironments = computed(() => {
@@ -297,18 +296,13 @@ const toggleEmploymentTypeInfo = () => {
   showEmploymentTypeInfo.value = !showEmploymentTypeInfo.value;
 };
 
-const props = defineProps<{
-  workEnvironment?: CareerWorkEnvironmentType;
-  isLoading: boolean;
-}>();
-
 // Get badge class for employment difficulty
 const getEmploymentBadgeClass = (level?: string) => {
   const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
 
   if (!level) return `${baseClasses} bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200`;
 
-  const classes = {
+  const classes: Record<string, string> = {
     'Easy': `${baseClasses} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`,
     'Medium': `${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200`,
     'Hard': `${baseClasses} bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200`
@@ -323,7 +317,7 @@ const getEmploymentTypeBadgeClass = (type?: string) => {
 
   if (!type) return `${baseClasses} bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200`;
 
-  const classes = {
+  const classes: Record<string, string> = {
     'Part-time': `${baseClasses} bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200`,
     'Mixed': `${baseClasses} bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200`,
     'Full-time': `${baseClasses} bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200`

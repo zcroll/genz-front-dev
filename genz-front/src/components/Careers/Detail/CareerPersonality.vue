@@ -218,7 +218,7 @@ import { currentTheme } from '@/lib/theme-utils';
 import type { CareerPersonality as CareerPersonalityType } from '@/types/career';
 
 const props = defineProps<{
-  personality?: CareerPersonalityType;
+  personality?: CareerPersonalityType | null;
   isLoading: boolean;
 }>();
 
@@ -241,7 +241,7 @@ const sortedBigFiveTraits = computed(() => {
 
 // Get color class for Holland code
 const getHollandCodeColor = (code: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Realistic': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     'Investigative': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
     'Artistic': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
@@ -255,7 +255,7 @@ const getHollandCodeColor = (code: string) => {
 
 // Get bar color for Holland code
 const getHollandCodeBarColor = (code: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Realistic': 'bg-blue-500',
     'Investigative': 'bg-purple-500',
     'Artistic': 'bg-pink-500',
@@ -269,7 +269,7 @@ const getHollandCodeBarColor = (code: string) => {
 
 // Get header background color for Holland code
 const getHollandCodeHeaderBg = (code: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Realistic': 'bg-blue-50 dark:bg-blue-900/10',
     'Investigative': 'bg-purple-50 dark:bg-purple-900/10',
     'Artistic': 'bg-pink-50 dark:bg-pink-900/10',
@@ -283,7 +283,7 @@ const getHollandCodeHeaderBg = (code: string) => {
 
 // Get dot color for Holland code
 const getHollandCodeDot = (code: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Realistic': 'bg-blue-500',
     'Investigative': 'bg-purple-500',
     'Artistic': 'bg-pink-500',
@@ -297,7 +297,7 @@ const getHollandCodeDot = (code: string) => {
 
 // Get color class for Big Five trait
 const getBigFiveColor = (trait: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Openness': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
     'Conscientiousness': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     'Extraversion': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
@@ -310,7 +310,7 @@ const getBigFiveColor = (trait: string) => {
 
 // Get bar color for Big Five trait
 const getBigFiveBarColor = (trait: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Openness': 'bg-indigo-500',
     'Conscientiousness': 'bg-blue-500',
     'Extraversion': 'bg-yellow-500',
@@ -323,7 +323,7 @@ const getBigFiveBarColor = (trait: string) => {
 
 // Get header background color for Big Five trait
 const getBigFiveHeaderBg = (trait: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Openness': 'bg-indigo-50 dark:bg-indigo-900/10',
     'Conscientiousness': 'bg-blue-50 dark:bg-blue-900/10',
     'Extraversion': 'bg-yellow-50 dark:bg-yellow-900/10',
@@ -336,7 +336,7 @@ const getBigFiveHeaderBg = (trait: string) => {
 
 // Get dot color for Big Five trait
 const getBigFiveDot = (trait: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Openness': 'bg-indigo-500',
     'Conscientiousness': 'bg-blue-500',
     'Extraversion': 'bg-yellow-500',

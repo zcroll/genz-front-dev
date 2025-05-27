@@ -1,10 +1,11 @@
+
 <template>
   <div :class="[
-    'h-screen p-4 overflow-hidden transition-colors duration-300',
+    'overflow-hidden transition-colors duration-300',
     themeStore.isDarkMode ? 'dark bg-gray-900' : 'bg-white'
   ]">
     <div
-      class="w-full h-full max-w-[120rem] rounded-[48px] p-12 md:shadow-2xl relative overflow-hidden backdrop-blur-lg"
+      class="w-full h-full mx-auto md:shadow-2xl relative overflow-hidden backdrop-blur-lg"
       :class="[
         themeStore.isDarkMode ? 'bg-gray-800/40' : 'bg-white/40',
         'md:p-12 p-4 md:rounded-[48px] rounded-none'

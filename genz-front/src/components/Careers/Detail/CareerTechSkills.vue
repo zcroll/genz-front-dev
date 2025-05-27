@@ -26,15 +26,7 @@
       </div>
 
       <div v-else class="p-6">
-        <!-- Introduction section -->
-<!--        <div class="mb-8 bg-gradient-to-r from-transparent via-gray-50/50 dark:via-gray-800/30 to-transparent p-4 rounded-lg border border-gray-100/50 dark:border-gray-800/50 shadow-sm">-->
-<!--          <div class="flex items-start gap-3">-->
-<!--            <Info class="h-5 w-5 mt-1 flex-shrink-0" :class="`text-${themeColorName}-500`" />-->
-<!--            <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">-->
-<!--              {{ techSkills.name }}s use a variety of technical skills and technologies in their work. Understanding these can help you prepare for this career.-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
+ 
 
         <!-- Technologies Section -->
         <div v-if="techSkills.technologies && techSkills.technologies.length > 0" class="mb-10">
@@ -203,104 +195,41 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { currentTheme } from '@/lib/theme-utils';
-import { useThemeStore } from '@/stores/theme/themeStore';
+
 import type { CareerTechSkills as CareerTechSkillsType } from '@/types/career';
-import { Code, Cpu, Zap, Lightbulb, ArrowRight, ChevronRight, Info } from 'lucide-vue-next';
+import { Code, Cpu, Zap, Lightbulb } from 'lucide-vue-next';
 
 const props = defineProps<{
-  techSkills?: CareerTechSkillsType;
+  techSkills?: CareerTechSkillsType | null;
   isLoading: boolean;
 }>();
 
-// Get theme store
-const themeStore = useThemeStore();
-
-// Get the current theme color
 const themeColorName = computed(() => {
   return currentTheme.value.replace('-theme', '') || 'blue';
 });
 
-// Animation delay for staggered animations
+const techCategories = computed(() => {
+  return props.techSkills?.technologies || [];
+});
+
+const skillCategories = computed(() => {
+  return props.techSkills?.skills || [];
+});
+
+const featuredSkills = computed(() => {
+  if (!props.techSkills?.skills) return [];
+  const allSkills = props.techSkills.skills.reduce((acc, category) => {
+    return acc.concat(category.skills);
+  }, [] as any[]); 
+  return allSkills.slice(0, 12);
+});
+
 const getAnimationDelay = (index: number) => {
   return `${index * 100}ms`;
 };
 
-// Determine if we're in dark mode
-const isDarkMode = computed(() => {
-  return themeStore.isDarkMode;
-});
-
-// Get card style based on theme - simplified as we're using Tailwind classes directly
-
-// State for expanded tech descriptions
-const expandedTechs = ref<{ categoryIndex: number; techIndex: number }[]>([]);
-
-// Toggle tech description
-const toggleTechInfo = (categoryIndex: number, techIndex: number) => {
-  const index = expandedTechs.value.findIndex(
-    item => item.categoryIndex === categoryIndex && item.techIndex === techIndex
-  );
-
-  if (index !== -1) {
-    // Close this tech description
-    expandedTechs.value.splice(index, 1);
-  } else {
-    // Find any open tech descriptions in the same category
-    const sameCategory = expandedTechs.value.findIndex(item => item.categoryIndex === categoryIndex);
-
-    // If there's an open item in the same category, close it
-    if (sameCategory !== -1) {
-      expandedTechs.value.splice(sameCategory, 1);
-    }
-
-    // Open this one
-    expandedTechs.value.push({ categoryIndex, techIndex });
-  }
-};
-
-// Check if a tech description is expanded
-const isTechExpanded = (categoryIndex: number, techIndex: number) => {
-  return expandedTechs.value.some(
-    item => item.categoryIndex === categoryIndex && item.techIndex === techIndex
-  );
-};
-
-// State for expanded skill descriptions
-const expandedSkills = ref<{ categoryIndex: number; skillIndex: number }[]>([]);
-
-// Toggle skill description
-const toggleSkillInfo = (categoryIndex: number, skillIndex: number) => {
-  const index = expandedSkills.value.findIndex(
-    item => item.categoryIndex === categoryIndex && item.skillIndex === skillIndex
-  );
-
-  if (index !== -1) {
-    // Close this skill description
-    expandedSkills.value.splice(index, 1);
-  } else {
-    // Find any open skill descriptions in the same category
-    const sameCategory = expandedSkills.value.findIndex(item => item.categoryIndex === categoryIndex);
-
-    // If there's an open item in the same category, close it
-    if (sameCategory !== -1) {
-      expandedSkills.value.splice(sameCategory, 1);
-    }
-
-    // Open this one
-    expandedSkills.value.push({ categoryIndex, skillIndex });
-  }
-};
-
-// Check if a skill description is expanded
-const isSkillExpanded = (categoryIndex: number, skillIndex: number) => {
-  return expandedSkills.value.some(
-    item => item.categoryIndex === categoryIndex && item.skillIndex === skillIndex
-  );
-};
-
-// Get the first 12 skills across all categories
 const topSkills = computed(() => {
   if (!props.techSkills?.skills) return [];
 
@@ -332,6 +261,7 @@ const getImportanceLabel = (value: number): string => {
   return 'Helpful';
 };
 
+const activeTab = ref("technologies");
 
 </script>
 
