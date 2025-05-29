@@ -1,25 +1,31 @@
-<script lang="ts" setup>
-import type { LabelProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { cn } from '@/lib/utils'
-import { Label } from '@/components/ui/label'
-import { useFormField } from './useFormField'
+<template>
+  <label class="form-label" :class="props.class">
+    <slot></slot>
+    <span v-if="required" class="required-indicator">*</span>
+  </label>
+</template>
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>()
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue';
 
-const { error, formItemId } = useFormField()
+interface Props {
+  required?: boolean;
+  class?: HTMLAttributes['class'];
+}
+
+const props = defineProps<Props>();
+
 </script>
 
-<template>
-  <Label
-    data-slot="form-label"
-    :data-error="!!error"
-    :class="cn(
-      'data-[error=true]:text-destructive-foreground',
-      props.class,
-    )"
-    :for="formItemId"
-  >
-    <slot />
-  </Label>
-</template>
+<style scoped>
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem; /* Or your preferred spacing */
+  font-weight: 500; /* Example styling */
+}
+
+.required-indicator {
+  color: red; /* Or your theme's error/required color */
+  margin-left: 0.25rem;
+}
+</style>

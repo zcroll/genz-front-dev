@@ -1,7 +1,6 @@
 <template>
   <div
-    class="sticky top-16  transition-all duration-200"
-    style="max-height: calc(100vh - 5rem)"
+    class="career-filters-sticky transition-all duration-200"
   >
     <Card variant="frosted" class="overflow-hidden">
       <!-- Header -->
@@ -26,7 +25,6 @@
                 : 'rgba(255, 255, 255, 0.5)',
               borderColor: 'var(--border-subtle)',
               color: 'var(--text-primary)',
-              '::placeholder': { color: 'var(--text-secondary)' },
             }"
             :class="`focus:ring-2 focus:ring-${themeColorName}-500 focus:border-${themeColorName}-500`"
             @input="debouncedSearch"
@@ -232,11 +230,6 @@
                     }"
                     :style="{
                       color: 'var(--text-primary)',
-                      ':hover': {
-                        backgroundColor: themeStore.isDarkMode
-                          ? 'rgba(50, 50, 50, 0.5)'
-                          : 'rgba(240, 240, 240, 0.5)',
-                      },
                     }"
                   >
                     {{ industry.name }}
@@ -617,7 +610,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { debounce } from "lodash";
-import { Search, XCircle } from "lucide-vue-next";
+import { Search } from "lucide-vue-next";
 import {
   BuildingOfficeIcon,
   UserPlusIcon,
@@ -637,14 +630,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const emit = defineEmits(["update:filters", "reset"]);
 const themeStore = useThemeStore();
-
-// Get the current theme color (blue, green, purple, amber)
-const currentThemeColor = computed(() => {
-  // Get theme from theme-utils or from theme store
-  const themeId = currentTheme.value || themeStore.currentThemeId || "blue";
-  // Remove '-theme' suffix if present
-  return themeId.replace("-theme", "");
-});
 
 // For direct use in template (not as a computed property)
 const themeColorName =
@@ -727,7 +712,7 @@ watch(searchQuery, () => {
 
 // Watch for changes in theme color
 watch(
-  () => themeStore.currentThemeId,
+  () => themeStore.color,
   () => {
     // Update the ring color when theme changes
     document.documentElement.style.setProperty(
@@ -756,11 +741,12 @@ watch(
 );
 
 // Close dropdown when clicking outside
-const handleClickOutside = (event) => {
+const handleClickOutside = (event: MouseEvent) => {
   // Handle industry dropdown only (degree dropdown is managed by DegreeSearch component)
   if (showIndustryDropdown.value) {
+    const targetElement = event.target as HTMLElement | null;
     // Check if click is outside the dropdown container
-    const isClickOutside = !event.target.closest(
+    const isClickOutside = targetElement && !targetElement.closest(
       ".industry-dropdown-container",
     );
 
@@ -868,6 +854,20 @@ const resetAllFilters = () => {
 </script>
 
 <style scoped>
+/* Make the filter sticky to the top with a high z-index and full width */
+.career-filters-sticky {
+  position: sticky;
+  padding-top: 1rem;
+  top: 0;
+  z-index: 30;
+  max-height: calc(100vh - 1rem);
+  width: 100%;
+  /* Optional: add a background to prevent content bleed-through */
+  /* background: var(--content-surface-primary, #fff); */
+  /* Optional: add a subtle shadow for separation */
+  
+}
+
 /* Scrollbar styling */
 .custom-scrollbar {
   scrollbar-width: thin;

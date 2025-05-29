@@ -1,22 +1,28 @@
 <script lang="ts" setup>
-import { cn } from '@/lib/utils'
-import { ErrorMessage } from 'vee-validate'
-import { type HTMLAttributes, toValue } from 'vue'
-import { useFormField } from './useFormField'
+import { inject, computed, type ComputedRef, type HTMLAttributes } from 'vue'
 
-const props = defineProps<{
+interface Props {
   class?: HTMLAttributes['class']
-}>()
+}
 
-const { name, formMessageId } = useFormField()
+const props = defineProps<Props>()
+
+const fieldError = inject<ComputedRef<string | undefined>>('fieldError', computed(() => undefined))
 </script>
 
 <template>
-  <ErrorMessage
-    :id="formMessageId"
-    data-slot="form-message"
-    as="p"
-    :name="toValue(name)"
-    :class="cn('text-destructive-foreground text-sm', props.class)"
-  />
+  <div v-if="fieldError.value" class="form-message error-message" :class="props.class">
+    {{ fieldError.value }}
+  </div>
 </template>
+
+<style scoped>
+.form-message {
+  margin-top: 0.25rem; /* Or your preferred spacing */
+  font-size: 0.875rem; /* Or your preferred font size */
+}
+
+.error-message {
+  color: red; /* Or your theme's error color */
+}
+</style>

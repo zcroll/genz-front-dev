@@ -24,6 +24,16 @@ const schema = yup.object({
   password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
 });
 
+// Define types for form values and error
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+interface LoginError extends Error {
+  // Add any specific error properties if applicable
+}
+
 // Initialize user store and router
 const userStore = useUserStore();
 const router = useRouter();
@@ -33,7 +43,7 @@ const isSubmitting = ref(false);
 const error = ref('');
 
 // Handle form submission
-const onSubmit = async (values) => {
+const onSubmit = async (values: LoginFormValues) => {
   isSubmitting.value = true;
   error.value = '';
 
@@ -41,7 +51,8 @@ const onSubmit = async (values) => {
     await userStore.login(values.email, values.password);
     router.push('/dashboard');
   } catch (err) {
-    error.value = err.message || 'Login failed. Please try again.';
+    const loginErr = err as LoginError;
+    error.value = loginErr.message || 'Login failed. Please try again.';
   } finally {
     isSubmitting.value = false;
   }
@@ -61,14 +72,14 @@ const onSubmit = async (values) => {
         <FormField name="email">
           <FormItem>
             <FormLabel required>Email</FormLabel>
-            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+            <FormControl v-slot="{ modelValue, error: fieldError, 'update:modelValue': onUpdateModelValue, blur: onFieldBlur }">
               <Input 
                 type="email" 
                 :model-value="modelValue" 
-                :error="error" 
+                :error="fieldError" 
                 placeholder="Enter your email" 
                 @update:model-value="onUpdateModelValue" 
-                @blur="onBlur" 
+                @blur="onFieldBlur" 
               />
             </FormControl>
             <FormMessage />
@@ -78,14 +89,14 @@ const onSubmit = async (values) => {
         <FormField name="password">
           <FormItem>
             <FormLabel required>Password</FormLabel>
-            <FormControl v-slot="{ modelValue, error, 'onUpdate:modelValue': onUpdateModelValue, onBlur }">
+            <FormControl v-slot="{ modelValue, error: fieldError, 'update:modelValue': onUpdateModelValue, blur: onFieldBlur }">
               <Input 
                 type="password" 
                 :model-value="modelValue" 
-                :error="error" 
+                :error="fieldError" 
                 placeholder="Enter your password" 
                 @update:model-value="onUpdateModelValue" 
-                @blur="onBlur" 
+                @blur="onFieldBlur" 
               />
             </FormControl>
             <FormMessage />
